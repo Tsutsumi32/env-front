@@ -29,6 +29,17 @@ help: ## このヘルプメッセージを表示
 
 ##@ Docker
 
+init: ## 初回セットアップ（docker compose up -d ＆ pre-commitフック設置）
+	@echo "🟢 docker compose up -d を実行します..."
+	docker compose up -d
+	@echo "🟢 pre-commit フックを .git/hooks にコピーします..."
+	@if [ ! -d .git/hooks ]; then \
+		echo "❌ .git/hooks ディレクトリがありません。git 管理下で実行してください。"; \
+		exit 1; \
+	fi
+	@cp -f pre-commit .git/hooks/pre-commit
+	@chmod +x .git/hooks/pre-commit
+	@echo "✅ 初期セットアップ完了: pre-commit フック設置済み"
 
 
 up: ## Dockerコンテナを起動
