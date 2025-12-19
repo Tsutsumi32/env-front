@@ -6,7 +6,7 @@ import {
   runCommand,
   collectScssFiles
 } from './logic-scss.js';
-import { BUILD_CONFIG } from '../build-config.js';
+import { BUILD_CONFIG } from '../../build-config.js';
 import { join, dirname, relative } from 'path';
 import { mkdirSync } from 'fs';
 

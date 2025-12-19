@@ -1,7 +1,7 @@
 import { spawn, exec } from 'child_process';
 import { promisify } from 'util';
 import { getEnv } from '../load-env.js';
-import { BUILD_CONFIG } from '../build-config.js';
+import { BUILD_CONFIG } from '../../build-config.js';
 
 const execAsync = promisify(exec);
 

@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
-import { BUILD_CONFIG } from '../build-config.js';
+import { BUILD_CONFIG } from '../../build-config.js';
 import {
   getAllFiles,
   META_FILE,

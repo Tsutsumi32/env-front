@@ -26,6 +26,7 @@ Thumbs.db
 Dockerfile
 docker-compose.yml
 .dockerignore
+docker/db/data
 
 # その他
 *.log

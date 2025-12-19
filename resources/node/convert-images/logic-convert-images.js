@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import sharp from 'sharp';
-import { BUILD_CONFIG } from '../build-config.js';
+import { BUILD_CONFIG } from '../../build-config.js';
 
 // 設定を定数から取得
 const DIR_IMAGE_TARGET_PATH = BUILD_CONFIG.DIR_IMAGE_TARGET_PATH;

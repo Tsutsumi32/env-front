@@ -1,7 +1,7 @@
 // watch-js.js
 import chokidar from 'chokidar';
 import { runLintAll, buildJs } from './logic-js.js';
-import { BUILD_CONFIG } from '../build-config.js';
+import { BUILD_CONFIG } from '../../build-config.js';
 
 // 設定を定数から取得
 const DIR_SRC_PATH = BUILD_CONFIG.DIR_SRC_PATH;

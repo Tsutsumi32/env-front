@@ -1,9 +1,28 @@
 services:
+  php:
+    container_name: "${PROJECT_NAME}_app"
+    build:
+      context: ./docker/php
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    ports:
+      - "${PHP_PORT:-8000}:80"
+    depends_on:
+      - db
+    environment:
+      - UID=${UID:-1000}
+      - GID=${GID:-1000}
+    volumes:
+      - .:/var/www
+      - ./docker/php/php.ini-development:/usr/local/etc/php/php.ini:cached
+    networks:
+      - br0
   frontend:
     container_name: "${PROJECT_NAME}_${FRONT_CONTAINER}"
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/frontend/Dockerfile
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
@@ -21,10 +40,54 @@ services:
     # 環境変数（.envファイルから読み込み）
     environment:
       - NODE_ENV=${PROJECT_ENV}
+    # ネットワークを揃えてプロキシする
+    networks:
+      - br0
     # コマンド（コンテナを停めない）
     stdin_open: true
     tty: true
     command: /bin/bash
-
+  db:
+    container_name: "${PROJECT_NAME}_db"
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+    networks:
+      - br0
+  phpmyadmin:
+    container_name: "${PROJECT_NAME}_admin"
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_USER=${DB_USERNAME}
+      - PMA_PASSWORD=${DB_PASSWORD}
+    links:
+      - db
+    ports:
+      - 3333:80
+    volumes:
+      - ./docker/phpmyadmin/sessions:/sessions
+    networks:
+      - br0
+  mail:
+    container_name: "${PROJECT_NAME}_mail"
+    image: mailhog/mailhog
+    ports:
+      - 8025:8025
+      - 1025:1025
+    networks:
+      - br0
 volumes:
   node_modules:
+
+networks:
+  br0:
+    driver: bridge

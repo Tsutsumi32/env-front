@@ -11,6 +11,9 @@ build:convert-imagesで、現在のmeta状況でconvertし直し
 scssの準備でいじるmixinは、hoverくらい。
 
 
+build-config.jsを編集し、プロキシモード設定などを行う
+
+
 jsプラグインについては、npmで管理せず、CDNを利用する方針とする
 ビルドができない(クライアントの都合で)場合は、
 src内のjsをそのまま使用する方法をとる。

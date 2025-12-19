@@ -9,7 +9,7 @@ import { mkdirSync } from 'fs';
 import { transformFileAsync } from '@babel/core';
 import { minify } from 'terser';
 import path from 'path';
-import { BUILD_CONFIG } from '../build-config.js';
+import { BUILD_CONFIG } from '../../build-config.js';
 import fs from 'fs/promises';
 
 // 設定を定数から取得

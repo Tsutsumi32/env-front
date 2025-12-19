@@ -7,7 +7,7 @@ import { SwiperControl, swiperBreakPoints } from '../modules/swiper.js';
 // BasePageClassをインスタンス化（DOM完了後に自動実行）
 new BasePageClass('#top', async () => {
   console.log('あああああああああああああ');
-  console.log("いううういいい");
+  console.log('aaaaaa');
 
   // カードコンテンツのスライダー
   document.querySelectorAll('.js-card-swiper').forEach((element) => {

@@ -2,7 +2,7 @@
 import { exec } from 'child_process';
 import { readdirSync, unlinkSync, lstatSync } from 'fs';
 import { join } from 'path';
-import { BUILD_CONFIG } from '../build-config.js';
+import { BUILD_CONFIG } from '../../build-config.js';
 
 export function runCommand(cmd, label = '') {
   return new Promise((resolve) => {
