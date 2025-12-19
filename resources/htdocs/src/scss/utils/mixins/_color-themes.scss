@@ -56,21 +56,21 @@
 * mode テーマモード別のスタイルを定義する mixin
 * @param $mode モード名（'default' | 'dark' など）
 * defaultモードの場合は親セレクタそのまま、それ以外は[data-theme="モード名"]で出力
-* 
+*
 * 使用例:
 * .my-element {
 *   color: red;
-*   
+*
 *   @include mode('dark') {
 *     color: white;
 *   }
 * }
-* 
+*
 * 出力結果:
 * .my-element {
 *   color: red;
 * }
-* 
+*
 * [data-theme="dark"] .my-element {
 *   color: white;
 * }
