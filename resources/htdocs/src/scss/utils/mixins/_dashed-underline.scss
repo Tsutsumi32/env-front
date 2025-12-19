@@ -1,0 +1,24 @@
+/******************************************************************
+* dashed-underline　破線の下線を設定する
+* @param $_width 線の太さ（デフォルト: 1px）
+* @param $_dash-length 線の長さ（デフォルト: 8px）
+* @param $_gap 間隔（デフォルト: 4px）
+* @param $_color 線の色（デフォルト: currentColor）
+*  例) @include dashed-underline(2px, 8px, 4px, #000);
+*******************************************************************/
+@mixin dashed-underline($_width: 1px, $_dash-length: 8px, $_gap: 4px, $_color: currentColor) {
+	$total-length: calc($_dash-length + $_gap);
+	background-image: repeating-linear-gradient(
+		to right,
+		$_color 0,
+		$_color #{$_dash-length},
+		transparent #{$_dash-length},
+		transparent #{$total-length}
+	);
+	background-size: #{$total-length} $_width;
+	background-position: left bottom;
+	background-repeat: repeat-x;
+	padding-bottom: $_width;
+}
+
+

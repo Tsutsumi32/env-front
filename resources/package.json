@@ -1,0 +1,49 @@
+{
+  "name": "app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "meta:convert-images": "node node/convert-images/meta-generate-convert-images.js",
+    "build:convert-images": "node node/convert-images/build-convert-images.js",
+    "watch:convert-images": "run-s meta:convert-images && node node/convert-images/watch-convert-images.js",
+    "build:scss": "node node/scss/build-scss.js",
+    "watch:scss": "node node/scss/watch-scss.js",
+    "build:js": "node node/js/build-js.js",
+    "watch:js": "node node/js/watch-js.js",
+    "serve": "node node/serve/browser-sync.js",
+    "build": "run-s build:scss build:js build:convert-images",
+    "watch": "concurrently \"npm run watch:scss\" \"npm run watch:js\" \"npm run watch:convert-images\"",
+    "start": "run-s build && concurrently \"npm run watch\" \"npm run serve\""
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "autoprefixer": "^10.4.21",
+    "babel-plugin-polyfill-corejs3": "^0.13.0",
+    "browser-sync": "^3.0.4",
+    "chokidar": "^4.0.3",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^9.2.1",
+    "cssnano": "^7.0.6",
+    "esbuild": "^0.25.12",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "fs-extra": "^11.3.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "prettier": "^3.6.2",
+    "sass": "^1.93.3",
+    "sharp": "^0.34.4",
+    "terser": "^5.44.1"
+  },
+  "volta": {
+    "node": "24.11.0",
+    "npm": "11.6.2"
+  },
+  "dependencies": {
+    "core-js": "^3.46.0",
+    "whatwg-fetch": "^3.6.20"
+  }
+}

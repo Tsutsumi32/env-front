@@ -1,0 +1,124 @@
+@use 'sass:meta';
+@use 'sass:map';
+@use '../functions/strip-unit' as *;
+@use '../variables/variables' as *;
+
+/******************************************************************
+* メディアクエリ
+* 比較演算子を使用した統一されたメディアクエリ
+* $media_query_strategy で 'sp-first' または 'pc-first' を切り替え可能
+*
+* 連番ベースのブレイクポイントを使用することで、
+* sp-firstとpc-firstのどちらでも同じ呼び出し順で使用可能
+*******************************************************************/
+
+/* 連番ベースの汎用メディアクエリ
+* $key: ブレイクポイントのキー（文字列のみ）
+* $max-key: オプション。範囲指定の場合の最大キー
+* variablesで設定した順序に応じて適用
+*
+* sp-first: 1が最小、数が大きくなるほど画面サイズが大きい
+*   media('tab') => 560px以上
+*   media('tab', 'pc') => 560px以上、1120px未満（範囲指定）
+*   media('pc') => 1120px以上
+*
+* pc-first: 1が最大、数が大きくなるほど画面サイズが小さい
+*   media('pcLL') => 1920px未満
+*   media('pcLL', 'pc') => 1120px以上、1920px未満（範囲指定、大きい方を先に書く）
+*   media('pc') => 1120px未満
+*   注意: 範囲指定の場合、引数の順序は任意（実際の値の大小関係で自動判定）
+*
+* 使用例:
+*   @include media('tab') { ... }        // tab以上（sp-first）または未満（pc-first）
+*   @include media('pc') { ... }         // pc以上（sp-first）または未満（pc-first）
+*   @include media('tab', 'pc') { ... }  // tab以上、pc未満（範囲指定）
+*   @include media('pc', 'pcL') { ... }  // pc以上、pcL未満（範囲指定）
+*
+* variablesで定義した文字列キーに自動的に依存します
+----------------------------------------------------------------- */
+@mixin media($key, $max-key: null) {
+  // 型チェック（文字列のみ）
+  @if meta.type-of($key) != string {
+    @error "breakpoint key must be a string, got #{meta.type-of($key)}";
+  }
+  @if $max-key != null and meta.type-of($max-key) != string {
+    @error "breakpoint max-key must be a string, got #{meta.type-of($max-key)}";
+  }
+
+  // キーがマップに存在するかチェック
+  @if not map.has-key($breakpoints, $key) {
+    @error "breakpoint key '#{$key}' not found in $breakpoints map. Available keys: #{map.keys($breakpoints)}";
+  }
+  @if $max-key != null and not map.has-key($breakpoints, $max-key) {
+    @error "breakpoint max-key '#{$max-key}' not found in $breakpoints map. Available keys: #{map.keys($breakpoints)}";
+  }
+
+  // ブレイクポイント値を取得（variablesで設定された順序に従う）
+  $break-value: map.get($breakpoints, $key);
+  @if $break-value == null {
+    @error "breakpoint key '#{$key}' not found in $breakpoints map. Available keys: #{map.keys($breakpoints)}";
+  }
+
+  // 範囲指定の場合
+  @if $max-key != null {
+    $max-break-value: map.get($breakpoints, $max-key);
+    @if $max-break-value == null {
+      @error "breakpoint max-key '#{$max-key}' not found in $breakpoints map. Available keys: #{map.keys($breakpoints)}";
+    }
+
+    // 範囲指定は常に「以上」と「未満」で指定（sp-first/pc-firstに関係なく同じ物理的な範囲）
+    // ただし、sp-firstとpc-firstで変数の順序が逆なので、実際の値の大小関係を確認
+    $min-value: null;
+    $max-value: null;
+    @if strip-unit($break-value, 1px) < strip-unit($max-break-value, 1px) {
+      $min-value: $break-value;
+      $max-value: $max-break-value;
+    } @else {
+      $min-value: $max-break-value;
+      $max-value: $break-value;
+    }
+
+    @media screen and (strip-unit($min-value, 1px) <= width < strip-unit($max-value, 1px)) {
+      @content;
+    }
+  } @else {
+    // 単一指定の場合
+    @if $media_query_strategy == 'sp-first' {
+      // SPファースト: breakpoint-{key}以上
+      @media screen and (strip-unit($break-value, 1px) <= width) {
+        @content;
+      }
+    } @else {
+      // PCファースト: breakpoint-{key}未満
+      @media screen and (width < strip-unit($break-value, 1px)) {
+        @content;
+      }
+    }
+  }
+}
+
+/* 高さメディアクエリ
+$break ～$break(含まない)の高さに適用
+----------------------------------------------------------------- */
+@mixin height-media-max($break) {
+  @media screen and ($break <= height) {
+    @content;
+  }
+}
+
+/* 高さメディアクエリ
+$break $break～の高さに適用
+----------------------------------------------------------------- */
+@mixin height-media-min($break) {
+  @media screen and ($break > height) {
+    @content;
+  }
+}
+
+/* 印刷時
+----------------------------------------------------------------- */
+@mixin print {
+  @media print {
+    @content;
+  }
+}

@@ -1,0 +1,39 @@
+{
+  // prettier拡張機能使う場合(本環境はhuskyで対応想定)
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": false,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+  },
+  "liveSassCompile.settings.autoprefix": [
+    ">= 5%",
+    "last 2 versions"
+  ],
+  "liveSassCompile.settings.formats": [
+    {
+      "format": "compressed",
+      "extensionName": ".css",
+      "savePath": "/wp-dir/wp-content/themes/midorikawa-hp/assets/css",
+      // "savePath": "~/../css",
+      "savePathReplacementPairs": null
+    }
+  ],
+  "liveSassCompile.settings.excludeList": [
+      "**/wp-admin/**",
+      "**/wp-content/plugins/**",
+      "**/.sample-code/**",
+      "**/node_modules/**",
+  ],
+}

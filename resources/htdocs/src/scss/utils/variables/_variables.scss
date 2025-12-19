@@ -1,0 +1,550 @@
+@use 'sass:meta';
+@use 'sass:map';
+@use 'sass:list';
+/******************************************************************
+* 変数・取得設定
+* ※mapなども定義されていますが、各実装の場面では、フラットな変数を使用します
+*******************************************************************/
+/* base font size
+----------------------------------------------------------------- */
+// ベースフォントサイズ(htmlサイズ)
+// vwやremの計算に使用する
+$font-s_base: 16px;
+
+
+/* size
+----------------------------------------------------------------- */
+// デザインサイズ
+//////////////////////////////////////////////
+$design_size_sp: 375;
+$design_size_pc: 1600;
+
+
+// デザインのコンテナ
+//////////////////////////////////////////////
+// SPデザインのコンテナサイズ
+$design_container_sp: 343;
+// PCデザインのコンテナサイズ
+$design_container_pc: 1131;
+
+
+// スクロールバー幅バッファ
+//////////////////////////////////////////////
+$width_scrollbar: 20;
+
+
+// pc時の左右余白最低値
+//////////////////////////////////////////////
+$padding_container_pc: 20;
+
+
+// PC時に最低限確保する幅
+// pcデザインコンテナ(確保したい幅) +
+// 確保したい左右余白 + スクロールバーバッファ)
+// => コンテナが入りきる最低限の幅
+//////////////////////////////////////////////
+$minWidth_container_pc: calc(
+  $design_container_pc + $padding_container_pc + $width_scrollbar
+);
+
+
+// レスポンシブ(rem)対応時のSPの最小幅
+// これ以下はリキッドになるように_style-settings-varsで設定
+//////////////////////////////////////////////
+$min_layout_width: $design_size_sp;
+
+
+
+/* breakpoint
+----------------------------------------------------------------- */
+// メディアクエリの設計方針
+//////////////////////////////////////////////
+// 'sp-first': SPファースト（小さい画面から大きい画面へ上書き）
+// 'pc-first': PCファースト（大きい画面から小さい画面へ上書き）
+$media_query_strategy: 'sp-first' !default;
+
+
+// ブレイクポイントのキー名（一元管理）
+// 実装時 @include media($bp_tab)
+// @include media(xx) のスニペット作成推奨
+$bp_tab: 'tab' !default;
+$bp_tabL: 'tabL' !default;
+$bp_pc: 'pc' !default;
+$bp_pcL: 'pcL' !default;
+$bp_pcLL: 'pcLL' !default;
+
+// ブレイクポイントのマップ（文字列キー）
+// sp-firstとpc-firstで、文字列キーを変更することで柔軟に対応可能
+//
+// sp-firstの場合の例（小さい順）:
+//   'tab': 560,
+//   'tabL': 768,
+//   'pc': 1120,
+//   'pcL': 1400,
+//   'pcLL': 1920
+//
+// pc-firstの場合の例（大きい順）:
+//   'pcS': 1920,
+//   'pcSS': 1400,
+//   'tab': 1120,
+//   'tabS': 768,
+//   'sp': 560
+// 注意: ★sp-firstとpc-firstで、この値自体を手動で書き換える必要があります。
+//       必ずsp-first、pc-firstで順番(小さい順・大きい順)を変えることが必要です。
+$breakpoints: (
+  #{$bp_tab}: 580,
+  #{$bp_tabL}: 768,
+  #{$bp_pc}: 1080,
+  #{$bp_pcL}: $minWidth_container_pc,
+  #{$bp_pcLL}: 1600
+) !default;
+
+
+
+/* style
+----------------------------------------------------------------- */
+// レスポンシブ・リキッドの設定
+// 実装時に値を設定する場合に_style-settings(s())fucntionを使用します。
+// s()を使用することで、本設定に基づいてレスポンシブ・リキッドの対応が設定されます
+//
+// 'type': 'liquid' | 'responsive' | 'fixed' | 'none'
+//   - 'liquid': vwで計算（リキッド）
+//   - 'responsive': remで計算（レスポンシブ(rem値を使用、$min_layout_width以下はvw)）
+//   - 'fixed': 前時点のリキッドの変化において、指定時点でのサイズに固定化（vw-to-pixelを使用）
+//   - 'none': 変更しない（前のブレイクポイントの値を継承）
+// 'base-size': 基準となるフォントサイズ（px、通常は1、または計算値）
+// 'viewport-base': vwの計算基準となる画面幅（px、リキッドまたはfixedの場合に使用）
+//   - responsiveの場合: 原則 $font-s_base を指定する
+// 'fixed-width': 固定化する時点の画面幅（px、fixedの場合のみ使用）
+// 最初のキーは'default'とし、sp-first/pc-firstのどちらでも、メディアクエリを使用しない範囲の指定を行う
+// default以降は、$breakpointsのキー名で各ブレイクポイントでの設定を行う
+$style-settings: (
+  'default': (
+    'type': 'liquid',
+    'base-size': 1,
+    'viewport-base': $design_size_sp
+  ),
+  #{$bp_tab}: (
+    'type': 'fixed',
+    'base-size': 1,
+    'viewport-base': $design_size_sp, // SPのリキッド基準点
+    'fixed-width': map.get($breakpoints, $bp_tab) // TABの時点で固定化
+  ),
+  #{$bp_tabL}: (
+    'type': 'responsive',
+    'base-size': 1,
+    'viewport-base': $font-s_base
+  ),
+  #{$bp_pc}: (
+    'type': 'responsive',
+    'base-size': 1,
+    'viewport-base': $font-s_base
+  ),
+  #{$bp_pcL}: (
+    'type': 'responsive',
+    'base-size': 1,
+    'viewport-base': $font-s_base
+  ),
+  #{$bp_pcLL}: (
+    'type': 'liquid',
+    'base-size': 1,
+    'viewport-base': map.get($breakpoints, $bp_pcLL)
+  )
+);
+
+
+
+/* section
+----------------------------------------------------------------- */
+// セクションサイズの定義
+// キー: サイズ名（ly_sectionの モディファイアクラス名として使用）
+// 値:
+//   - 'default': メディアクエリを使用しない時のデフォルト値（sp-first/pc-first共通）
+//   - $breakpointsのキー名 : 該当のメディアクエリで値を設定
+// 単位なし => s(数値)
+$section-sizes: (
+  'normal': (
+    'default': 30,
+    #{$bp_tab}: 100,
+    #{$bp_pc}: 300,
+  ),
+  'large': (
+    'default': 50,
+    #{$bp_tab}: 100,
+    #{$bp_pc}: 300,
+  ),
+  'xlarge': (
+    'default': 50,
+    #{$bp_tab}: 100,
+    #{$bp_pc}: 300,
+  )
+);
+
+
+
+/* container
+----------------------------------------------------------------- */
+// コンテナサイズの定義
+// キー: コンテナの種類（ly_container のモディファイアクラス名として使用）
+// 値:
+//   - 'default': メディアクエリを使用しない時のデフォルト値（sp-first/pc-first共通）
+//   - $breakpointsのキー名 : 該当のメディアクエリで値を設定
+// 各値は (padding: 余白値, max-width: 最大幅) の形式
+// 単位なし => s(数値)　単位あり => 直接指定
+// max-widthはオプション（nullの場合は設定しない）
+$container-sizes: (
+  'normal': (
+    'default': (
+      'padding': 30,
+      'max-width': null
+    ),
+    #{$bp_tab}: (
+      'padding': 80,
+      'max-width': null
+    ),
+    #{$bp_pc}: (
+      'padding': 120,
+      'max-width': 1200px
+    )
+  )
+);
+
+
+
+/* color
+----------------------------------------------------------------- */
+// モード別カラーマップ（一元管理）
+// 構造: $colors: (mode: (group: (name: value)))
+// 例: $colors: (default: (text: (primary: #2B2D31)))
+// 注意: 'default'モードは必須。defaultモードは:rootに、その他は[data-theme="モード名"]に出力される
+// _color-themes.scssによって、本変数を元にモード毎のCSS変数を設定
+// 下記color-var() functionで、定義されるCSS変数の取得
+$colors: (
+  default: (
+    // 基本色
+    base: (
+      black: #000,
+      white: #FFFFFF,
+      accent: #c42e29,
+    ),
+    // テキスト色
+    text: (
+      primary: #2B2D31,
+      secondary: #585B67,
+      dark: #2B2D31,
+    ),
+    // 背景色
+    bg: (
+      base: #FFFFFF,
+      button: #EAF3FF,
+      tag: #DFE3E5,
+    ),
+    // ボーダー色
+    border: (
+      tag: #CBD1D4,
+      blue: #61A9FF,
+    ),
+    // ブルー系
+    blue: (
+      light: #A6CFFF,
+      primary: #006DEF,
+      base: #0051B2,
+      button: #0061D5,
+    ),
+    // UI要素
+    ui: (
+      placeholder: #A2A5B1,
+      highlight: #11FFE9,
+      focus-outline: #164097,
+      hover: #000,
+    ),
+    selection: (
+      selection-text: #FFFFFF,
+      selection-bg: #164097,
+    )
+  ),
+  dark: (
+    // 基本色
+    base: (
+      black: #FFFFFF,
+      white: #121212,
+      accent: #e74c3c,
+    ),
+    // テキスト色
+    text: (
+      primary: #FFFFFF,
+      secondary: #CFCFCF,
+      dark: #E0E0E0,
+    ),
+    // 背景色
+    bg: (
+      base: #121212,
+      button: #1E3A5F,
+      tag: #2D2D2D,
+    ),
+    // ボーダー色
+    border: (
+      tag: #404040,
+      blue: #61A9FF,
+    ),
+    // ブルー系
+    blue: (
+      light: #4A90E2,
+      primary: #4A9EFF,
+      base: #006DEF,
+      button: #5FA3FF,
+    ),
+    // UI要素
+    ui: (
+      placeholder: #888888,
+      highlight: #00FFCC,
+      focus-outline: #4A9EFF,
+      hover: #FFFFFF,
+    ),
+    selection: (
+      selection-text: #FFFFFF,
+      selection-bg: #164097,
+    )
+  ),
+) !default;
+
+/******************************************************************
+* color-var CSS変数を返す function
+* @param $group カラーグループ名（text, bg, blue など）
+* @param $name カラー名（primary, secondary など）
+* @return CSS変数参照
+*  例) color-var('text', 'primary') → var(--color-text-primary)
+*  例) color-var('bg', 'base') → var(--color-bg-base)
+*******************************************************************/
+@function color-var($group, $name) {
+  @return var(--color-#{$group}-#{$name});
+}
+
+// フラット変数（実装API - CSS変数参照）
+// 実装者はこれらの変数を使用するだけで、モード切替が自動的に反映
+// ※モード切替自体はJSで制御
+//////////////////////////////////////////////
+// 基本色
+$color_base_black: color-var('base', 'black');
+$color_base_white: color-var('base', 'white');
+$color_base_accent: color-var('base', 'accent');
+
+// テキスト色
+$color_text_primary: color-var('text', 'primary');
+$color_text_secondary: color-var('text', 'secondary');
+$color_text_dark: color-var('text', 'dark');
+
+// 背景色
+$color_bg_base: color-var('bg', 'base');
+$color_button_bg: color-var('bg', 'button');
+$color_tag_bg: color-var('bg', 'tag');
+
+// ボーダー色
+$color_tag_border: color-var('border', 'tag');
+$color_blue_border: color-var('border', 'blue');
+
+// ブルー系
+$color_blue_light: color-var('blue', 'light');
+$color_blue_primary: color-var('blue', 'primary');
+$color_blue_base: color-var('blue', 'base');
+$color_button_text: color-var('blue', 'button');
+
+// UI要素
+$color_placeholder: color-var('ui', 'placeholder');
+$color_highlight: color-var('ui', 'highlight');
+$color_focus_outline: color-var('ui', 'focus-outline');
+$color_hover: color-var('ui', 'hover');
+
+// selection
+$color_selection_text: color-var('selection', 'selection-text');
+$color_selection_bg: color-var('selection', 'selection-bg');
+
+
+/* font
+----------------------------------------------------------------- */
+// フォントファイルのベースパス
+$font-path-base: '../../assets/fonts/';
+
+// フォント設定マップ(フォントファイルを用意した上で設定 => font-face設定)
+// CDNを使用する場合は、フラット変数のみで運用
+// 各フォントファミリーの設定を定義
+// key名：フォントファミリー名(小文字 スペースは「-」つなぎ)
+// 'family': フォントファミリー名（CSSで使用する名前）
+// 'files': フォントファイルの設定配列
+//   - 'file': ファイル名（$font-path-baseからの相対パス）
+//   - 'weight': フォントウェイト（数値または範囲文字列 '100 900'）
+//   - 'style': フォントスタイル（'normal' | 'italic'、デフォルト: 'normal'）
+//   - 'variable': 可変フォントかどうか（true | false、デフォルト: false）
+//   - 'variable-axes': 可変フォントの軸（'wght' | 'wght opsz' など、variable: trueの場合のみ）
+$font-configs: (
+  'noto-sans-jp': (
+    'family': 'Noto Sans JP',
+    'fallback': sans-serif,
+    'files': (
+      (
+        'file': 'NotoSansJP-VariableFont_wght.woff2',
+        'weight': '100 900',
+        'style': 'normal',
+        'variable': true,
+        'variable-axes': 'wght'
+      ),
+    )
+  ),
+  'inter': (
+    'family': 'Inter',
+    'fallback': sans-serif,
+    'files': (
+      (
+        'file': 'Inter-VariableFont_opsz,wght.woff2',
+        'weight': '100 900',
+        'style': 'normal',
+        'variable': true,
+        'variable-axes': 'wght opsz'
+      ),
+    )
+  ),
+  'mplus1p': (
+    'family': 'M PLUS 1p',
+    'fallback': sans-serif,
+    'files': (
+      (
+        'file': 'MPLUS1p-Regular.woff2',
+        'weight': 400,
+        'style': 'normal',
+        'variable': false
+      ),
+      (
+        'file': 'MPLUS1p-Medium.woff2',
+        'weight': 500,
+        'style': 'normal',
+        'variable': false
+      ),
+      (
+        'file': 'MPLUS1p-Bold.woff2',
+        'weight': 700,
+        'style': 'normal',
+        'variable': false
+      ),
+      (
+        'file': 'MPLUS1p-Black.woff2',
+        'weight': 900,
+        'style': 'normal',
+        'variable': false
+      )
+    )
+  ),
+  'rocknroll-one': (
+    'family': 'RocknRoll One',
+    'fallback': sans-serif,
+    'files': (
+      (
+        'file': 'RocknRollOne-Regular.woff2',
+        'weight': 400,
+        'style': 'normal',
+        'variable': false
+      ),
+    )
+  ),
+  'sahitya': (
+    'family': 'Sahitya',
+    'fallback': serif,
+    'files': (
+      (
+        'file': 'Sahitya-Regular.woff2',
+        'weight': 400,
+        'style': 'normal',
+        'variable': false
+      ),
+      (
+        'file': 'Sahitya-Bold.woff2',
+        'weight': 700,
+        'style': 'normal',
+        'variable': false
+      )
+    )
+  )
+) !default;
+
+
+/******************************************************************
+* get-font-family フォントファミリー名を取得する
+* @param $font-key フォントキー名（$font-configsのキー）
+* @return フォントファミリー名（文字列）
+*  例) get-font-family('noto-sans-jp') → 'Noto Sans JP'
+*******************************************************************/
+@function get-font-family($font-key) {
+  $config: map.get($font-configs, $font-key);
+  @if $config == null {
+    @error "Font key '#{$font-key}' not found in $font-configs.";
+  }
+  @return map.get($config, 'family');
+}
+
+/******************************************************************
+* get-font-fallback フォールバックフォントを取得する
+* @param $font-key フォントキー名（$font-configsのキー）
+* @return フォールバックフォント（sans-serif | serif | monospace など）
+*  例) get-font-fallback('noto-sans-jp') → sans-serif
+*******************************************************************/
+@function get-font-fallback($font-key) {
+  $config: map.get($font-configs, $font-key);
+  @if $config == null {
+    @error "Font key '#{$font-key}' not found in $font-configs.";
+  }
+  @return map.get($config, 'fallback');
+}
+
+// フォントファミリー用の変数（実装の際はこちらを使用する）
+// get-font-*関数を使用して$font-configsから値を取得
+$font-f_notosans: get-font-family('noto-sans-jp'), get-font-fallback('noto-sans-jp');
+$font-f_inter: get-font-family('inter'), get-font-fallback('inter');
+$font-f_mplus1p: get-font-family('mplus1p'), get-font-fallback('mplus1p');
+$font-f_rocknroll-one: get-font-family('rocknroll-one'), get-font-fallback('rocknroll-one');
+$font-f_sahitya: get-font-family('sahitya'), get-font-fallback('sahitya');
+
+// フォントウェイト用の変数（実装の際はこちらを使用する）
+$font-w_thin: 100;
+$font-w_extralight: 200;
+$font-w_light: 300;
+$font-w_normal: 400;
+$font-w_medium: 500;
+$font-w_semibold: 600;
+$font-w_bold: 700;
+$font-w_extrabold: 800;
+$font-w_black: 900;
+
+
+
+/* image
+----------------------------------------------------------------- */
+//画像ファイルパス
+$image_path_webp: '../../src/assets/images/webp/';
+$image_path_avif: '../../src/assets/images/avif/';
+$image_path_compression : '../../src/assets/images/compression/';
+$image_path_svg : '../../src/assets/images/svg/';
+
+
+
+/* height
+----------------------------------------------------------------- */
+$height_header_pc: 80;
+$height_header_sp: 80;
+
+
+
+/* transition
+----------------------------------------------------------------- */
+$transition_normal: .3s;
+$transition_fast: .2s;
+
+
+
+/* border
+----------------------------------------------------------------- */
+$border_normal: max(.1rem, 1px) solid $color_base_black;
+
+
+
+/* others
+----------------------------------------------------------------- */
+$box-shadow: 0 0 1rem rgba(0, 0, 0, .3);

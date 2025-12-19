@@ -1,0 +1,56 @@
+#==============================
+# map除外
+#==============================
+*css.map
+*js.map
+
+#==============================
+# sample-code
+#==============================
+.sample-code/
+
+#==============================
+# docker
+#==============================
+docker/db/
+docker/phpmyadmin/
+
+#==============================
+# WP
+#==============================
+.env
+/index.php
+readme.html
+license.txt
+.htaccess
+xmlrpc.php
+docker/phpmyadmin/
+wp-*.php
+!wp-install.sh
+wp-dir/*
+!wp-dir/wp-content
+wp-dir/wp-content/*
+!wp-dir/wp-content/themes
+wp-dir/wp-content/themes/*
+!wp-dir/wp-content/themes/momimo-hp
+docker-compose.override.yml
+
+#==============================
+# 不必要なフォルダ・ファイルを除外
+#==============================
+.vscode
+node_modules/
+vendor/
+*~
+*.bak
+.DS_Store
+.buildpath
+.project
+.settings
+*.tmproj
+.ide
+mix-manifest.json
+build/
+nbproject/
+
+.image-meta.json

@@ -1,0 +1,18 @@
+@use '../../utils/' as *;
+
+/******************************************************************
+* layout - container
+* $container-sizesで定義されたサイズごとにモディファイアクラスを生成
+* 例）ly_container __large,  __small, ・・・
+*******************************************************************/
+.ly_container {
+  // デフォルトのコンテナ設定
+  @include container('normal');
+
+  // サイズモディファイア
+  @each $type, $sizes in $container-sizes {
+    &.__#{$type} {
+      @include container($type);
+    }
+  }
+}

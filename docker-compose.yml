@@ -1,0 +1,30 @@
+services:
+  frontend:
+    container_name: "${PROJECT_NAME}_frontend"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    # ホスト側のユーザーID/グループIDをマッピング
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      # プロジェクトのファイルをマウント（ホストの変更がコンテナに反映される）
+      - .:/var/www
+      # node_modulesはボリュームとしてマウント
+      - node_modules:/var/www/resources/node_modules
+    working_dir: /var/www/resources
+    # ポートマッピング（.envファイルから読み込み）
+    ports:
+      - "${FRONT_PORT}:${FRONT_PORT}"
+    # 環境変数（.envファイルから読み込み）
+    environment:
+      - NODE_ENV=${PROJECT_ENV}
+    # コマンド（コンテナを停めない）
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+volumes:
+  node_modules:

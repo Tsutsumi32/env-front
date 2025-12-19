@@ -1,0 +1,54 @@
+@use 'sass:map';
+@use '../variables/variables' as *;
+
+/******************************************************************
+* define-color-vars CSS変数を一括定義する mixin
+* @param $mode モード名（default | dark など）
+* ネスト map をフラットな CSS変数に変換する
+* 例) @include define-color-vars('default');
+*     → --color-text-primary: #2B2D31;
+*     → --color-bg-base: #FFFFFF;
+*******************************************************************/
+@mixin define-color-vars($mode) {
+  $mode-map: map.get($colors, $mode);
+
+  @if $mode-map == null {
+    @error "Unknown color mode: #{$mode}";
+  }
+
+  @each $group, $group-map in $mode-map {
+    @each $name, $value in $group-map {
+      --color-#{"" + $group}-#{"" + $name}: #{$value};
+    }
+  }
+}
+
+/******************************************************************
+* generate-color-themes テーマ全体を生成する mixin
+* defaultモードを:rootに、それ以外のモードを[data-theme="モード名"]に出力する
+* $colorsマップにモードを追加するだけで、自動的にすべてのテーマが生成される
+* 例) @include generate-color-themes;
+*     → :root { --color-text-primary: ...; }
+*     → [data-theme="dark"] { --color-text-primary: ...; }
+*******************************************************************/
+@mixin generate-color-themes {
+  // default が存在するかチェック
+  @if not map.has-key($colors, default) {
+    @error "$colors must have a 'default' mode.";
+  }
+
+  // :root（default）
+  :root {
+    @include define-color-vars(default);
+  }
+
+  // その他のモード
+  @each $mode, $_ in $colors {
+    @if $mode != default {
+      [data-theme="#{$mode}"] {
+        @include define-color-vars($mode);
+      }
+    }
+  }
+}
+

@@ -1,0 +1,102 @@
+/******************************************************************
+* ruled-underline　行ごとにボックス幅いっぱいの破線下線を設定する
+* 要素に line-height を設定し、1行＝1タイルとして破線背景を分割
+* マスクで各タイルの最下部のみ見せる → 行間に線が出ない
+* 背景は ::after に描画し、テキストはマスク対象外（消えない）
+* @param $color 色（デフォルト: #000）例: #0d47a1 または var(--colors-main) 形式の RGB 変数名（中身が "R,G,B"）
+* @param $alpha 不透明度（デフォルト: 0.4、0〜1）
+* @param $dash-on 破線の線の長さ（デフォルト: 5px）
+* @param $dash-off 破線の空白の長さ（デフォルト: 10px）
+* @param $thickness 下線の太さ（デフォルト: 1px）
+* @param $offset 文字ベースラインからの下げ量（デフォルト: 3px）
+* @param $line-height 行高（デフォルト: 1.8、数値指定を推奨）
+* @param $z-index 擬似要素の z-index（デフォルト: -1、背面にしたいので通常は -1）
+*  例) @include ruled-underline(#000, 0.4, 5px, 10px, 1px, 3px, 1.8, -1);
+*******************************************************************/
+@mixin ruled-underline(
+  $color: #000,
+  $alpha: 0.4,
+  $dash-on: 5px,
+  $dash-off: 10px,
+  $thickness: 1px,
+  $offset: 3px,
+  $line-height: 1.8,
+  $z-index: -1
+) {
+  // 色の最終値（Sass カラー or CSS 変数 "R,G,B" のどちらにも対応）
+  $fill-color: null;
+  @if type-of($color) == 'color' {
+    $fill-color: rgba($color, $alpha);
+  } @else {
+    $fill-color: unquote('rgba(#{$color}, #{$alpha})');
+  }
+
+  line-height: $line-height;
+  padding-bottom: $offset; // 下線分の空きを確保
+  position: relative;
+  isolation: isolate; // 独立スタッキング → z-index:-1 を安全に運用
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: $z-index;
+
+    // 横方向の破線パターン
+    background-image: repeating-linear-gradient(
+      to right,
+      #{$fill-color} 0 #{$dash-on},
+      transparent #{$dash-on} calc(#{$dash-on} + #{$dash-off})
+    );
+    background-position: left top;
+    background-repeat: repeat-y;
+    background-size: 100% 1lh; // 1行＝1タイル
+
+    // 各タイルの最下部だけ見せる（= 下線の帯だけ）
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent calc(1lh - #{$offset} - #{$thickness}),
+      #000 calc(1lh - #{$offset} - #{$thickness}),
+      #000 calc(1lh - #{$offset}),
+      transparent calc(1lh - #{$offset})
+    );
+    -webkit-mask-size: 100% 1lh;
+    -webkit-mask-repeat: repeat;
+
+    mask-image: linear-gradient(
+      to bottom,
+      transparent calc(1lh - #{$offset} - #{$thickness}),
+      #000 calc(1lh - #{$offset} - #{$thickness}),
+      #000 calc(1lh - #{$offset}),
+      transparent calc(1lh - #{$offset})
+    );
+    mask-size: 100% 1lh;
+    mask-repeat: repeat;
+  }
+
+  // 古めブラウザ向け（1lh 非対応）のフォールバック
+  @supports not (background-size: 100% 1lh) {
+    &::after {
+      $tile: calc(1em * #{$line-height}); // line-height の数値と揃える
+      background-size: 100% $tile;
+      -webkit-mask-size: 100% $tile;
+      mask-size: 100% $tile;
+
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent calc(#{$tile} - #{$offset} - #{$thickness}),
+        #000 calc(#{$tile} - #{$offset} - #{$thickness}),
+        #000 calc(#{$tile} - #{$offset}),
+        transparent calc(#{$tile} - #{$offset})
+      );
+      mask-image: linear-gradient(
+        to bottom,
+        transparent calc(#{$tile} - #{$offset} - #{$thickness}),
+        #000 calc(#{$tile} - #{$offset} - #{$thickness}),
+        #000 calc(#{$tile} - #{$offset}),
+        transparent calc(#{$tile} - #{$offset})
+      );
+    }
+  }
+}

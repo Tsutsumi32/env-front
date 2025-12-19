@@ -1,0 +1,14 @@
+@use '../../utils/' as *;
+/******************************************************************
+* layout - section
+* $section-sizesで定義されたサイズごとにモディファイアクラスを生成
+* 例）ly_section __large,  __small, ・・・
+*******************************************************************/
+.ly_section {
+  // $section-sizesの各サイズに対してモディファイアクラスを生成
+  @each $size-name, $sizes in $section-sizes {
+    &.__#{$size-name} {
+      @include section($size-name);
+    }
+  }
+}

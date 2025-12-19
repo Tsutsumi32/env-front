@@ -1,0 +1,130 @@
+@use '../utils/' as *;
+
+/******************************************************************
+* 共通設定
+*******************************************************************/
+@include style-settings-vars;
+@include generate-color-themes;
+
+html {
+  // スムーススクロールはjsで制御
+  // (・GSAPなどのアニメーションと相性が悪い・画面遷移時はスムーススクロールしたくない)
+  // 画面遷移を伴う場合の位置調整はscroll-padding-topで調整
+  scroll-padding-top: calc(s($height_header_sp) + 5.2rem);
+  scroll-behavior: smooth;
+}
+
+body {
+  // デザインの改行方法によって変更する
+  // word-break: break-all;
+  word-break: break-word;
+  line-break: strict;
+
+  background-color: $color_base_white;
+  color: $color_base_black;
+  width: 100%;
+}
+
+// セレクトスタイル
+select {
+  appearance: base-select;
+
+  &::picker(select) {
+    appearance: base-select;
+    border: none;
+    background-color: $color_base_black;
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    /* アニメーションも設定できる */
+    // transition: scale 0.2s;
+
+    @include hover-only {
+      // scale: 1.02;
+    }
+  }
+
+  &::picker-icon {
+    // display: none;
+  }
+
+  option {
+    padding-inline: 1rem;
+    color: $color_base_white;
+
+    &::checkmark {
+      display: none;
+    }
+
+    &:checked {
+      background-color: $color_base_accent !important;
+      color: $color_base_black;
+    }
+
+    &:hover {
+      background-color: $color_base_black;
+      color: $color_base_black;
+    }
+  }
+}
+
+// picutreはスタイル上無視
+picture {
+  display: contents;
+}
+
+img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+textarea,
+dt,
+dd,
+button {
+  line-height: inherit;
+}
+
+address {
+  font-style: normal;
+}
+
+textarea {
+  resize: vertical;
+  overflow-y: auto;
+}
+
+a,
+span {
+  display: inline-block;
+}
+
+button {
+  display: inline-block;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+// テキスト選択時のスタイル
+::selection {
+  color: $color_selection_text;
+  background-color: $color_selection_bg;
+}
+
+::-moz-selection {
+  color: $color_selection_text;
+  background-color: $color_selection_bg;
+}
+
+// フォーカス時のoutlineスタイル
+:focus-visible {
+  outline: 2px solid $color_focus_outline;
+  outline-offset: 2px;
+}
+
+// 補正入力選択時
+input:-internal-autofill-selected,
+textarea:-internal-autofill-selected {
+  background-color: transparent !important;
+}
