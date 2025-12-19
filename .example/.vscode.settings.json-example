@@ -1,7 +1,7 @@
 {
-  // prettier拡張機能使う場合(本環境はhuskyで対応想定)
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": false,
+  "prettier.configPath": "${workspaceFolder}/resources/.prettierrc",
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -12,6 +12,12 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[php]": {
