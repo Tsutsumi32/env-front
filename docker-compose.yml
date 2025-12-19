@@ -1,6 +1,6 @@
 services:
   frontend:
-    container_name: "${PROJECT_NAME}_${SERVICE}"
+    container_name: "${PROJECT_NAME}_${FRONT_CONTAINER}"
     build:
       context: .
       dockerfile: docker/Dockerfile

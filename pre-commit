@@ -42,8 +42,8 @@ SERVICE="${SERVICE:-frontend}"
 # プロジェクト名（環境変数から取得、未設定時はsample_hpをデフォルト値として使用）
 PROJECT_NAME="${PROJECT_NAME:-sample_hp}"
 
-# コンテナ名を構築（形式: ${PROJECT_NAME}_${SERVICE}）
-CONTAINER_NAME="${PROJECT_NAME}_${SERVICE}"
+# コンテナ名を構築（形式: ${PROJECT_NAME}_${FRONT_CONTAINER}）
+CONTAINER_NAME="${PROJECT_NAME}_${FRONT_CONTAINER}"
 
 # ============================================================================
 # Dockerコンテナの起動確認
@@ -54,7 +54,7 @@ cd "$COMPOSE_DIR" || exit 1
 # コンテナが起動しているか確認
 if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${CONTAINER_NAME}$"; then
   echo "⚠️  Dockerコンテナが起動していません。起動中..."
-  docker compose up -d "${SERVICE}" || exit 1
+  docker compose up -d "${FRONT_CONTAINER}" || exit 1
   sleep 2
 fi
 
