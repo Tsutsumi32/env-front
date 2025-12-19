@@ -1,11 +1,15 @@
 /************************************************************
  * GSAPアニメーション汎用
  ************************************************************/
+
+/* npm *******************************************************
+
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
 gsap.registerPlugin(ScrollTrigger);
+**************************************************************/
 
 /**
  * GSAPアニメーション制御クラス
@@ -117,7 +121,7 @@ export class GsapControl extends BaseModuleClass {
       startOffset = 0,
       startPosition = '90%',
       scrub = false,
-      toggleActions = 'play none none reverse'
+      toggleActions = 'play none none reverse',
     } = options;
 
     let delay = startOffset;
@@ -159,7 +163,7 @@ export class GsapControl extends BaseModuleClass {
       startOffset = 0,
       startPosition = '90%',
       scrub = false,
-      toggleActions = 'play none none reverse'
+      toggleActions = 'play none none reverse',
     } = options;
 
     let delay = startOffset;
@@ -198,7 +202,7 @@ export class GsapControl extends BaseModuleClass {
       ease = 'power1.inOut',
       startPosition = 'bottom 30%',
       endPosition = 'bottom top',
-      scrub = true
+      scrub = true,
     } = options;
 
     const animation = gsap.to(element, {
@@ -226,12 +230,7 @@ export class GsapControl extends BaseModuleClass {
    * @private
    */
   initFadeScaleIn(element, bag, options) {
-    const {
-      fromScale = 0.93,
-      toScale = 1,
-      duration = 2,
-      ease = 'power2.inOut'
-    } = options;
+    const { fromScale = 0.93, toScale = 1, duration = 2, ease = 'power2.inOut' } = options;
 
     const animation = gsap.fromTo(
       element,

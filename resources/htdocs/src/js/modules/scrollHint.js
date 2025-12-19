@@ -1,5 +1,5 @@
 /************************************************************
- * スクロールヒント　※scroll-hint.jsの読み込みが必要
+ * スクロールヒント　CDN想定の実装
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
@@ -20,14 +20,14 @@ export class ScrollHintControl extends BaseModuleClass {
       i18n = { scrollable: 'scroll' },
       remainingTime = 5000,
       suggestiveShadow = true,
-      scrollHintIconAppendClass = 'scroll-hint-icon-white'
+      scrollHintIconAppendClass = 'scroll-hint-icon-white',
     } = this.options;
 
     const scrollHintInstance = new ScrollHint(target, {
       i18n: i18n,
       remainingTime: remainingTime,
       suggestiveShadow: suggestiveShadow,
-      scrollHintIconAppendClass: scrollHintIconAppendClass
+      scrollHintIconAppendClass: scrollHintIconAppendClass,
     });
 
     // ScrollHintインスタンスをbagに登録（destroyメソッドがある場合）
