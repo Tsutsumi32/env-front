@@ -14,7 +14,7 @@
     "serve": "node node/serve/browser-sync.js",
     "build": "run-s build:scss build:js build:convert-images",
     "watch": "concurrently \"npm run watch:scss\" \"npm run watch:js\" \"npm run watch:convert-images\"",
-    "start": "run-s build && concurrently \"npm run watch\" \"npm run serve\""
+    "start": "concurrently \"npm run watch\" \"npm run serve\""
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",

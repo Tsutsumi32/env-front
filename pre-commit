@@ -37,7 +37,7 @@ if [ -f "$COMPOSE_DIR/.env" ]; then
 fi
 
 # Docker Composeサービス名（環境変数から取得、未設定時はfrontendをデフォルト値として使用）
-SERVICE="${SERVICE:-frontend}"
+FRONT_CONTAINER="${FRONT_CONTAINER:-frontend}"
 
 # プロジェクト名（環境変数から取得、未設定時はsample_hpをデフォルト値として使用）
 PROJECT_NAME="${PROJECT_NAME:-sample_hp}"

@@ -10,13 +10,13 @@ ifneq (,$(wildcard .env))
 endif
 
 # Docker Composeサービス名（環境変数から取得、未設定の場合はfrontendをデフォルト値として使用）
-SERVICE := $(or $(SERVICE),frontend)
+FRONT_CONTAINER := $(or $(FRONT_CONTAINER),frontend)
 
 # プロジェクト名（環境変数から取得、未設定の場合はsample_hpをデフォルト値として使用）
 PROJECT_NAME := $(or $(PROJECT_NAME),sample_hp)
 
 # コンテナ名（環境変数から構築）
-CONTAINER_NAME := $(PROJECT_NAME)_$(SERVICE)
+CONTAINER_NAME := $(PROJECT_NAME)_$(FRONT_CONTAINER)
 
 # コンテナ内の作業ディレクトリ
 WORK_DIR := /var/www/resources
