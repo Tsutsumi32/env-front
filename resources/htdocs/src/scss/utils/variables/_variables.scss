@@ -11,14 +11,12 @@
 // vwやremの計算に使用する
 $font-s_base: 16px;
 
-
 /* size
 ----------------------------------------------------------------- */
 // デザインサイズ
 //////////////////////////////////////////////
 $design_size_sp: 375;
 $design_size_pc: 1600;
-
 
 // デザインのコンテナ
 //////////////////////////////////////////////
@@ -27,33 +25,25 @@ $design_container_sp: 343;
 // PCデザインのコンテナサイズ
 $design_container_pc: 1131;
 
-
 // スクロールバー幅バッファ
 //////////////////////////////////////////////
 $width_scrollbar: 20;
 
-
 // pc時の左右余白最低値
 //////////////////////////////////////////////
 $padding_container_pc: 20;
-
 
 // PC時に最低限確保する幅
 // pcデザインコンテナ(確保したい幅) +
 // 確保したい左右余白 + スクロールバーバッファ)
 // => コンテナが入りきる最低限の幅
 //////////////////////////////////////////////
-$minWidth_container_pc: calc(
-  $design_container_pc + $padding_container_pc + $width_scrollbar
-);
-
+$minWidth_container_pc: calc($design_container_pc + $padding_container_pc + $width_scrollbar);
 
 // レスポンシブ(rem)対応時のSPの最小幅
 // これ以下はリキッドになるように_style-settings-varsで設定
 //////////////////////////////////////////////
 $min_layout_width: $design_size_sp;
-
-
 
 /* breakpoint
 ----------------------------------------------------------------- */
@@ -62,7 +52,6 @@ $min_layout_width: $design_size_sp;
 // 'sp-first': SPファースト（小さい画面から大きい画面へ上書き）
 // 'pc-first': PCファースト（大きい画面から小さい画面へ上書き）
 $media_query_strategy: 'sp-first' !default;
-
 
 // ブレイクポイントのキー名（一元管理）
 // 実装時 @include media($bp_tab)
@@ -99,8 +88,6 @@ $breakpoints: (
   #{$bp_pcLL}: 1600
 ) !default;
 
-
-
 /* style
 ----------------------------------------------------------------- */
 // レスポンシブ・リキッドの設定
@@ -122,37 +109,36 @@ $style-settings: (
   'default': (
     'type': 'liquid',
     'base-size': 1,
-    'viewport-base': $design_size_sp
+    'viewport-base': $design_size_sp,
   ),
   #{$bp_tab}: (
-    'type': 'fixed',
-    'base-size': 1,
-    'viewport-base': $design_size_sp, // SPのリキッド基準点
-    'fixed-width': map.get($breakpoints, $bp_tab) // TABの時点で固定化
-  ),
+      'type': 'fixed',
+      'base-size': 1,
+      'viewport-base': $design_size_sp,
+      // SPのリキッド基準点
+      'fixed-width': map.get($breakpoints, $bp_tab), // TABの時点で固定化
+    ),
   #{$bp_tabL}: (
-    'type': 'responsive',
-    'base-size': 1,
-    'viewport-base': $font-s_base
-  ),
+      'type': 'responsive',
+      'base-size': 1,
+      'viewport-base': $font-s_base,
+    ),
   #{$bp_pc}: (
-    'type': 'responsive',
-    'base-size': 1,
-    'viewport-base': $font-s_base
-  ),
+      'type': 'responsive',
+      'base-size': 1,
+      'viewport-base': $font-s_base,
+    ),
   #{$bp_pcL}: (
-    'type': 'responsive',
-    'base-size': 1,
-    'viewport-base': $font-s_base
-  ),
+      'type': 'responsive',
+      'base-size': 1,
+      'viewport-base': $font-s_base,
+    ),
   #{$bp_pcLL}: (
-    'type': 'liquid',
-    'base-size': 1,
-    'viewport-base': map.get($breakpoints, $bp_pcLL)
-  )
+      'type': 'liquid',
+      'base-size': 1,
+      'viewport-base': map.get($breakpoints, $bp_pcLL),
+    ),
 );
-
-
 
 /* section
 ----------------------------------------------------------------- */
@@ -177,10 +163,8 @@ $section-sizes: (
     'default': 50,
     #{$bp_tab}: 100,
     #{$bp_pc}: 300,
-  )
+  ),
 );
-
-
 
 /* container
 ----------------------------------------------------------------- */
@@ -196,20 +180,18 @@ $container-sizes: (
   'normal': (
     'default': (
       'padding': 30,
-      'max-width': null
+      'max-width': null,
     ),
     #{$bp_tab}: (
-      'padding': 80,
-      'max-width': null
-    ),
+        'padding': 80,
+        'max-width': null,
+      ),
     #{$bp_pc}: (
-      'padding': 120,
-      'max-width': 1200px
-    )
-  )
+        'padding': 120,
+        'max-width': 1200px,
+      ),
+  ),
 );
-
-
 
 /* color
 ----------------------------------------------------------------- */
@@ -217,96 +199,104 @@ $container-sizes: (
 // 構造: $colors: (mode: (group: (name: value)))
 // 例: $colors: (default: (text: (primary: #2B2D31)))
 // 注意: 'default'モードは必須。defaultモードは:rootに、その他は[data-theme="モード名"]に出力される
-// _color-themes.scssによって、本変数を元にモード毎のCSS変数を設定
-// 下記color-var() functionで、定義されるCSS変数の取得
+// _color-themes.scssによって、本変数を元に、モード毎のCSS変数を設定
+// 下記color-var() functionで、定義されるCSS変数の取得が可能
+// ※モード切替自体はJSで制御 JSでユーザー設定や切り替えボタンで data-theme属性の切り替えを行う
 $colors: (
   default: (
     // 基本色
     base: (
-      black: #000,
-      white: #FFFFFF,
-      accent: #c42e29,
-    ),
+        black: #000,
+        white: #f2f2f2,
+        accent: #f6b40a,
+      ),
     // テキスト色
     text: (
-      primary: #2B2D31,
-      secondary: #585B67,
-      dark: #2B2D31,
-    ),
+        primary: #271a06,
+        secondary: #4a4133,
+        dark: #000,
+        link: #271a06,
+      ),
     // 背景色
     bg: (
-      base: #FFFFFF,
-      button: #EAF3FF,
-      tag: #DFE3E5,
-    ),
+        base: #ebebeb,
+        button: rgba(#e7dfd1, 0.9),
+        tag: rgba(#e7dfd1, 0.15),
+        hover: rgba(#e7dfd1, 0.3),
+      ),
     // ボーダー色
     border: (
-      tag: #CBD1D4,
-      blue: #61A9FF,
-    ),
-    // ブルー系
-    blue: (
-      light: #A6CFFF,
-      primary: #006DEF,
-      base: #0051B2,
-      button: #0061D5,
-    ),
+        tag: rgba(#bcb2a0, 0.5),
+        primary: #271a06,
+        light: rgba(#e7dfd1, 0.5),
+      ),
+    // アクセント色（リンク、ボタンなど）
+    accent: (
+        primary: #f6b40a,
+        hover: #f9ebc6,
+        light: #f9ebc6,
+      ),
     // UI要素
     ui: (
-      placeholder: #A2A5B1,
-      highlight: #11FFE9,
-      focus-outline: #164097,
-      hover: #000,
-    ),
+        placeholder: #4a4133,
+        highlight: #f6b40a,
+        focus-outline: #f6b40a,
+        hover: #f6b40a,
+      ),
     selection: (
-      selection-text: #FFFFFF,
-      selection-bg: #164097,
-    )
+      selection-text: #271a06,
+      selection-bg: #f6b40a,
+    ),
   ),
   dark: (
     // 基本色
     base: (
-      black: #FFFFFF,
-      white: #121212,
-      accent: #e74c3c,
-    ),
+        black: #fafafa,
+        white: #271a06,
+        accent: #f6b40a,
+      ),
     // テキスト色
     text: (
-      primary: #FFFFFF,
-      secondary: #CFCFCF,
-      dark: #E0E0E0,
-    ),
+        primary: #fafafa,
+        secondary: rgba(#fafafa, 0.7),
+        dark: #ffffff,
+        link: #fafafa,
+      ),
     // 背景色
     bg: (
-      base: #121212,
-      button: #1E3A5F,
-      tag: #2D2D2D,
-    ),
+        base: #271a06,
+        button: rgba(#271a06, 0.95),
+        tag: rgba(#796d57, 0.83),
+        hover: rgba(#4a4133, 0.5),
+      ),
     // ボーダー色
     border: (
-      tag: #404040,
-      blue: #61A9FF,
-    ),
-    // ブルー系
-    blue: (
-      light: #4A90E2,
-      primary: #4A9EFF,
-      base: #006DEF,
-      button: #5FA3FF,
-    ),
+        tag: rgba(#bcb2a0, 0.3),
+        primary: rgba(#fafafa, 0.3),
+        light: rgba(#bcb2a0, 0.2),
+      ),
+    // アクセント色（リンク、ボタンなど）
+    accent: (
+        primary: #f6b40a,
+        hover: #f9ebc6,
+        light: #f9ebc6,
+      ),
     // UI要素
     ui: (
-      placeholder: #888888,
-      highlight: #00FFCC,
-      focus-outline: #4A9EFF,
-      hover: #FFFFFF,
-    ),
+        placeholder: rgba(#fafafa, 0.5),
+        highlight: #f6b40a,
+        focus-outline: #f6b40a,
+        hover: #f6b40a,
+      ),
     selection: (
-      selection-text: #FFFFFF,
-      selection-bg: #164097,
-    )
+      selection-text: #271a06,
+      selection-bg: #f6b40a,
+    ),
   ),
 ) !default;
+
+// モード選択用変数
+$color_mode_dark: 'dark';
 
 /******************************************************************
 * color-var CSS変数を返す function
@@ -322,7 +312,6 @@ $colors: (
 
 // フラット変数（実装API - CSS変数参照）
 // 実装者はこれらの変数を使用するだけで、モード切替が自動的に反映
-// ※モード切替自体はJSで制御
 //////////////////////////////////////////////
 // 基本色
 $color_base_black: color-var('base', 'black');
@@ -333,21 +322,23 @@ $color_base_accent: color-var('base', 'accent');
 $color_text_primary: color-var('text', 'primary');
 $color_text_secondary: color-var('text', 'secondary');
 $color_text_dark: color-var('text', 'dark');
+$color_text_link: color-var('text', 'link');
 
 // 背景色
 $color_bg_base: color-var('bg', 'base');
 $color_button_bg: color-var('bg', 'button');
 $color_tag_bg: color-var('bg', 'tag');
+$color_bg_hover: color-var('bg', 'hover');
 
 // ボーダー色
 $color_tag_border: color-var('border', 'tag');
-$color_blue_border: color-var('border', 'blue');
+$color_border_primary: color-var('border', 'primary');
+$color_border_light: color-var('border', 'light');
 
-// ブルー系
-$color_blue_light: color-var('blue', 'light');
-$color_blue_primary: color-var('blue', 'primary');
-$color_blue_base: color-var('blue', 'base');
-$color_button_text: color-var('blue', 'button');
+// アクセント色
+$color_accent_primary: color-var('accent', 'primary');
+$color_accent_hover: color-var('accent', 'hover');
+$color_accent_light: color-var('accent', 'light');
 
 // UI要素
 $color_placeholder: color-var('ui', 'placeholder');
@@ -358,7 +349,6 @@ $color_hover: color-var('ui', 'hover');
 // selection
 $color_selection_text: color-var('selection', 'selection-text');
 $color_selection_bg: color-var('selection', 'selection-bg');
-
 
 /* font
 ----------------------------------------------------------------- */
@@ -386,9 +376,9 @@ $font-configs: (
         'weight': '100 900',
         'style': 'normal',
         'variable': true,
-        'variable-axes': 'wght'
+        'variable-axes': 'wght',
       ),
-    )
+    ),
   ),
   'inter': (
     'family': 'Inter',
@@ -399,9 +389,9 @@ $font-configs: (
         'weight': '100 900',
         'style': 'normal',
         'variable': true,
-        'variable-axes': 'wght opsz'
+        'variable-axes': 'wght opsz',
       ),
-    )
+    ),
   ),
   'mplus1p': (
     'family': 'M PLUS 1p',
@@ -411,27 +401,27 @@ $font-configs: (
         'file': 'MPLUS1p-Regular.woff2',
         'weight': 400,
         'style': 'normal',
-        'variable': false
+        'variable': false,
       ),
       (
         'file': 'MPLUS1p-Medium.woff2',
         'weight': 500,
         'style': 'normal',
-        'variable': false
+        'variable': false,
       ),
       (
         'file': 'MPLUS1p-Bold.woff2',
         'weight': 700,
         'style': 'normal',
-        'variable': false
+        'variable': false,
       ),
       (
         'file': 'MPLUS1p-Black.woff2',
         'weight': 900,
         'style': 'normal',
-        'variable': false
-      )
-    )
+        'variable': false,
+      ),
+    ),
   ),
   'rocknroll-one': (
     'family': 'RocknRoll One',
@@ -441,9 +431,9 @@ $font-configs: (
         'file': 'RocknRollOne-Regular.woff2',
         'weight': 400,
         'style': 'normal',
-        'variable': false
+        'variable': false,
       ),
-    )
+    ),
   ),
   'sahitya': (
     'family': 'Sahitya',
@@ -453,18 +443,17 @@ $font-configs: (
         'file': 'Sahitya-Regular.woff2',
         'weight': 400,
         'style': 'normal',
-        'variable': false
+        'variable': false,
       ),
       (
         'file': 'Sahitya-Bold.woff2',
         'weight': 700,
         'style': 'normal',
-        'variable': false
-      )
-    )
-  )
+        'variable': false,
+      ),
+    ),
+  ),
 ) !default;
-
 
 /******************************************************************
 * get-font-family フォントファミリー名を取得する
@@ -513,38 +502,28 @@ $font-w_bold: 700;
 $font-w_extrabold: 800;
 $font-w_black: 900;
 
-
-
 /* image
 ----------------------------------------------------------------- */
 //画像ファイルパス
-$image_path_webp: '../../src/assets/images/webp/';
-$image_path_avif: '../../src/assets/images/avif/';
-$image_path_compression : '../../src/assets/images/compression/';
-$image_path_svg : '../../src/assets/images/svg/';
-
-
+$image_path_webp: '../../assets/images/webp/';
+$image_path_avif: '../../assets/images/avif/';
+$image_path_compression: '../../assets/images/compression/';
+$image_path_svg: '../../assets/images/svg/';
 
 /* height
 ----------------------------------------------------------------- */
 $height_header_pc: 80;
 $height_header_sp: 80;
 
-
-
 /* transition
 ----------------------------------------------------------------- */
-$transition_normal: .3s;
-$transition_fast: .2s;
-
-
+$transition_normal: 0.3s;
+$transition_fast: 0.2s;
 
 /* border
 ----------------------------------------------------------------- */
-$border_normal: max(.1rem, 1px) solid $color_base_black;
-
-
+$border_normal: max(0.1rem, 1px) solid $color_base_black;
 
 /* others
 ----------------------------------------------------------------- */
-$box-shadow: 0 0 1rem rgba(0, 0, 0, .3);
+$box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);

@@ -4,10 +4,10 @@ import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
 
 /**
  * ヘッダー制御クラス
- * @requires .js-header - ヘッダー要素
- * @requires .js-header-btn - メニューボタン
- * @requires .js-header-menu - メニュー要素
- * @requires .js-header-bg - 背景要素
+ * @requires .js_header - ヘッダー要素
+ * @requires .js_headerBtn - メニューボタン
+ * @requires .js_headerMenu - メニュー要素
+ * @requires .js_headerBg - 背景要素
  */
 export class HeaderControl extends BaseModuleClass {
   /**
@@ -19,14 +19,14 @@ export class HeaderControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      headerSelector = '.js-header',
-      menuBtnSelector = '.js-header-btn',
-      menuSelector = '.js-header-menu',
-      bgSelector = '.js-header-bg',
+      headerSelector = '.js_header',
+      menuBtnSelector = '.js_headerBtn',
+      menuSelector = '.js_headerMenu',
+      bgSelector = '.js_headerBg',
       activeClass = 'is_active',
       displayClass = 'is-display',
       openDelay = 300,
-      closeDelay = 600
+      closeDelay = 600,
     } = this.options;
 
     const header = document.querySelector(headerSelector);
@@ -48,7 +48,17 @@ export class HeaderControl extends BaseModuleClass {
     menuBtn.addEventListener(
       'click',
       () => {
-        this.toggleHeaderMenu({ menuBtn, menu, bg, activeClass, displayClass, openDelay, closeDelay, signal, bag });
+        this.toggleHeaderMenu({
+          menuBtn,
+          menu,
+          bg,
+          activeClass,
+          displayClass,
+          openDelay,
+          closeDelay,
+          signal,
+          bag,
+        });
       },
       { signal }
     );
@@ -60,7 +70,16 @@ export class HeaderControl extends BaseModuleClass {
         'click',
         () => {
           const timeoutId = setTimeout(() => {
-            this.closeHeaderMenu({ menuBtn, menu, bg, activeClass, displayClass, closeDelay, signal, bag });
+            this.closeHeaderMenu({
+              menuBtn,
+              menu,
+              bg,
+              activeClass,
+              displayClass,
+              closeDelay,
+              signal,
+              bag,
+            });
           }, openDelay);
           // signalでタイムアウトをクリーンアップ
           signal.addEventListener('abort', () => clearTimeout(timeoutId), { once: true });
@@ -86,7 +105,7 @@ export class HeaderControl extends BaseModuleClass {
       openDelay = 300,
       closeDelay = 600,
       signal,
-      bag
+      bag,
     } = options;
 
     menuBtn.style.pointerEvents = 'none';
@@ -129,7 +148,7 @@ export class HeaderControl extends BaseModuleClass {
       displayClass = 'is-display',
       closeDelay = 600,
       signal,
-      bag
+      bag,
     } = options;
 
     menuBtn.style.pointerEvents = 'none';
@@ -144,4 +163,3 @@ export class HeaderControl extends BaseModuleClass {
     signal.addEventListener('abort', () => clearTimeout(timeoutId), { once: true });
   }
 }
-

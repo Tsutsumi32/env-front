@@ -1,7 +1,11 @@
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
+import { THEME_STORAGE_KEY } from '../utils/themeSystemInit.js';
 
 /**
  * テーマ切替制御クラス
+ * 切り替えボタンの機能のみを提供します。
+ * システム設定からの初期化は themeSystemInit.js で行います。
+ *
  * @requires .js_themeToggle - テーマ切替ボタン（data-theme属性でモードを指定）
  * @example
  * <button class="js_themeToggle" data-theme="dark">ダークモード</button>
@@ -9,9 +13,9 @@ import { BaseModuleClass } from '../core/BaseModuleClass.js';
  */
 export class ThemeToggle extends BaseModuleClass {
   /**
-   * ストレージキー
+   * ストレージキー（themeSystemInit.jsと統一）
    */
-  static STORAGE_KEY = 'theme-mode';
+  static STORAGE_KEY = THEME_STORAGE_KEY;
 
   /**
    * 初期化処理
@@ -21,13 +25,7 @@ export class ThemeToggle extends BaseModuleClass {
    * @param {AbortSignal} resources.signal - AbortSignal
    */
   init(element, { bag, signal }) {
-    const {
-      toggleButtonSelector = '.js_themeToggle',
-      storageEnabled = true
-    } = this.options;
-
-    // 初期テーマ設定
-    this.setInitialTheme(storageEnabled);
+    const { toggleButtonSelector = '.js_themeToggle', storageEnabled = true } = this.options;
 
     // テーマ切替ボタンの設定
     const toggleButtons = document.querySelectorAll(toggleButtonSelector);
@@ -49,53 +47,6 @@ export class ThemeToggle extends BaseModuleClass {
         { signal }
       );
     });
-
-    // システム設定の変更を監視（OSのダークモード設定変更時）
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleMediaChange = (e) => {
-      // ユーザーが手動で設定していない場合のみ、システム設定を反映
-      if (storageEnabled && !localStorage.getItem(ThemeToggle.STORAGE_KEY)) {
-        const systemTheme = e.matches ? 'dark' : 'default';
-        this.setTheme(systemTheme, false);
-      }
-    };
-
-    // モダンブラウザのイベントリスナー
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleMediaChange, { signal });
-    } else {
-      // 古いブラウザ用（addEventListener が使えない場合）
-      mediaQuery.addListener(handleMediaChange);
-      signal.addEventListener('abort', () => {
-        mediaQuery.removeListener(handleMediaChange);
-      });
-    }
-  }
-
-  /**
-   * 初期テーマを設定
-   * 優先順位: 1. localStorage > 2. システム設定 > 3. default
-   * @param {boolean} storageEnabled - ストレージを使用するか
-   */
-  setInitialTheme(storageEnabled) {
-    let theme = 'default';
-
-    // 1. localStorageから取得（ユーザーが手動で設定した値）
-    if (storageEnabled) {
-      const storedTheme = localStorage.getItem(ThemeToggle.STORAGE_KEY);
-      if (storedTheme) {
-        theme = storedTheme;
-      }
-    }
-
-    // 2. ストレージにない場合、システム設定を確認
-    if (!storageEnabled || !localStorage.getItem(ThemeToggle.STORAGE_KEY)) {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        theme = 'dark';
-      }
-    }
-
-    this.setTheme(theme, false); // 初期設定時はストレージに保存しない（既に取得済み）
   }
 
   /**
@@ -122,7 +73,7 @@ export class ThemeToggle extends BaseModuleClass {
 
     // カスタムイベントを発火（他のスクリプトでテーマ変更を監視可能）
     const event = new CustomEvent('themechange', {
-      detail: { theme }
+      detail: { theme },
     });
     document.dispatchEvent(event);
   }
@@ -135,4 +86,3 @@ export class ThemeToggle extends BaseModuleClass {
     return document.documentElement.getAttribute('data-theme') || 'default';
   }
 }
-

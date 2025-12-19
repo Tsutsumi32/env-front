@@ -19,9 +19,10 @@ body {
   // word-break: break-all;
   word-break: break-word;
   line-break: strict;
+  font-family: $font-f_notosans;
 
-  background-color: $color_base_white;
-  color: $color_base_black;
+  background-color: $color_bg_base;
+  color: $color_text_primary;
   width: 100%;
 }
 
@@ -104,6 +105,16 @@ button {
   text-align: left;
   font: inherit;
   color: inherit;
+}
+
+// 見出し要素（タイトル的な英文字にRocknRollフォントを適用）
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-f_rocknroll-one;
 }
 
 // テキスト選択時のスタイル

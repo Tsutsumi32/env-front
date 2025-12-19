@@ -1,8 +1,9 @@
 <?php
 /**
- * レスポンシブ画像を出力する関数
+ * レスポンシブ画像出力関数
  *
- * PC用とSP用の画像を適切な形式（AVIF、WebP、圧縮版）で出力します。
+ * このファイルでは、PC用とSP用の画像を適切な形式（AVIF、WebP、圧縮版）で出力する処理を定義します。
+ * pictureタグとsourceタグを使用して、最適な画像形式を自動選択します。
  *
  * @param array $pcAttributes PC用画像の属性（必須: src）
  * @param array $spAttributes SP用画像の属性（オプション）
@@ -130,15 +131,23 @@ HTML;
 <source srcset="{$pcPaths['webp']}" type="image/webp"{$pcDims}>
 HTML;
 
-    // ===== <img> タグ（PC attributes のみ） =====
+    // ===== <img> タグ（PC attributes を使用） =====
     $imgAttrs = $pcAttributes;
-    $imgAttrs['src'] = $pcPaths['compression'];
-    unset($imgAttrs['srcset'], $imgAttrs['src']); // safety
 
+    // srcとsrcsetは除外（picture/sourceで処理済み）
+    unset($imgAttrs['srcset']);
+
+    // srcはcompressionパスに置き換え
+    $imgAttrs['src'] = $pcPaths['compression'];
+
+    // 属性文字列を構築
     $attrStr = '';
     foreach ($imgAttrs as $k => $v) {
-        $attrStr .= sprintf(' %s="%s"', htmlspecialchars($k), htmlspecialchars($v));
+        // 空文字列の属性はスキップ（width/heightなどが空の場合）
+        if ($v !== '' && $v !== null) {
+            $attrStr .= sprintf(' %s="%s"', htmlspecialchars($k), htmlspecialchars($v));
+        }
     }
 
-    echo "<img src=\"{$pcPaths['compression']}\"{$attrStr}>";
+    echo "<img{$attrStr}>";
 }

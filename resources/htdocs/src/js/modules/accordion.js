@@ -2,7 +2,7 @@
  * アコーディオン
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
-import { slideToggle, slideUp } from "../utils/slideAnimation.js";
+import { slideToggle, slideUp } from '../utils/slideAnimation.js';
 
 /**
  * アコーディオン制御クラス
@@ -17,33 +17,37 @@ export class AccordionControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      btnSelector = '.js-accordion-btn',
-      parentSelector = '.js-accordion-parent',
-      contentSelector = '.js-accordion-contents',
+      btnSelector = '.js_accordionBtn',
+      parentSelector = '.js_accordionParent',
+      contentSelector = '.js_accordionContents',
       activeClass = 'is_active',
       animationDuration = 300,
       hideButtonOnOpen = false,
-      hideButtonSelector = null
+      hideButtonSelector = null,
     } = this.options;
 
     // アコーディオン
     const accordionBtns = document.querySelectorAll(btnSelector);
-    accordionBtns.forEach(btn => {
-      btn.addEventListener('click', (event) => {
-        // 中のaタグがクリックされた場合は何もしない
-        if (event.target.closest('a')) {
-          return;
-        }
-        this.accordionToggle(btn, {
-          parentSelector,
-          contentSelector,
-          activeClass,
-          animationDuration,
-          hideButtonOnOpen,
-          hideButtonSelector,
-          signal
-        });
-      }, { signal });
+    accordionBtns.forEach((btn) => {
+      btn.addEventListener(
+        'click',
+        (event) => {
+          // 中のaタグがクリックされた場合は何もしない
+          if (event.target.closest('a')) {
+            return;
+          }
+          this.accordionToggle(btn, {
+            parentSelector,
+            contentSelector,
+            activeClass,
+            animationDuration,
+            hideButtonOnOpen,
+            hideButtonSelector,
+            signal,
+          });
+        },
+        { signal }
+      );
     });
   }
 
@@ -55,13 +59,13 @@ export class AccordionControl extends BaseModuleClass {
    */
   accordionToggle(button, options = {}) {
     const {
-      parentSelector = '.js-accordion-parent',
-      contentSelector = '.js-accordion-contents',
+      parentSelector = '.js_accordionParent',
+      contentSelector = '.js_accordionContents',
       activeClass = 'is_active',
       animationDuration = 300,
       hideButtonOnOpen = false,
       hideButtonSelector = null,
-      signal
+      signal,
     } = options;
 
     const parent = button.closest(parentSelector);
@@ -88,4 +92,3 @@ export class AccordionControl extends BaseModuleClass {
     }
   }
 }
-

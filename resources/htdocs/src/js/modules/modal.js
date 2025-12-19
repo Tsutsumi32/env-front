@@ -26,7 +26,7 @@ export class ModalControl extends BaseModuleClass {
       closeBtnSelector = '.js_modalClose',
       modalSelector = '.js_modal',
       activeClass = 'is_active',
-      animationSpeed = 400
+      animationSpeed = 400,
     } = this.options;
 
     const MODAL_BTNS = document.querySelectorAll(openBtnSelector);
@@ -64,7 +64,7 @@ export class ModalControl extends BaseModuleClass {
       modalSelector = '.js_modal',
       activeClass = 'is_active',
       animationSpeed = 400,
-      signal
+      signal,
     } = options;
 
     const TARGET = btn.getAttribute('data-modal');
@@ -84,7 +84,7 @@ export class ModalControl extends BaseModuleClass {
       modalSelector = '.js_modal',
       activeClass = 'is_active',
       animationSpeed = 400,
-      signal
+      signal,
     } = options;
 
     const MODAL = document.querySelector(`${modalSelector}.${activeClass}`);
@@ -93,7 +93,7 @@ export class ModalControl extends BaseModuleClass {
     if (MODAL) {
       const scrollableElements = MODAL.querySelectorAll('.js_modal_scrollAble');
       setTimeout(() => {
-        scrollableElements.forEach(element => {
+        scrollableElements.forEach((element) => {
           element.scrollTop = 0;
         });
       }, animationSpeed);
@@ -107,9 +107,9 @@ export class ModalControl extends BaseModuleClass {
 
       // モーダルを閉じた後に、モーダル内のすべてのアコーディオンを閉じる
       setTimeout(() => {
-        const accordionParents = MODAL.querySelectorAll('.js-accordion-parent.is_active');
-        accordionParents.forEach(parent => {
-          const content = parent.querySelector('.js-accordion-contents');
+        const accordionParents = MODAL.querySelectorAll('.js_accordionParent.is_active');
+        accordionParents.forEach((parent) => {
+          const content = parent.querySelector('.js_accordionContents');
           if (content) {
             slideUp(content, 300, 'ease-out', signal);
             parent.classList.remove('is_active');
@@ -118,7 +118,7 @@ export class ModalControl extends BaseModuleClass {
 
         // 非表示にされたボタンをすべて再度表示する
         const hiddenButtons = MODAL.querySelectorAll('button[style*="display: none"]');
-        hiddenButtons.forEach(button => {
+        hiddenButtons.forEach((button) => {
           button.style.display = '';
         });
       }, animationSpeed);
@@ -127,4 +127,3 @@ export class ModalControl extends BaseModuleClass {
     }
   }
 }
-

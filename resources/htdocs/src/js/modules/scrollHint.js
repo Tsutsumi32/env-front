@@ -16,7 +16,7 @@ export class ScrollHintControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      target = '.js-scrollable',
+      target = '.js_scrollable',
       i18n = { scrollable: 'scroll' },
       remainingTime = 5000,
       suggestiveShadow = true,

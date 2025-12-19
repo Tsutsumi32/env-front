@@ -1,12 +1,12 @@
 /************************************************************
  * 句読点をspanタグ（クラスpalt）で囲む処理
- * js-paltクラスがついた要素内の句読点（、と。）を処理対象とする
+ * js_paltクラスがついた要素内の句読点（、と。）を処理対象とする
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
 /**
  * 句読点制御クラス
- * @requires .js-palt - 処理対象の要素
+ * @requires .js_palt - 処理対象の要素
  */
 export class WrapPunctuationControl extends BaseModuleClass {
   /**
@@ -18,10 +18,10 @@ export class WrapPunctuationControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      targetSelector = '.js-palt',
+      targetSelector = '.js_palt',
       processedDataAttribute = 'paltProcessed',
       spanClass = 'palt',
-      punctuationRegex = /([、。（）])/g
+      punctuationRegex = /([、。（）])/g,
     } = this.options;
 
     const elements = document.querySelectorAll(targetSelector);
@@ -86,20 +86,21 @@ export class WrapPunctuationControl extends BaseModuleClass {
    * @param {Function} callback - テキストノードに対して実行するコールバック
    */
   walkTextNodes(node, callback) {
-    const walker = document.createTreeWalker(
-      node,
-      NodeFilter.SHOW_TEXT,
-      {
-        acceptNode: (node) => {
-          // 親要素がscript, style, noscriptタグの場合はスキップ
-          const parent = node.parentElement;
-          if (parent && (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE' || parent.tagName === 'NOSCRIPT')) {
-            return NodeFilter.FILTER_REJECT;
-          }
-          return NodeFilter.FILTER_ACCEPT;
+    const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => {
+        // 親要素がscript, style, noscriptタグの場合はスキップ
+        const parent = node.parentElement;
+        if (
+          parent &&
+          (parent.tagName === 'SCRIPT' ||
+            parent.tagName === 'STYLE' ||
+            parent.tagName === 'NOSCRIPT')
+        ) {
+          return NodeFilter.FILTER_REJECT;
         }
-      }
-    );
+        return NodeFilter.FILTER_ACCEPT;
+      },
+    });
 
     let textNode;
     const textNodes = [];
@@ -113,4 +114,3 @@ export class WrapPunctuationControl extends BaseModuleClass {
     textNodes.forEach(callback);
   }
 }
-

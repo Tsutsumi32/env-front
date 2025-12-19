@@ -1,0 +1,48 @@
+@use '../../utils/' as *;
+
+/******************************************************************
+* block - breadcrumbs
+* パンくずリストブロックコンポーネント
+* 汎用的に使用できるパンくずリストスタイル
+*******************************************************************/
+.bl_breadcrumbs {
+  margin-bottom: s(30);
+
+  &_list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: s(10);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &_item {
+    display: flex;
+    align-items: center;
+  }
+
+  &_link {
+    color: $color_text_secondary;
+    text-decoration: none;
+    font-size: s(14);
+    transition: color 0.3s ease;
+
+    @include hover {
+      color: $color_text_primary;
+    }
+  }
+
+  &_text {
+    color: $color_text_primary;
+    font-size: s(14);
+    font-weight: 500;
+  }
+
+  &_separator {
+    color: $color_text_secondary;
+    margin: 0 s(5);
+    font-size: s(14);
+  }
+}

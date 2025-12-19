@@ -17,11 +17,11 @@ export class BreadCrumbsControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      containerSelector = '.js-bred',
-      itemSelector = '.js-bred-item',
+      containerSelector = '.js_bred',
+      itemSelector = '.js_bredItem',
       itemWrapperClass = '.c-breadcrumbs__item',
       itemSpanClass = 'span',
-      marginOffset = 16
+      marginOffset = 16,
     } = this.options;
 
     const container = document.querySelector(containerSelector);
@@ -72,8 +72,12 @@ export class BreadCrumbsControl extends BaseModuleClass {
     adjustBreadWidth();
 
     // リサイズ時にも再計算
-    window.addEventListener('resize', () => {
-      adjustBreadWidth();
-    }, { signal });
+    window.addEventListener(
+      'resize',
+      () => {
+        adjustBreadWidth();
+      },
+      { signal }
+    );
   }
 }

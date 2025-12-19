@@ -1,61 +1,103 @@
-<!doctype html>
-<html lang="ja">
+<?php
+/**
+ * サンプルサイト - トップページ
+ *
+ * サンプルサイトのトップページです。
+ * ob_start/ob_get_cleanを使用してページコンテンツを取得し、レイアウトに差し込みます。
+ */
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="format-detection" content="telephone=no">
-    <meta name="format-detection" content="address=no">
+// 共通ファイルの読み込み
+require_once __DIR__ . '/includes/init.php';
 
-    <title>Vite App</title>
-    <meta name="description" content="">
+// ページID
+$pageId = PAGE_ID::SAMPLE;
 
-    <!-- font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+// ページコンテンツを取得
+ob_start();
+?>
 
-    <!-- favicon -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-on.png" />
+<section id="top" class="ly_section">
+    <div class="ly_container">
+        <?php include __DIR__ . '/includes/modules/breadcrumbs.php'; ?>
 
-    <!-- ogp -->
-    <meta property="og:title" content="">
-    <meta property="og:description" content="">
-    <meta property="og:image" content="https://xxxxxxxx/ogp.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:alt" content="">
-    <!-- 記事コンテンツ -->
-    <!-- <meta property="og:type" content="article"> -->
-    <meta property="og:type" content="website">
-    <!-- サイトURL -->
-    <meta property="og:url" content="">
-    <meta property="og:site_name" content="">
+        <div class="un_hero">
+            <h1 class="un_hero_title">Welcome to Sample Site</h1>
+            <p class="un_hero_description">サンプルサイトへようこそ</p>
+            <div class="un_hero_actions">
+                <a href="/about.php" class="el_btn el_btn__primary">Aboutを見る</a>
+            </div>
+        </div>
 
-    <!-- theme-color -->
-    <meta name="theme-color" content="#E2EBE6">
+        <div class="un_feature">
+            <h2 class="un_feature_title">Feature</h2>
+            <div class="un_feature_list">
+                <div class="un_feature_item">
+                    <div class="un_feature_icon">✨</div>
+                    <h3 class="un_feature_itemTitle">Feature 1</h3>
+                    <p class="un_feature_itemText">サンプル機能の説明です。ここに詳しい説明が入ります。</p>
+                    <a href="/works.php" class="el_btn el_btn__outline el_btn__small">詳細を見る</a>
+                </div>
+                <div class="un_feature_item">
+                    <div class="un_feature_icon">🚀</div>
+                    <h3 class="un_feature_itemTitle">Feature 2</h3>
+                    <p class="un_feature_itemText">サンプル機能の説明です。ここに詳しい説明が入ります。</p>
+                    <a href="/works.php" class="el_btn el_btn__outline el_btn__small">詳細を見る</a>
+                </div>
+                <div class="un_feature_item">
+                    <div class="un_feature_icon">💡</div>
+                    <h3 class="un_feature_itemTitle">Feature 3</h3>
+                    <p class="un_feature_itemText">サンプル機能の説明です。ここに詳しい説明が入ります。</p>
+                    <a href="/works.php" class="el_btn el_btn__outline el_btn__small">詳細を見る</a>
+                </div>
+            </div>
+        </div>
 
-    <!-- css common -->
-    <link rel="stylesheet" href="./dist/css/common.css">
-    <!-- css page -->
-    <link rel="stylesheet" href="./dist/css/page.css">
+        <div class="un_accordionSection">
+            <h2 class="un_accordionSection_title">FAQ</h2>
+            <div class="un_accordionSection_list">
+                <div class="un_accordion js_accordionParent">
+                    <button type="button" class="un_accordion_btn js_accordionBtn">
+                        <span class="un_accordion_btnText">よくある質問1</span>
+                        <span class="un_accordion_btnIcon">+</span>
+                    </button>
+                    <div class="un_accordion_contents js_accordionContents">
+                        <div class="un_accordion_inner">
+                            <p class="un_accordion_text">回答内容がここに入ります。回答内容がここに入ります。回答内容がここに入ります。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="un_accordion js_accordionParent">
+                    <button type="button" class="un_accordion_btn js_accordionBtn">
+                        <span class="un_accordion_btnText">よくある質問2</span>
+                        <span class="un_accordion_btnIcon">+</span>
+                    </button>
+                    <div class="un_accordion_contents js_accordionContents">
+                        <div class="un_accordion_inner">
+                            <p class="un_accordion_text">回答内容がここに入ります。回答内容がここに入ります。回答内容がここに入ります。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="un_accordion js_accordionParent">
+                    <button type="button" class="un_accordion_btn js_accordionBtn">
+                        <span class="un_accordion_btnText">よくある質問3</span>
+                        <span class="un_accordion_btnIcon">+</span>
+                    </button>
+                    <div class="un_accordion_contents js_accordionContents">
+                        <div class="un_accordion_inner">
+                            <p class="un_accordion_text">回答内容がここに入ります。回答内容がここに入ります。回答内容がここに入ります。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <!-- js -->
-    <script type="module" src="./dist/js/top.js" defer></script>
-</head>
+<?php
+$pageContents = ob_get_clean();
 
-<body class="is_nojs">
-    <header class="header"></header>
-    <main class="ly_main">
-        <section id="top" class="ly_section">
-            <div class="ly_container"></div>
-            <p class="test hp_hidden_pc_tab">サンプルソースサンプルソースサンプルソースサンプルソースサンプルソースサンプルソースサンプルソースサンプルソースサンプルソースサンプルソースサンプルソースサン</p>
-        </section>
-    </main>
-    <footer class="footer"></footer>
-</body>
+// ベースレイアウトを読み込み（init.phpとhead.phpも読み込まれる）
+// CSS/JSファイルはbase.phpでページIDから自動的に読み込まれます
+include __DIR__ . '/includes/layouts/base.php';
+?>
 
-</html>

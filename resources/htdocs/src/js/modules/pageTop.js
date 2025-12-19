@@ -4,8 +4,8 @@ import { setUpScrollTrigger } from '../utils/setUpScrollTrigger.js';
 
 /**
  * ページトップボタン制御クラス
- * @requires .js-page-top - ページトップボタン
- * @requires .js-mv - メインビジュアル要素
+ * @requires .js_pageTop - ページトップボタン
+ * @requires .js_mv - メインビジュアル要素
  */
 export class PageTopControl extends BaseModuleClass {
   /**
@@ -17,14 +17,14 @@ export class PageTopControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      pageTopSelector = '.js-page-top',
-      mvSelector = '.js-mv',
-      startSelector = '.js-mv',
+      pageTopSelector = '.js_pageTop',
+      mvSelector = '.js_mv',
+      startSelector = '.js_mv',
       mode = 'scroll',
       anchor = { position: 'top', offset: 0 },
       startAnchor = { position: 'bottom', offset: 0 },
       rangeMode = 'after',
-      once = false
+      once = false,
     } = this.options;
 
     const pageTop = document.querySelector(pageTopSelector);
@@ -68,4 +68,3 @@ export class PageTopControl extends BaseModuleClass {
     );
   }
 }
-

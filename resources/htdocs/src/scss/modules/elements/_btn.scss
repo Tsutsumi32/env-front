@@ -1,0 +1,59 @@
+@use '../../utils/' as *;
+
+/******************************************************************
+* element - btn
+* ボタン要素コンポーネント
+* 汎用的に使用できるボタンスタイル
+*******************************************************************/
+.el_btn {
+  display: inline-block;
+  padding: s(12) s(24);
+  font-size: s(16);
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid $color_border_primary;
+  border-radius: s(8);
+  background-color: $color_bg_base;
+  color: $color_text_primary;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  @include hover {
+    background-color: $color_accent_primary;
+    color: $color_hover;
+    border-color: $color_accent_primary;
+  }
+
+  &__primary {
+    background-color: $color_accent_primary;
+    color: $color_base_white;
+    border-color: $color_accent_primary;
+
+    @include hover {
+      background-color: $color_accent_hover;
+      border-color: $color_accent_hover;
+    }
+  }
+
+  &__outline {
+    background-color: transparent;
+    border-color: $color_border_primary;
+    color: $color_text_primary;
+
+    @include hover {
+      background-color: $color_bg_hover;
+      border-color: $color_border_primary;
+    }
+  }
+
+  &__small {
+    padding: s(8) s(16);
+    font-size: s(14);
+  }
+
+  &__large {
+    padding: s(16) s(32);
+    font-size: s(18);
+  }
+}

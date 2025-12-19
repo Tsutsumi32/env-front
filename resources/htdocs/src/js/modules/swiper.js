@@ -61,13 +61,13 @@ export function swiperBreakPoints({ sp, tab = sp, pc = sp, ...customBreakpoints 
  * Swiper制御クラス
  * @example
  * // 通常のスライダー
- * new SwiperControl('.js-swiper', {
+ * new SwiperControl('.js_swiper', {
  *   breakpoints: swiperBreakPoints({ sp: { slidesPerView: 2 } }),
  *   speed: 600,
  * });
  *
  * // 無限ループのテキストスクロールスライダー
- * new SwiperControl('.js-textScroll', {
+ * new SwiperControl('.js_textScroll', {
  *   mode: 'linear',
  *   speed: 15000,
  *   allowTouchMove: false,
@@ -101,12 +101,12 @@ export class SwiperControl extends BaseModuleClass {
   initNormalSlider(element, { bag, signal }, options) {
     const {
       classNames = {
-        parent: '.js-swiper-parent',
+        parent: '.js_swiperParent',
         slide: '.swiper-slide',
         wrapper: '.swiper-wrapper',
-        next: '.js-swiper-next',
-        prev: '.js-swiper-prev',
-        pagination: '.js-swiper-pagination',
+        next: '.js_swiperNext',
+        prev: '.js_swiperPrev',
+        pagination: '.js_swiperPagination',
       },
       breakpoints = {},
       ...swiperOptions
