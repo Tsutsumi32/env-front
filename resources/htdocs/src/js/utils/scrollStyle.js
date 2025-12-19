@@ -217,9 +217,13 @@ function createVerticalScrollbar(element, style, signal) {
 
     // signalでResizeObserverをクリーンアップ
     if (signal) {
-      signal.addEventListener('abort', () => {
-        resizeObserver.disconnect();
-      }, { once: true });
+      signal.addEventListener(
+        'abort',
+        () => {
+          resizeObserver.disconnect();
+        },
+        { once: true }
+      );
     }
   }
 }
@@ -313,9 +317,13 @@ function createHorizontalScrollbar(element, style, signal) {
 
     // signalでResizeObserverをクリーンアップ
     if (signal) {
-      signal.addEventListener('abort', () => {
-        resizeObserver.disconnect();
-      }, { once: true });
+      signal.addEventListener(
+        'abort',
+        () => {
+          resizeObserver.disconnect();
+        },
+        { once: true }
+      );
     }
   }
 }
@@ -367,7 +375,9 @@ export function watchScrollableElements(targetSelector = 'body', options = {}) {
   // 監視対象の要素を取得
   const target = document.querySelector(targetSelector);
   if (!target) {
-    console.warn(`スクロールバー: セレクタ "${targetSelector}" に一致する要素が見つかりませんでした`);
+    console.warn(
+      `スクロールバー: セレクタ "${targetSelector}" に一致する要素が見つかりませんでした`
+    );
     return null;
   }
 
@@ -378,7 +388,8 @@ export function watchScrollableElements(targetSelector = 'body', options = {}) {
 
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
-        if (node.nodeType === 1) { // Element node
+        if (node.nodeType === 1) {
+          // Element node
           // 追加された要素が監視対象のセレクタに一致する場合
           if (node.matches && node.matches(watchSelector)) {
             createScrollbarInternal(node, style, watchSelector, signal);
@@ -402,9 +413,13 @@ export function watchScrollableElements(targetSelector = 'body', options = {}) {
 
   // signalでMutationObserverをクリーンアップ
   if (signal) {
-    signal.addEventListener('abort', () => {
-      mutationObserver.disconnect();
-    }, { once: true });
+    signal.addEventListener(
+      'abort',
+      () => {
+        mutationObserver.disconnect();
+      },
+      { once: true }
+    );
   }
 
   return mutationObserver;
