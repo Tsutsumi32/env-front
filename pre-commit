@@ -1,7 +1,16 @@
 #!/bin/sh
-# コミット前にprettierとeslintのfixを実行（コンテナ内で実行）
+#
+# Git pre-commit hook
+# コミット前にステージングされたJS/SCSSファイルに対して
+# prettierとeslintを実行してコードを自動整形・修正します
+# （Dockerコンテナ内で実行）
+#
 
-# プロジェクトルートを取得
+# ============================================================================
+# 初期設定
+# ============================================================================
+
+# プロジェクトルートディレクトリを取得
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 cd "$ROOT_DIR" || exit 1
 
@@ -16,24 +25,30 @@ else
   exit 1
 fi
 
+# ============================================================================
+# 環境変数の読み込み
+# ============================================================================
+
 # .envファイルから環境変数を読み込む
 if [ -f "$COMPOSE_DIR/.env" ]; then
-  # .envファイルを読み込む（コメント行と空行を除外）
   set -a
   . "$COMPOSE_DIR/.env"
   set +a
 fi
 
-# Docker Composeサービス名（環境変数から取得、未設定の場合はfrontendをデフォルト値として使用）
+# Docker Composeサービス名（環境変数から取得、未設定時はfrontendをデフォルト値として使用）
 SERVICE="${SERVICE:-frontend}"
 
-# プロジェクト名（環境変数から取得、未設定の場合はsample_hpをデフォルト値として使用）
+# プロジェクト名（環境変数から取得、未設定時はsample_hpをデフォルト値として使用）
 PROJECT_NAME="${PROJECT_NAME:-sample_hp}"
 
-# コンテナ名（環境変数から構築）
+# コンテナ名を構築（形式: ${PROJECT_NAME}_${SERVICE}）
 CONTAINER_NAME="${PROJECT_NAME}_${SERVICE}"
 
-# docker-compose.ymlがあるディレクトリに移動してから実行
+# ============================================================================
+# Dockerコンテナの起動確認
+# ============================================================================
+
 cd "$COMPOSE_DIR" || exit 1
 
 # コンテナが起動しているか確認
@@ -43,26 +58,25 @@ if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${CONTAINER_NAME}$"
   sleep 2
 fi
 
-# 元のルートディレクトリに戻る
 cd "$ROOT_DIR" || exit 1
 
-# ステージングされたファイルを取得
+# ============================================================================
+# ステージングされたファイルの取得と分類
+# ============================================================================
+
+# ステージングされたファイル一覧を取得（追加・変更・マージされたファイルのみ）
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
 
-echo "🔍 Debug: Staged files: $STAGED_FILES"
-
+# ステージングされたファイルがない場合は終了
 if [ -z "$STAGED_FILES" ]; then
-  echo "🔍 Debug: No staged files"
   exit 0
 fi
 
-# JSファイルとSCSSファイルを抽出
+# JSファイルとSCSSファイルを分類
 JS_FILES=""
 SCSS_FILES=""
 
 for file in $STAGED_FILES; do
-  echo "🔍 Debug: Checking file: $file"
-  
   # dev-front/プレフィックスを削除して相対パスを取得
   case "$file" in
     dev-front/*)
@@ -73,24 +87,25 @@ for file in $STAGED_FILES; do
       ;;
   esac
   
-  # JSファイル（resources/htdocs/src/js/配下）
+  # JSファイル（resources/htdocs/src/js/配下）を抽出
   if echo "$relative_file" | grep -q "^resources/htdocs/src/js/.*\.js$"; then
     JS_FILES="$JS_FILES $file"
-    echo "🔍 Debug: Added JS file: $file"
   fi
   
-  # SCSSファイル（resources/htdocs/src/scss/配下）
+  # SCSSファイル（resources/htdocs/src/scss/配下）を抽出
   if echo "$relative_file" | grep -q "^resources/htdocs/src/scss/.*\.scss$"; then
     SCSS_FILES="$SCSS_FILES $file"
-    echo "🔍 Debug: Added SCSS file: $file"
   fi
 done
 
-# prettierでSCSSファイルを整形（コンテナ内で実行）
+# ============================================================================
+# SCSSファイルの整形処理
+# ============================================================================
+
 if [ -n "$SCSS_FILES" ]; then
-  echo "🔧 Running prettier on SCSS files (in container)..."
+  echo "🔧 SCSSファイルを整形中..."
   for file in $SCSS_FILES; do
-    # 相対パスを取得（コンテナ内のパスに変換）
+    # コンテナ内のパスに変換（dev-front/プレフィックスを削除）
     case "$file" in
       dev-front/*)
         relative_file="${file#dev-front/resources/}"
@@ -99,21 +114,24 @@ if [ -n "$SCSS_FILES" ]; then
         relative_file="${file#resources/}"
         ;;
     esac
-    echo "🔍 Debug: Formatting: $relative_file"
-    # コンテナ名を直接指定して実行
+    
+    # コンテナ内でprettierを実行してファイルを整形
     docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
-    # 元のパスでgit add
+    
+    # 整形後のファイルをステージングに追加
     git add "$file"
   done
-else
-  echo "🔍 Debug: No SCSS files to format"
 fi
 
-# prettierとeslintでJSファイルを整形・修正（コンテナ内で実行）
+# ============================================================================
+# JSファイルの整形・修正処理
+# ============================================================================
+
 if [ -n "$JS_FILES" ]; then
-  echo "🔧 Running prettier on JS files (in container)..."
+  # prettierでJSファイルを整形
+  echo "🔧 JSファイルを整形中..."
   for file in $JS_FILES; do
-    # 相対パスを取得（コンテナ内のパスに変換）
+    # コンテナ内のパスに変換（dev-front/プレフィックスを削除）
     case "$file" in
       dev-front/*)
         relative_file="${file#dev-front/resources/}"
@@ -122,14 +140,18 @@ if [ -n "$JS_FILES" ]; then
         relative_file="${file#resources/}"
         ;;
     esac
-    # コンテナ名を直接指定して実行
+    
+    # コンテナ内でprettierを実行してファイルを整形
     docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
+    
+    # 整形後のファイルをステージングに追加
     git add "$file"
   done
   
-  echo "🔧 Running eslint --fix on JS files (in container)..."
+  # eslintでJSファイルを修正
+  echo "🔧 JSファイルをESLintで修正中..."
   for file in $JS_FILES; do
-    # 相対パスを取得（コンテナ内のパスに変換）
+    # コンテナ内のパスに変換（dev-front/プレフィックスを削除）
     case "$file" in
       dev-front/*)
         relative_file="${file#dev-front/resources/}"
@@ -138,12 +160,13 @@ if [ -n "$JS_FILES" ]; then
         relative_file="${file#resources/}"
         ;;
     esac
-    # コンテナ名を直接指定して実行
+    
+    # コンテナ内でeslint --fixを実行して自動修正
     docker exec "${CONTAINER_NAME}" npx eslint --fix "/var/www/resources/${relative_file}" || exit 1
+    
+    # 修正後のファイルをステージングに追加
     git add "$file"
   done
-else
-  echo "🔍 Debug: No JS files to format"
 fi
 
 exit 0
