@@ -15,7 +15,7 @@
 body {
   border: 10px solid $color_base_black;
   background-color: lightgray;
-  @include media($bp_pcL     ) {
+  @include media($bp_pcL) {
     border-color: yellow;
   }
 }
