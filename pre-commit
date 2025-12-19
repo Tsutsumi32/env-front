@@ -16,14 +16,28 @@ else
   exit 1
 fi
 
-# Docker Composeサービス名
-SERVICE="frontend"
+# .envファイルから環境変数を読み込む
+if [ -f "$COMPOSE_DIR/.env" ]; then
+  # .envファイルを読み込む（コメント行と空行を除外）
+  set -a
+  . "$COMPOSE_DIR/.env"
+  set +a
+fi
+
+# Docker Composeサービス名（環境変数から取得、未設定の場合はfrontendをデフォルト値として使用）
+SERVICE="${SERVICE:-frontend}"
+
+# プロジェクト名（環境変数から取得、未設定の場合はsample_hpをデフォルト値として使用）
+PROJECT_NAME="${PROJECT_NAME:-sample_hp}"
+
+# コンテナ名（環境変数から構築）
+CONTAINER_NAME="${PROJECT_NAME}_${SERVICE}"
 
 # docker-compose.ymlがあるディレクトリに移動してから実行
 cd "$COMPOSE_DIR" || exit 1
 
 # コンテナが起動しているか確認
-if ! docker compose ps --services --filter "status=running" 2>/dev/null | grep -q "^${SERVICE}$"; then
+if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${CONTAINER_NAME}$"; then
   echo "⚠️  Dockerコンテナが起動していません。起動中..."
   docker compose up -d "${SERVICE}" || exit 1
   sleep 2
@@ -86,8 +100,8 @@ if [ -n "$SCSS_FILES" ]; then
         ;;
     esac
     echo "🔍 Debug: Formatting: $relative_file"
-    # docker-compose.ymlがあるディレクトリで実行
-    (cd "$COMPOSE_DIR" && docker compose exec -T "${SERVICE}" npx prettier --write "/var/www/resources/${relative_file}") || exit 1
+    # コンテナ名を直接指定して実行
+    docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
     # 元のパスでgit add
     git add "$file"
   done
@@ -108,8 +122,8 @@ if [ -n "$JS_FILES" ]; then
         relative_file="${file#resources/}"
         ;;
     esac
-    # docker-compose.ymlがあるディレクトリで実行
-    (cd "$COMPOSE_DIR" && docker compose exec -T "${SERVICE}" npx prettier --write "/var/www/resources/${relative_file}") || exit 1
+    # コンテナ名を直接指定して実行
+    docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
     git add "$file"
   done
   
@@ -124,8 +138,8 @@ if [ -n "$JS_FILES" ]; then
         relative_file="${file#resources/}"
         ;;
     esac
-    # docker-compose.ymlがあるディレクトリで実行
-    (cd "$COMPOSE_DIR" && docker compose exec -T "${SERVICE}" npx eslint --fix "/var/www/resources/${relative_file}") || exit 1
+    # コンテナ名を直接指定して実行
+    docker exec "${CONTAINER_NAME}" npx eslint --fix "/var/www/resources/${relative_file}" || exit 1
     git add "$file"
   done
 else
