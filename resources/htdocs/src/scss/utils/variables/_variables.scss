@@ -116,7 +116,8 @@ $style-settings: (
       'base-size': 1,
       'viewport-base': $design_size_sp,
       // SPのリキッド基準点
-      'fixed-width': map.get($breakpoints, $bp_tab), // TABの時点で固定化
+      'fixed-width': map.get($breakpoints, $bp_tab),
+      // TABの時点で固定化
     ),
   #{$bp_tabL}: (
       'type': 'responsive',
@@ -463,9 +464,11 @@ $font-configs: (
 *******************************************************************/
 @function get-font-family($font-key) {
   $config: map.get($font-configs, $font-key);
-  @if $config == null {
+
+  @if $config ==null {
     @error "Font key '#{$font-key}' not found in $font-configs.";
   }
+
   @return map.get($config, 'family');
 }
 
@@ -477,9 +480,11 @@ $font-configs: (
 *******************************************************************/
 @function get-font-fallback($font-key) {
   $config: map.get($font-configs, $font-key);
-  @if $config == null {
+
+  @if $config ==null {
     @error "Font key '#{$font-key}' not found in $font-configs.";
   }
+
   @return map.get($config, 'fallback');
 }
 

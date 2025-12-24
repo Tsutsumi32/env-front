@@ -43,9 +43,7 @@
   }
 
   &_nav {
-    @include media($bp_tab) {
-      display: none;
-    }
+    display: none;
   }
 
   &_navList {

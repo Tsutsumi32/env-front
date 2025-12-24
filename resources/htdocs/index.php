@@ -22,7 +22,7 @@ ob_start();
 
         <div class="un_hero">
             <h1 class="un_hero_title">Welcome to Sample Site</h1>
-            <p class="un_hero_description">サンプルサイトへようこそ</p>
+            <p class="un_hero_description">サンプルサイトへようこそ<br></p>
             <div class="un_hero_actions">
                 <a href="/about.php" class="el_btn el_btn__primary">Aboutを見る</a>
             </div>
