@@ -111,13 +111,18 @@ $style-settings: (
     'base-size': 1,
     'viewport-base': $design_size_sp,
   ),
+  // #{$bp_tab}: (
+  //     'type': 'fixed',
+  //     'base-size': 1,
+  //     'viewport-base': $design_size_sp,
+  //     // SPのリキッド基準点
+  //     'fixed-width': map.get($breakpoints, $bp_tab),
+  //     // TABの時点で固定化
+  //   ),
   #{$bp_tab}: (
-      'type': 'fixed',
+      'type': 'responsive',
       'base-size': 1,
-      'viewport-base': $design_size_sp,
-      // SPのリキッド基準点
-      'fixed-width': map.get($breakpoints, $bp_tab),
-      // TABの時点で固定化
+      'viewport-base': $font-s_base,
     ),
   #{$bp_tabL}: (
       'type': 'responsive',
