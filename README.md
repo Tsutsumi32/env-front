@@ -173,6 +173,10 @@ env-front/
 
 **変換防止**: `npm run meta:convert-images`でメタファイルを更新し、変換対象から除外可能
 
+**設定**
+- 各種画像の出力有無やクオリティに関しては、build-config.jsにて制御
+- .jpeg,.JPG等は.jpgに統一出力。.PNGは.pngに統一出力。
+
 ---
 
 ## ブラウザシンク
