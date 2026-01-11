@@ -7,13 +7,14 @@
 * section　section余白を設定する
 * @param $_type 大きさのタイプ（_variables.scssの$section-sizesで定義）
 * @param $_margin padding(pd)・margin(mg)
+* @param $_position 位置指定（both: 上下両方, top: 上だけ, bottom: 下だけ）
 * $media_query_strategy で 'sp-first' または 'pc-first' を切り替え可能
 *   - 'sp-first': SPをデフォルト、大きい画面で上書き
 *   - 'pc-first': PCをデフォルト、小さい画面で上書き
 *
 * $section-sizesのキー名は$breakpointsのキー名と統一されています
 *******************************************************************/
-@mixin section($_type: 'normal', $_margin: 'pd') {
+@mixin section($_type: 'normal', $_margin: 'pd', $_position: 'both') {
   // $section-sizesから指定されたタイプのサイズを取得
   @if not map.has-key($section-sizes, $_type) {
     @error "section(): 指定されたタイプ '#{$_type}' は $section-sizes に定義されていません。";
@@ -31,9 +32,21 @@
   @if $media_query_strategy == 'sp-first' {
     // デフォルト値を設定（メディアクエリなし）
     @if $_margin == 'mg' {
-      margin-block: s($_size-default);
+      @if $_position == 'top' {
+        margin-top: s($_size-default);
+      } @else if $_position == 'bottom' {
+        margin-bottom: s($_size-default);
+      } @else {
+        margin-block: s($_size-default);
+      }
     } @else {
-      padding-block: s($_size-default);
+      @if $_position == 'top' {
+        padding-top: s($_size-default);
+      } @else if $_position == 'bottom' {
+        padding-bottom: s($_size-default);
+      } @else {
+        padding-block: s($_size-default);
+      }
     }
 
     // $breakpointsの各キーを順番に処理（小さい方から）
@@ -42,9 +55,21 @@
       @if $_size-value != null {
         @include media($breakpoint-key) {
           @if $_margin == 'mg' {
-            margin-block: s($_size-value);
+            @if $_position == 'top' {
+              margin-top: s($_size-value);
+            } @else if $_position == 'bottom' {
+              margin-bottom: s($_size-value);
+            } @else {
+              margin-block: s($_size-value);
+            }
           } @else {
-            padding-block: s($_size-value);
+            @if $_position == 'top' {
+              padding-top: s($_size-value);
+            } @else if $_position == 'bottom' {
+              padding-bottom: s($_size-value);
+            } @else {
+              padding-block: s($_size-value);
+            }
           }
         }
       }
@@ -53,9 +78,21 @@
     // PCファーストの場合
     // デフォルト値を設定（メディアクエリなし）
     @if $_margin == 'mg' {
-      margin-block: s($_size-default);
+      @if $_position == 'top' {
+        margin-top: s($_size-default);
+      } @else if $_position == 'bottom' {
+        margin-bottom: s($_size-default);
+      } @else {
+        margin-block: s($_size-default);
+      }
     } @else {
-      padding-block: s($_size-default);
+      @if $_position == 'top' {
+        padding-top: s($_size-default);
+      } @else if $_position == 'bottom' {
+        padding-bottom: s($_size-default);
+      } @else {
+        padding-block: s($_size-default);
+      }
     }
 
     // $breakpointsの各キーを逆順に処理（大きい方から）
@@ -66,9 +103,21 @@
       @if $_size-value != null {
         @include media($breakpoint-key) {
           @if $_margin == 'mg' {
-            margin-block: s($_size-value);
+            @if $_position == 'top' {
+              margin-top: s($_size-value);
+            } @else if $_position == 'bottom' {
+              margin-bottom: s($_size-value);
+            } @else {
+              margin-block: s($_size-value);
+            }
           } @else {
-            padding-block: s($_size-value);
+            @if $_position == 'top' {
+              padding-top: s($_size-value);
+            } @else if $_position == 'bottom' {
+              padding-bottom: s($_size-value);
+            } @else {
+              padding-block: s($_size-value);
+            }
           }
         }
       }
