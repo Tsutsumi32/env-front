@@ -33,16 +33,16 @@
 /* hover時　カラースタイル
 ----------------------------------------------------------------- */
 @mixin hover-color() {
-  transition: color $transition_normal;
+  transition: color get-transition(normal);
   @include hover {
-    color: colors($color_hover);
+    color: colors(get-color('ui', 'hover'));
   }
 }
 
 /* hover時　透過スタイル
 ----------------------------------------------------------------- */
 @mixin hover-opacity() {
-  transition: opacity $transition_normal;
+  transition: opacity get-transition(normal);
   @include hover {
     opacity: 0.8;
   }

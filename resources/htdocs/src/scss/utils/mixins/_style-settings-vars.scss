@@ -38,18 +38,27 @@
     } @else if $_default-type == 'responsive' {
       // $min_layout_width以下ではvw、それ以上ではrem
       $_min-layout-width-stripped: strip-unit($min_layout_width);
-      --liq-unit: min(calc(#{$_default-base-value} / #{$_min-layout-width-stripped} * 100vw), calc(#{$_default-base-value} / #{strip-unit($font-s_base)} * 1rem));
+      --liq-unit: min(
+        calc(#{$_default-base-value} / #{$_min-layout-width-stripped} * 100vw),
+        calc(#{$_default-base-value} / #{strip-unit($font-s_base)} * 1rem)
+      );
     } @else if $_default-type == 'fixed' {
       $_default-fixed-width: map.get($_default, 'fixed-width');
       $_default-fixed-width-stripped: strip-unit($_default-fixed-width);
       $_font-s-base-stripped: strip-unit($font-s_base);
       // vw-to-pixelの計算式を展開してremに変換
-      --liq-unit: calc(#{$_default-base-value} / #{$_default-viewport-base-stripped} * #{$_default-fixed-width-stripped} / #{$_font-s-base-stripped} * 1rem);
+      --liq-unit: calc(
+        #{$_default-base-value} /
+          #{$_default-viewport-base-stripped} *
+          #{$_default-fixed-width-stripped} /
+          #{$_font-s-base-stripped} *
+          1rem
+      );
     }
     // type='none'の場合は何もしない（前の値を継承）
 
     // 各ブレイクポイントを$breakpointsマップから動的に処理
-    @each $key, $break-value in $breakpoints {
+    @each $key, $_break-value in $breakpoints {
       @if map.has-key($style-settings, $key) {
         @include media($key) {
           $_setting: map.get($style-settings, $key);
@@ -74,12 +83,21 @@
             } @else if $_type == 'responsive' {
               // $min_layout_width以下ではvw、それ以上ではrem
               $_min-layout-width-stripped: strip-unit($min_layout_width);
-              --liq-unit: min(calc(#{$_base-value} / #{$_min-layout-width-stripped} * 100vw), calc(#{$_base-value} / #{strip-unit($font-s_base)} * 1rem));
+              --liq-unit: min(
+                calc(#{$_base-value} / #{$_min-layout-width-stripped} * 100vw),
+                calc(#{$_base-value} / #{strip-unit($font-s_base)} * 1rem)
+              );
             } @else if $_type == 'fixed' {
               $_fixed-width-stripped: strip-unit($_fixed-width);
               $_font-s-base-stripped: strip-unit($font-s_base);
               // vw-to-pixelの計算式を展開してremに変換
-              --liq-unit: calc(#{$_base-value} / #{$_viewport-base-stripped} * #{$_fixed-width-stripped} / #{$_font-s-base-stripped} * 1rem);
+              --liq-unit: calc(
+                #{$_base-value} /
+                  #{$_viewport-base-stripped} *
+                  #{$_fixed-width-stripped} /
+                  #{$_font-s-base-stripped} *
+                  1rem
+              );
             }
           }
         }
@@ -87,4 +105,3 @@
     }
   }
 }
-

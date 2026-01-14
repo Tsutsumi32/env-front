@@ -7,24 +7,24 @@
 *  例) strip-unit(32px) → 32
 *  例) strip-unit(32px, 1rem) → 2rem
 *******************************************************************/
-@function strip-unit($value, $unit: null) {
+@function strip-unit($_value, $_unit: null) {
   // 単位除去は math.div を使用
-  $n: null;
-  @if math.is-unitless($value) {
-    $n: $value;
+  $_n: null;
+  @if math.is-unitless($_value) {
+    $_n: $_value;
   } @else {
-    $n: math.div($value, ($value * 0 + 1));
+    $_n: math.div($_value, ($_value * 0 + 1));
   }
 
-  @if $unit == null {
-    @return $n;
+  @if $_unit == null {
+    @return $_n;
   }
 
   // ここを meta.type-of に
-  @if meta.type-of($unit) != 'number' or math.is-unitless($unit) {
+  @if meta.type-of($_unit) != 'number' or math.is-unitless($_unit) {
     @error 'strip-unit(): The second argument must be a number with a unit, e.g. 1px, 1rem, or 1%.';
   }
 
-  $unit-one: math.div($unit, strip-unit($unit));
-  @return $n * $unit-one;
+  $_unit-one: math.div($_unit, strip-unit($_unit));
+  @return $_n * $_unit-one;
 }

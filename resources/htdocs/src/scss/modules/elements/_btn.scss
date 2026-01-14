@@ -12,38 +12,38 @@
   font-weight: 500;
   text-align: center;
   text-decoration: none;
-  border: 1px solid $color_border_primary;
+  border: 1px solid get-color('border', 'primary');
   border-radius: s(8);
-  background-color: $color_bg_base;
-  color: $color_text_primary;
+  background-color: get-color('bg', 'base');
+  color: get-color('text', 'primary');
   cursor: pointer;
   transition: all 0.3s ease;
 
   @include hover {
-    background-color: $color_accent_primary;
-    color: $color_hover;
-    border-color: $color_accent_primary;
+    background-color: get-color('accent', 'primary');
+    color: get-color('ui', 'hover');
+    border-color: get-color('accent', 'primary');
   }
 
   &__primary {
-    background-color: $color_accent_primary;
-    color: $color_base_white;
-    border-color: $color_accent_primary;
+    background-color: get-color('accent', 'primary');
+    color: get-color('base', 'white');
+    border-color: get-color('accent', 'primary');
 
     @include hover {
-      background-color: $color_accent_hover;
-      border-color: $color_accent_hover;
+      background-color: get-color('accent', 'hover');
+      border-color: get-color('accent', 'hover');
     }
   }
 
   &__outline {
     background-color: transparent;
-    border-color: $color_border_primary;
-    color: $color_text_primary;
+    border-color: get-color('border', 'primary');
+    color: get-color('text', 'primary');
 
     @include hover {
-      background-color: $color_bg_hover;
-      border-color: $color_border_primary;
+      background-color: get-color('bg', 'hover');
+      border-color: get-color('border', 'primary');
     }
   }
 

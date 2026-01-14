@@ -22,19 +22,19 @@
   &_title {
     font-size: s(32);
     font-weight: 700;
-    color: $color_text_primary;
+    color: get-color('text', 'primary');
     margin-bottom: s(15);
 
-    @include media($bp_tab) {
+    @include media(get-breakpoint-key('tab')) {
       font-size: s(40);
     }
   }
 
   &_description {
     font-size: s(18);
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
 
-    @include media($bp_tab) {
+    @include media(get-breakpoint-key('tab')) {
       font-size: s(20);
     }
   }
@@ -50,13 +50,13 @@
   &_title {
     font-size: s(24);
     font-weight: 600;
-    color: $color_text_primary;
+    color: get-color('text', 'primary');
     margin-bottom: s(20);
   }
 
   &_text {
     font-size: s(16);
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     line-height: 1.8;
   }
 
@@ -68,9 +68,9 @@
 
   &_listItem {
     font-size: s(16);
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     padding: s(10) 0;
-    border-bottom: 1px solid $color_tag_border;
+    border-bottom: 1px solid get-color('border', 'tag');
 
     &:last-child {
       border-bottom: none;

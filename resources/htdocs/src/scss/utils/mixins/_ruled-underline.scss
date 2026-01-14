@@ -14,25 +14,25 @@
 *  例) @include ruled-underline(#000, 0.4, 5px, 10px, 1px, 3px, 1.8, -1);
 *******************************************************************/
 @mixin ruled-underline(
-  $color: #000,
-  $alpha: 0.4,
-  $dash-on: 5px,
-  $dash-off: 10px,
-  $thickness: 1px,
-  $offset: 3px,
-  $line-height: 1.8,
-  $z-index: -1
+  $_color: #000,
+  $_alpha: 0.4,
+  $_dash-on: 5px,
+  $_dash-off: 10px,
+  $_thickness: 1px,
+  $_offset: 3px,
+  $_line-height: 1.8,
+  $_z-index: -1
 ) {
   // 色の最終値（Sass カラー or CSS 変数 "R,G,B" のどちらにも対応）
-  $fill-color: null;
-  @if type-of($color) == 'color' {
-    $fill-color: rgba($color, $alpha);
+  $_fill-color: null;
+  @if type-of($_color) == 'color' {
+    $_fill-color: rgba($_color, $_alpha);
   } @else {
-    $fill-color: unquote('rgba(#{$color}, #{$alpha})');
+    $_fill-color: unquote('rgba(#{$_color}, #{$_alpha})');
   }
 
-  line-height: $line-height;
-  padding-bottom: $offset; // 下線分の空きを確保
+  line-height: $_line-height;
+  padding-bottom: $_offset; // 下線分の空きを確保
   position: relative;
   isolation: isolate; // 独立スタッキング → z-index:-1 を安全に運用
 
@@ -41,13 +41,13 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: $z-index;
+    z-index: $_z-index;
 
     // 横方向の破線パターン
     background-image: repeating-linear-gradient(
       to right,
-      #{$fill-color} 0 #{$dash-on},
-      transparent #{$dash-on} calc(#{$dash-on} + #{$dash-off})
+      #{$_fill-color} 0 #{$_dash-on},
+      transparent #{$_dash-on} calc(#{$_dash-on} + #{$_dash-off})
     );
     background-position: left top;
     background-repeat: repeat-y;
@@ -56,20 +56,20 @@
     // 各タイルの最下部だけ見せる（= 下線の帯だけ）
     -webkit-mask-image: linear-gradient(
       to bottom,
-      transparent calc(1lh - #{$offset} - #{$thickness}),
-      #000 calc(1lh - #{$offset} - #{$thickness}),
-      #000 calc(1lh - #{$offset}),
-      transparent calc(1lh - #{$offset})
+      transparent calc(1lh - #{$_offset} - #{$_thickness}),
+      #000 calc(1lh - #{$_offset} - #{$_thickness}),
+      #000 calc(1lh - #{$_offset}),
+      transparent calc(1lh - #{$_offset})
     );
     -webkit-mask-size: 100% 1lh;
     -webkit-mask-repeat: repeat;
 
     mask-image: linear-gradient(
       to bottom,
-      transparent calc(1lh - #{$offset} - #{$thickness}),
-      #000 calc(1lh - #{$offset} - #{$thickness}),
-      #000 calc(1lh - #{$offset}),
-      transparent calc(1lh - #{$offset})
+      transparent calc(1lh - #{$_offset} - #{$_thickness}),
+      #000 calc(1lh - #{$_offset} - #{$_thickness}),
+      #000 calc(1lh - #{$_offset}),
+      transparent calc(1lh - #{$_offset})
     );
     mask-size: 100% 1lh;
     mask-repeat: repeat;
@@ -78,24 +78,24 @@
   // 古めブラウザ向け（1lh 非対応）のフォールバック
   @supports not (background-size: 100% 1lh) {
     &::after {
-      $tile: calc(1em * #{$line-height}); // line-height の数値と揃える
-      background-size: 100% $tile;
-      -webkit-mask-size: 100% $tile;
-      mask-size: 100% $tile;
+      $_tile: calc(1em * #{$_line-height}); // line-height の数値と揃える
+      background-size: 100% $_tile;
+      -webkit-mask-size: 100% $_tile;
+      mask-size: 100% $_tile;
 
       -webkit-mask-image: linear-gradient(
         to bottom,
-        transparent calc(#{$tile} - #{$offset} - #{$thickness}),
-        #000 calc(#{$tile} - #{$offset} - #{$thickness}),
-        #000 calc(#{$tile} - #{$offset}),
-        transparent calc(#{$tile} - #{$offset})
+        transparent calc(#{$_tile} - #{$_offset} - #{$_thickness}),
+        #000 calc(#{$_tile} - #{$_offset} - #{$_thickness}),
+        #000 calc(#{$_tile} - #{$_offset}),
+        transparent calc(#{$_tile} - #{$_offset})
       );
       mask-image: linear-gradient(
         to bottom,
-        transparent calc(#{$tile} - #{$offset} - #{$thickness}),
-        #000 calc(#{$tile} - #{$offset} - #{$thickness}),
-        #000 calc(#{$tile} - #{$offset}),
-        transparent calc(#{$tile} - #{$offset})
+        transparent calc(#{$_tile} - #{$_offset} - #{$_thickness}),
+        #000 calc(#{$_tile} - #{$_offset} - #{$_thickness}),
+        #000 calc(#{$_tile} - #{$_offset}),
+        transparent calc(#{$_tile} - #{$_offset})
       );
     }
   }

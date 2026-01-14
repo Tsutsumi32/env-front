@@ -45,13 +45,13 @@
     }
 
     // $breakpointsの各キーを順番に処理（小さい方から）
-    @each $breakpoint-key in map.keys($breakpoints) {
-      $_breakpoint-config: map.get($_sizes, $breakpoint-key);
+    @each $_breakpoint-key in map.keys($breakpoints) {
+      $_breakpoint-config: map.get($_sizes, $_breakpoint-key);
       @if $_breakpoint-config != null {
         $_breakpoint-padding: map.get($_breakpoint-config, 'padding');
         $_breakpoint-max-width: map.get($_breakpoint-config, 'max-width');
 
-        @include media($breakpoint-key) {
+        @include media($_breakpoint-key) {
           @if $_breakpoint-padding != null {
             padding-inline: s($_breakpoint-padding);
           }
@@ -80,15 +80,15 @@
     }
 
     // $breakpointsの各キーを逆順に処理（大きい方から）
-    $breakpoint-keys: map.keys($breakpoints);
-    @for $i from length($breakpoint-keys) through 1 {
-      $breakpoint-key: nth($breakpoint-keys, $i);
-      $_breakpoint-config: map.get($_sizes, $breakpoint-key);
+    $_bp-keys-list: map.keys($breakpoints);
+    @for $_i from length($_bp-keys-list) through 1 {
+      $_breakpoint-key: nth($_bp-keys-list, $_i);
+      $_breakpoint-config: map.get($_sizes, $_breakpoint-key);
       @if $_breakpoint-config != null {
         $_breakpoint-padding: map.get($_breakpoint-config, 'padding');
         $_breakpoint-max-width: map.get($_breakpoint-config, 'max-width');
 
-        @include media($breakpoint-key) {
+        @include media($_breakpoint-key) {
           @if $_breakpoint-padding != null {
             padding-inline: s($_breakpoint-padding);
           }

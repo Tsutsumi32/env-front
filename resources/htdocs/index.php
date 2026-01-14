@@ -16,8 +16,8 @@ $pageId = PAGE_ID::SAMPLE;
 ob_start();
 ?>
 
-<section id="top" class="ly_section">
-    <div class="ly_container">
+<section id="top">
+    <div class="ly_container __normal">
         <?php include __DIR__ . '/includes/modules/breadcrumbs.php'; ?>
 
         <div class="un_hero">
@@ -25,6 +25,14 @@ ob_start();
             <p class="un_hero_description">サンプルサイトへようこそ<br></p>
             <div class="un_hero_actions">
                 <a href="/about.php" class="el_btn el_btn__primary">Aboutを見る</a>
+            </div>
+        </div>
+
+        <div class="ly_section __small _top">
+            <div class="ly_container __normal">
+                <p class="un_media">
+                    メディアクエリテスト
+                </p>
             </div>
         </div>
 

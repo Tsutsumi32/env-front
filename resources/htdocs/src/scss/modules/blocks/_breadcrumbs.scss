@@ -24,24 +24,24 @@
   }
 
   &_link {
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     text-decoration: none;
     font-size: s(14);
     transition: color 0.3s ease;
 
     @include hover {
-      color: $color_text_primary;
+      color: get-color('text', 'primary');
     }
   }
 
   &_text {
-    color: $color_text_primary;
+    color: get-color('text', 'primary');
     font-size: s(14);
     font-weight: 500;
   }
 
   &_separator {
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     margin: 0 s(5);
     font-size: s(14);
   }

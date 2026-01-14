@@ -43,18 +43,18 @@
 ///   .hidden_pc_         → pc未満を非表示（pc未満で非表示、pc時は表示）
 ///   .hidden_pc_tab      → pc未満、tab以上で非表示
 // デフォルト領域から指定ブレイクポイントまでの非表示クラスを生成
-@each $breakpoint-key in map.keys($breakpoints) {
-  .hp_hidden_default_#{$breakpoint-key} {
+@each $_breakpoint-key in map.keys($breakpoints) {
+  .hp_hidden_default_#{$_breakpoint-key} {
     @if $media_query_strategy == 'sp-first' {
       // SPファースト: デフォルト領域（最初のブレイクポイント未満）から指定ブレイクポイントまで非表示
-      $break-value: map.get($breakpoints, $breakpoint-key);
-      @media screen and (width < strip-unit($break-value, 1px)) {
+      $_break-value: get-breakpoint($_breakpoint-key);
+      @media screen and (width < strip-unit($_break-value, 1px)) {
         display: none !important;
       }
     } @else {
       // PCファースト: デフォルト領域（最後のブレイクポイント以上）から指定ブレイクポイントまで非表示
-      $break-value: map.get($breakpoints, $breakpoint-key);
-      @media screen and (strip-unit($break-value, 1px) <= width) {
+      $_break-value: get-breakpoint($_breakpoint-key);
+      @media screen and (strip-unit($_break-value, 1px) <= width) {
         display: none !important;
       }
     }
@@ -62,18 +62,18 @@
 }
 
 // 指定ブレイクポイント以降を非表示にするクラスを生成
-@each $breakpoint-key in map.keys($breakpoints) {
-  .hp_hidden_#{$breakpoint-key}_ {
+@each $_breakpoint-key in map.keys($breakpoints) {
+  .hp_hidden_#{$_breakpoint-key}_ {
     @if $media_query_strategy == 'sp-first' {
       // SPファースト: 指定ブレイクポイント以上を非表示
-      $break-value: map.get($breakpoints, $breakpoint-key);
-      @media screen and (strip-unit($break-value, 1px) <= width) {
+      $_break-value: get-breakpoint($_breakpoint-key);
+      @media screen and (strip-unit($_break-value, 1px) <= width) {
         display: none !important;
       }
     } @else {
       // PCファースト: 指定ブレイクポイント未満を非表示
-      $break-value: map.get($breakpoints, $breakpoint-key);
-      @media screen and (width < strip-unit($break-value, 1px)) {
+      $_break-value: get-breakpoint($_breakpoint-key);
+      @media screen and (width < strip-unit($_break-value, 1px)) {
         display: none !important;
       }
     }
@@ -81,15 +81,15 @@
 }
 
 // 範囲指定の非表示クラスを生成（2つのブレイクポイントの組み合わせ）
-$breakpoint-keys: map.keys($breakpoints);
-$keys-length: list.length($breakpoint-keys);
-@for $i from 1 through $keys-length {
-  $key1: list.nth($breakpoint-keys, $i);
-  @if $i < $keys-length {
-    @for $j from ($i + 1) through $keys-length {
-      $key2: list.nth($breakpoint-keys, $j);
-      .hp_hidden_#{$key1}_#{$key2} {
-        @include media($key1, $key2) {
+$_bp-keys-list: map.keys($breakpoints);
+$_keys-length: list.length($_bp-keys-list);
+@for $i from 1 through $_keys-length {
+  $_key1: list.nth($_bp-keys-list, $i);
+  @if $i < $_keys-length {
+    @for $j from ($i + 1) through $_keys-length {
+      $_key2: list.nth($_bp-keys-list, $j);
+      .hp_hidden_#{$_key1}_#{$_key2} {
+        @include media($_key1, $_key2) {
           display: none !important;
         }
       }

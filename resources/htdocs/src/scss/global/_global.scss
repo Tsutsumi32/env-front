@@ -10,7 +10,7 @@ html {
   // スムーススクロールはjsで制御
   // (・GSAPなどのアニメーションと相性が悪い・画面遷移時はスムーススクロールしたくない)
   // 画面遷移を伴う場合の位置調整はscroll-padding-topで調整
-  scroll-padding-top: calc(s($height_header_sp) + 5.2rem);
+  scroll-padding-top: calc(s(get-height('header-sp')) + 5.2rem);
   scroll-behavior: smooth;
 }
 
@@ -19,10 +19,10 @@ body {
   // word-break: break-all;
   word-break: break-word;
   line-break: strict;
-  font-family: $font-f_notosans;
+  font-family: get-font-family(notosans);
 
-  background-color: $color_bg_base;
-  color: $color_text_primary;
+  background-color: get-color('bg', 'base');
+  color: get-color('text', 'primary');
   width: 100%;
 }
 
@@ -33,7 +33,7 @@ select {
   &::picker(select) {
     appearance: base-select;
     border: none;
-    background-color: $color_base_black;
+    background-color: get-color(base, black);
     backdrop-filter: blur(1rem);
     -webkit-backdrop-filter: blur(1rem);
     /* アニメーションも設定できる */
@@ -50,20 +50,20 @@ select {
 
   option {
     padding-inline: 1rem;
-    color: $color_base_white;
+    color: get-color('base', 'white');
 
     &::checkmark {
       display: none;
     }
 
     &:checked {
-      background-color: $color_base_accent !important;
-      color: $color_base_black;
+      background-color: get-color('base', 'accent') !important;
+      color: get-color('base', 'black');
     }
 
     &:hover {
-      background-color: $color_base_black;
-      color: $color_base_black;
+      background-color: get-color('base', 'black');
+      color: get-color('base', 'black');
     }
   }
 }
@@ -114,23 +114,23 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: $font-f_rocknroll-one;
+  font-family: get-font-family('rocknroll-one');
 }
 
 // テキスト選択時のスタイル
 ::selection {
-  color: $color_selection_text;
-  background-color: $color_selection_bg;
+  color: get-color('selection', 'selection-text');
+  background-color: get-color('selection', 'selection-bg');
 }
 
 ::-moz-selection {
-  color: $color_selection_text;
-  background-color: $color_selection_bg;
+  color: get-color('selection', 'selection-text');
+  background-color: get-color('selection', 'selection-bg');
 }
 
 // フォーカス時のoutlineスタイル
 :focus-visible {
-  outline: 2px solid $color_focus_outline;
+  outline: 2px solid get-color('ui', 'focus-outline');
   outline-offset: 2px;
 }
 

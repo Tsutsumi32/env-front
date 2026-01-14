@@ -5,9 +5,9 @@
 * @param $important オプション: '!important'を付与する場合に指定
 *  例) @include flexSize(3, 1rem);
 *******************************************************************/
-@mixin flexSize($num, $gap, $important: '') {
-  width: calc((100% / $num) - ($gap * ($num - 1) / $num));
-  @if $important == '!important' {
-    width: calc((100% / $num) - ($gap * ($num - 1) / $num)) !important;
+@mixin flexSize($_num, $_gap, $_important: '') {
+  width: calc((100% / $_num) - ($_gap * ($_num - 1) / $_num));
+  @if $_important == '!important' {
+    width: calc((100% / $_num) - ($_gap * ($_num - 1) / $_num)) !important;
   }
 }

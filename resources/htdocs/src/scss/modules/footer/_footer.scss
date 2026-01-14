@@ -5,8 +5,8 @@
 * フッターコンポーネントのスタイル
 *******************************************************************/
 .ly_footer {
-  background-color: $color_bg_base;
-  border-top: 1px solid $color_tag_border;
+  background-color: get-color('bg', 'base');
+  border-top: 1px solid get-color('border', 'tag');
   padding: s(40) 0;
   margin-top: s(60);
 
@@ -20,13 +20,13 @@
 
   &_copyright {
     font-size: s(14);
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     margin-bottom: s(20);
   }
 
   &_address {
     font-size: s(14);
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     font-style: normal;
   }
 
@@ -35,7 +35,7 @@
   }
 
   &_addressLink {
-    color: $color_text_link;
+    color: get-color('text', 'link');
     text-decoration: none;
 
     @include hover {

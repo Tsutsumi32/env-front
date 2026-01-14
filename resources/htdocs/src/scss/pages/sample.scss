@@ -1,8 +1,4 @@
 @use './initpage' as *;
-/* use blocks
------------------------------------------------------------------ */
-@use '../modules/blocks/breadcrumbs' as *;
-
 /******************************************************************
 * page - sample
 * トップページ（サンプル）用のスタイル
@@ -15,31 +11,67 @@
 ----------------------------------------------------------------- */
 @use '../modules/blocks/card' as *;
 
+/* media(メディアクエリサンプル)
+----------------------------------------------------------------- */
+.un_media {
+  border: 5px solid red;
+  color: red;
+  font-size: s(24);
+  text-align: center;
+  padding-block: s(40);
+  @include media(get-breakpoint-key('tab')) {
+    border-color: black;
+  }
+  @include media(get-breakpoint-key('tab'), get-breakpoint-key('tabL')) {
+    color: black;
+  }
+  @include media(get-breakpoint-key('tabL')) {
+    border-color: blue;
+  }
+  @include media(get-breakpoint-key('tabL'), get-breakpoint-key('pc')) {
+    //
+  }
+  @include media(get-breakpoint-key('pc')) {
+    border-color: yellow;
+  }
+  @include media(get-breakpoint-key('pc'), get-breakpoint-key('pcL')) {
+    color: black;
+  }
+  @include media(get-breakpoint-key('pcL')) {
+    border-color: green;
+  }
+  @include media(get-breakpoint-key('pcL'), get-breakpoint-key('pcLL')) {
+    //
+  }
+  @include media(get-breakpoint-key('pcLL')) {
+    border-color: violet;
+  }
+}
+
 /* hero
 ----------------------------------------------------------------- */
 .un_hero {
   text-align: center;
   padding: s(60) 0;
-  margin-bottom: s(60);
 
   &_title {
     font-size: s(32);
     font-weight: 700;
-    color: $color_text_primary;
+    color: get-color('text', 'primary');
     margin-bottom: s(20);
     line-height: 1.4;
 
-    @include media($bp_tab) {
+    @include media(get-breakpoint-key('tab')) {
       font-size: s(48);
     }
   }
 
   &_description {
     font-size: s(18);
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     line-height: 1.6;
 
-    @include media($bp_tab) {
+    @include media(get-breakpoint-key('tab')) {
       font-size: s(20);
     }
   }
@@ -58,7 +90,7 @@
   &_title {
     font-size: s(28);
     font-weight: 700;
-    color: $color_text_primary;
+    color: get-color('text', 'primary');
     text-align: center;
     margin-bottom: s(40);
   }
@@ -68,18 +100,18 @@
     grid-template-columns: 1fr;
     gap: s(30);
 
-    @include media($bp_tab) {
+    @include media(get-breakpoint-key('tab')) {
       grid-template-columns: repeat(2, 1fr);
     }
 
-    @include media($bp_pc) {
+    @include media(get-breakpoint-key('pc')) {
       grid-template-columns: repeat(3, 1fr);
     }
   }
 
   &_item {
-    background-color: $color_bg_base;
-    border: 1px solid $color_tag_border;
+    background-color: get-color('bg', 'base');
+    border: 1px solid get-color('border', 'tag');
     border-radius: s(12);
     padding: s(30);
     text-align: center;
@@ -87,7 +119,7 @@
 
     @include hover {
       transform: translateY(-5px);
-      box-shadow: 0 s(10) s(20) rgba($color_base_black, 0.1);
+      box-shadow: 0 s(10) s(20) rgba(get-color('base', 'black'), 0.1);
     }
   }
 
@@ -99,13 +131,13 @@
   &_itemTitle {
     font-size: s(20);
     font-weight: 600;
-    color: $color_text_primary;
+    color: get-color('text', 'primary');
     margin-bottom: s(15);
   }
 
   &_itemText {
     font-size: s(16);
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     line-height: 1.6;
     margin-bottom: s(20);
   }
@@ -123,7 +155,7 @@
   &_title {
     font-size: s(28);
     font-weight: 700;
-    color: $color_text_primary;
+    color: get-color('text', 'primary');
     margin-bottom: s(30);
   }
 
@@ -135,8 +167,8 @@
 }
 
 .un_accordion {
-  background-color: $color_bg_base;
-  border: 1px solid $color_tag_border;
+  background-color: get-color('bg', 'base');
+  border: 1px solid get-color('border', 'tag');
   border-radius: s(8);
   overflow: hidden;
   transition: all 0.3s ease;
@@ -160,20 +192,20 @@
     transition: background-color 0.3s ease;
 
     @include hover {
-      background-color: $color_button_bg;
+      background-color: get-color('bg', 'button');
     }
   }
 
   &_btnText {
     font-size: s(18);
     font-weight: 600;
-    color: $color_text_primary;
+    color: get-color('text', 'primary');
   }
 
   &_btnIcon {
     font-size: s(24);
     font-weight: 300;
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     transition: transform 0.3s ease;
     line-height: 1;
   }
@@ -189,7 +221,7 @@
 
   &_text {
     font-size: s(16);
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     line-height: 1.7;
   }
 }

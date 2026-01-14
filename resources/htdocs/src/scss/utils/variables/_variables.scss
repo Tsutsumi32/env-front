@@ -4,6 +4,8 @@
 /******************************************************************
 * 変数・取得設定
 * ※mapなども定義されていますが、各実装の場面では、フラットな変数を使用します
+* Mapの取得用functionがある場合は、該当のfunctionを使用して値を設定します。
+* (スニペット使用推奨)
 *******************************************************************/
 /* base font size
 ----------------------------------------------------------------- */
@@ -34,9 +36,7 @@ $width_scrollbar: 20;
 $padding_container_pc: 20;
 
 // PC時に最低限確保する幅
-// pcデザインコンテナ(確保したい幅) +
-// 確保したい左右余白 + スクロールバーバッファ)
-// => コンテナが入りきる最低限の幅
+// pcデザインコンテナ(確保したい幅) + 確保したい左右余白 + スクロールバーバッファ)
 //////////////////////////////////////////////
 $minWidth_container_pc: calc($design_container_pc + $padding_container_pc + $width_scrollbar);
 
@@ -53,14 +53,30 @@ $min_layout_width: $design_size_sp;
 // 'pc-first': PCファースト（大きい画面から小さい画面へ上書き）
 $media_query_strategy: 'sp-first' !default;
 
-// ブレイクポイントのキー名（一元管理）
-// 実装時 @include media($bp_tab)
-// @include media(xx) のスニペット作成推奨
-$bp_tab: 'tab' !default;
-$bp_tabL: 'tabL' !default;
-$bp_pc: 'pc' !default;
-$bp_pcL: 'pcL' !default;
-$bp_pcLL: 'pcLL' !default;
+// ブレイクポイントのキー名一覧マップ（一元管理）
+// 構造: $breakpoint-keys: (key: value)
+// 実装の際は get-breakpoint-key() を使用して値を取得
+$breakpoint-keys: (
+  'tab': 'tab',
+  'tabL': 'tabL',
+  'pc': 'pc',
+  'pcL': 'pcL',
+  'pcLL': 'pcLL',
+) !default;
+
+// get-breakpoint-key ブレイクポイントのキー名を取得する
+// @param $key ブレイクポイントキーのキー名
+// @return ブレイクポイントのキー名（文字列）
+//  例) get-breakpoint-key('tab') → 'tab'
+@function get-breakpoint-key($_key) {
+  $_value: map.get($breakpoint-keys, $_key);
+
+  @if $_value ==null {
+    @error "Breakpoint key '#{$_key}' not found in $breakpoint-keys.";
+  }
+
+  @return $_value;
+}
 
 // ブレイクポイントのマップ（文字列キー）
 // sp-firstとpc-firstで、文字列キーを変更することで柔軟に対応可能
@@ -81,18 +97,33 @@ $bp_pcLL: 'pcLL' !default;
 // 注意: ★sp-firstとpc-firstで、この値自体を手動で書き換える必要があります。
 //       必ずsp-first、pc-firstで順番(小さい順・大きい順)を変えることが必要です。
 $breakpoints: (
-  #{$bp_tab}: 580,
-  #{$bp_tabL}: 768,
-  #{$bp_pc}: 1080,
-  #{$bp_pcL}: $minWidth_container_pc,
-  #{$bp_pcLL}: 1600
+  get-breakpoint-key('tab'): 580,
+  get-breakpoint-key('tabL'): 768,
+  get-breakpoint-key('pc'): 1080,
+  get-breakpoint-key('pcL'): $minWidth_container_pc,
+  get-breakpoint-key('pcLL'): 1600,
 ) !default;
+
+// get-breakpoint ブレイクポイントの値を取得する
+// @param $key ブレイクポイントのキー名
+// @return ブレイクポイントの値（数値）
+//  例) get-breakpoint('tab') → 580
+@function get-breakpoint($_key) {
+  $_value: map.get($breakpoints, $_key);
+
+  @if $_value ==null {
+    @error "Breakpoint key '#{$_key}' not found in $breakpoints.";
+  }
+
+  @return $_value;
+}
 
 /* style
 ----------------------------------------------------------------- */
 // レスポンシブ・リキッドの設定
-// 実装時に値を設定する場合に_style-settings(s())fucntionを使用します。
+// 値の設定は_style-settings.scssの「s()」fucntionを使用します。
 // s()を使用することで、本設定に基づいてレスポンシブ・リキッドの対応が設定されます
+// (style-settings-vars.scssのmixinで、CSS変数を生成し、計算に使用します。)
 //
 // 'type': 'liquid' | 'responsive' | 'fixed' | 'none'
 //   - 'liquid': vwで計算（リキッド）
@@ -111,39 +142,39 @@ $style-settings: (
     'base-size': 1,
     'viewport-base': $design_size_sp,
   ),
-  // #{$bp_tab}: (
+  // get-breakpoint-key('tab'): (
   //     'type': 'fixed',
   //     'base-size': 1,
   //     'viewport-base': $design_size_sp,
   //     // SPのリキッド基準点
-  //     'fixed-width': map.get($breakpoints, $bp_tab),
+  //     'fixed-width': get-breakpoint('tab'),
   //     // TABの時点で固定化
   //   ),
-  #{$bp_tab}: (
+  get-breakpoint-key('tab'): (
       'type': 'responsive',
       'base-size': 1,
       'viewport-base': $font-s_base,
     ),
-  #{$bp_tabL}: (
-      'type': 'responsive',
-      'base-size': 1,
-      'viewport-base': $font-s_base,
-    ),
-  #{$bp_pc}: (
-      'type': 'responsive',
-      'base-size': 1,
-      'viewport-base': $font-s_base,
-    ),
-  #{$bp_pcL}: (
-      'type': 'responsive',
-      'base-size': 1,
-      'viewport-base': $font-s_base,
-    ),
-  #{$bp_pcLL}: (
-      'type': 'liquid',
-      'base-size': 1,
-      'viewport-base': map.get($breakpoints, $bp_pcLL),
-    ),
+  get-breakpoint-key('tabL'): (
+    'type': 'responsive',
+    'base-size': 1,
+    'viewport-base': $font-s_base,
+  ),
+  get-breakpoint-key('pc'): (
+    'type': 'responsive',
+    'base-size': 1,
+    'viewport-base': $font-s_base,
+  ),
+  get-breakpoint-key('pcL'): (
+    'type': 'responsive',
+    'base-size': 1,
+    'viewport-base': $font-s_base,
+  ),
+  get-breakpoint-key('pcLL'): (
+    'type': 'liquid',
+    'base-size': 1,
+    'viewport-base': get-breakpoint('pcLL'),
+  ),
 );
 
 /* section
@@ -155,20 +186,25 @@ $style-settings: (
 //   - $breakpointsのキー名 : 該当のメディアクエリで値を設定
 // 単位なし => s(数値)
 $section-sizes: (
+  'small': (
+    'default': 50,
+    get-breakpoint-key('tab'): 80,
+    get-breakpoint-key('pc'): 100,
+  ),
   'normal': (
-    'default': 30,
-    #{$bp_tab}: 100,
-    #{$bp_pc}: 300,
+    'default': 80,
+    get-breakpoint-key('tab'): 100,
+    get-breakpoint-key('pc'): 140,
   ),
   'large': (
-    'default': 50,
-    #{$bp_tab}: 100,
-    #{$bp_pc}: 300,
+    'default': 90,
+    get-breakpoint-key('tab'): 110,
+    get-breakpoint-key('pc'): 150,
   ),
   'xlarge': (
-    'default': 50,
-    #{$bp_tab}: 100,
-    #{$bp_pc}: 300,
+    'default': 100,
+    get-breakpoint-key('tab'): 120,
+    get-breakpoint-key('pc'): 160,
   ),
 );
 
@@ -188,173 +224,195 @@ $container-sizes: (
       'padding': 30,
       'max-width': null,
     ),
-    #{$bp_tab}: (
-        'padding': 80,
-        'max-width': null,
-      ),
-    #{$bp_pc}: (
-        'padding': 120,
-        'max-width': 1200px,
-      ),
+    get-breakpoint-key('tab'): (
+      'padding': 80,
+      'max-width': null,
+    ),
+    get-breakpoint-key('pc'): (
+      'padding': 120,
+      'max-width': 1200px,
+    ),
   ),
 );
 
 /* color
+/* _color-themes.scss 「mod()」にて、data-theme属性を元に色を出し分け可能
+/* ①-1 モード切り替えあり - 自動色変換
+/*     ⇒ ・$colorsにモード毎の色を定義
+/*        ・_color-themes.scss generate-color-themes()にて
+            data-theme属性毎に、$colorsの色をCSSに設定(globalで呼び出し)
+/*        ・get-color(①)で、設定したCSS変数を取得する
+/* ①-2 モード切り替えあり - mod()を使用して手動で変換
+/*     ⇒ ・上記のCSS生成不要(generate-color-themes()不要)
+/*        ・※下記のカラー実装パターン参照
+/* ②   モード切り替えなし
+/*     ⇒ ・※下記のカラー実装パターン参照
+/*
+/* <カラー実装パターン>
+/* ・役割毎に色が管理されている場合
+/*   ⇒ $colorsを使用する(モード切り替えがない場合も、defaultだけの運用)
+/* ・役割毎に管理されていない場合
+/*   ⇒ $color-paletteを直接参照するget-color(②)を使用する
 ----------------------------------------------------------------- */
+
+// 色パレットマップ（一元管理）
+// プロジェクト全体で使用する色を定義（役割を持たない単純な色名）
+// 構造: $color-palette: (name: value)
+// 同じ色は1回のみ定義
+$color-palette: (
+  'black': #000,
+  'white': #ffffff,
+  'off-white': #fafafa,
+  'light-gray': #f2f2f2,
+  'gray': #ebebeb,
+  'dark-brown': #271a06,
+  'brown': #4a4133,
+  'medium-brown': #796d57,
+  'beige': #e7dfd1,
+  'tan': #bcb2a0,
+  'yellow': #f6b40a,
+  'cream': #f9ebc6,
+) !default;
+
+@function get-color-palette($_key) {
+  $value: map.get($color-palette, $_key);
+
+  @if $value ==null {
+    @error "Color key '#{$key}' not found in $box-shadows.";
+  }
+
+  @return $value;
+}
+
 // モード別カラーマップ（一元管理）
 // 構造: $colors: (mode: (group: (name: value)))
 // 例: $colors: (default: (text: (primary: #2B2D31)))
 // 注意: 'default'モードは必須。defaultモードは:rootに、その他は[data-theme="モード名"]に出力される
 // _color-themes.scssによって、本変数を元に、モード毎のCSS変数を設定
-// 下記color-var() functionで、定義されるCSS変数の取得が可能
+// 下記get-color() functionで、定義されるCSS変数の取得が可能
 // ※モード切替自体はJSで制御 JSでユーザー設定や切り替えボタンで data-theme属性の切り替えを行う
 $colors: (
-  default: (
+  'default': (
     // 基本色
-    base: (
-        black: #000,
-        white: #f2f2f2,
-        accent: #f6b40a,
+    'base': (
+        'black': get-color-palette('black'),
+        'white': get-color-palette('light-gray'),
+        'accent': get-color-palette('yellow'),
       ),
     // テキスト色
-    text: (
-        primary: #271a06,
-        secondary: #4a4133,
-        dark: #000,
-        link: #271a06,
+    'text': (
+        'primary': get-color-palette('dark-brown'),
+        'secondary': get-color-palette('brown'),
+        'dark': get-color-palette('black'),
+        'link': get-color-palette('dark-brown'),
       ),
     // 背景色
-    bg: (
-        base: #ebebeb,
-        button: rgba(#e7dfd1, 0.9),
-        tag: rgba(#e7dfd1, 0.15),
-        hover: rgba(#e7dfd1, 0.3),
+    'bg': (
+        'base': get-color-palette('gray'),
+        'button': rgba(get-color-palette('beige'), 0.9),
+        'tag': rgba(get-color-palette('beige'), 0.15),
+        'hover': rgba(get-color-palette('beige'), 0.3),
       ),
     // ボーダー色
-    border: (
-        tag: rgba(#bcb2a0, 0.5),
-        primary: #271a06,
-        light: rgba(#e7dfd1, 0.5),
+    'border': (
+        'tag': rgba(get-color-palette('tan'), 0.5),
+        'primary': get-color-palette('dark-brown'),
+        'light': rgba(get-color-palette('beige'), 0.5),
       ),
     // アクセント色（リンク、ボタンなど）
-    accent: (
-        primary: #f6b40a,
-        hover: #f9ebc6,
-        light: #f9ebc6,
+    'accent': (
+        'primary': get-color-palette('yellow'),
+        'hover': get-color-palette('cream'),
+        'light': get-color-palette('cream'),
       ),
     // UI要素
-    ui: (
-        placeholder: #4a4133,
-        highlight: #f6b40a,
-        focus-outline: #f6b40a,
-        hover: #f6b40a,
+    'ui': (
+        'placeholder': get-color-palette('brown'),
+        'highlight': get-color-palette('yellow'),
+        'focus-outline': get-color-palette('yellow'),
+        'hover': get-color-palette('yellow'),
       ),
-    selection: (
-      selection-text: #271a06,
-      selection-bg: #f6b40a,
+    'selection': (
+      'selection-text': get-color-palette('dark-brown'),
+      'selection-bg': get-color-palette('yellow'),
     ),
   ),
-  dark: (
+  'dark': (
     // 基本色
-    base: (
-        black: #fafafa,
-        white: #271a06,
-        accent: #f6b40a,
+    'base': (
+        'black': get-color-palette('off-white'),
+        'white': get-color-palette('dark-brown'),
+        'accent': get-color-palette('yellow'),
       ),
     // テキスト色
-    text: (
-        primary: #fafafa,
-        secondary: rgba(#fafafa, 0.7),
-        dark: #ffffff,
-        link: #fafafa,
+    'text': (
+        'primary': get-color-palette('off-white'),
+        'secondary': rgba(get-color-palette('off-white'), 0.7),
+        'dark': get-color-palette('white'),
+        'link': get-color-palette('off-white'),
       ),
     // 背景色
-    bg: (
-        base: #271a06,
-        button: rgba(#271a06, 0.95),
-        tag: rgba(#796d57, 0.83),
-        hover: rgba(#4a4133, 0.5),
+    'bg': (
+        'base': get-color-palette('dark-brown'),
+        'button': rgba(get-color-palette('dark-brown'), 0.95),
+        'tag': rgba(get-color-palette('medium-brown'), 0.83),
+        'hover': rgba(get-color-palette('brown'), 0.5),
       ),
     // ボーダー色
-    border: (
-        tag: rgba(#bcb2a0, 0.3),
-        primary: rgba(#fafafa, 0.3),
-        light: rgba(#bcb2a0, 0.2),
+    'border': (
+        'tag': rgba(get-color-palette('tan'), 0.3),
+        'primary': rgba(get-color-palette('off-white'), 0.3),
+        'light': rgba(get-color-palette('tan'), 0.2),
       ),
     // アクセント色（リンク、ボタンなど）
-    accent: (
-        primary: #f6b40a,
-        hover: #f9ebc6,
-        light: #f9ebc6,
+    'accent': (
+        'primary': get-color-palette('yellow'),
+        'hover': get-color-palette('cream'),
+        'light': get-color-palette('cream'),
       ),
     // UI要素
-    ui: (
-        placeholder: rgba(#fafafa, 0.5),
-        highlight: #f6b40a,
-        focus-outline: #f6b40a,
-        hover: #f6b40a,
+    'ui': (
+        'placeholder': rgba(get-color-palette('off-white'), 0.5),
+        'highlight': get-color-palette('yellow'),
+        'focus-outline': get-color-palette('yellow'),
+        'hover': get-color-palette('yellow'),
       ),
-    selection: (
-      selection-text: #271a06,
-      selection-bg: #f6b40a,
+    'selection': (
+      'selection-text': get-color-palette('dark-brown'),
+      'selection-bg': get-color-palette('yellow'),
     ),
   ),
 ) !default;
 
-// モード選択用変数
+// モード選択用変数(mod()で使用する)
 $color_mode_dark: 'dark';
 
-/******************************************************************
-* color-var CSS変数を返す function
-* @param $group カラーグループ名（text, bg, blue など）
-* @param $name カラー名（primary, secondary など）
-* @return CSS変数参照
-*  例) color-var('text', 'primary') → var(--color-text-primary)
-*  例) color-var('bg', 'base') → var(--color-bg-base)
-*******************************************************************/
-@function color-var($group, $name) {
-  @return var(--color-#{$group}-#{$name});
+// ※$colorsを使用する場合
+// get-color① CSS変数を返す function
+// _color-theme.scss(generate-color-themes())で生成したCSS変数を取得
+// @param $group カラーグループ名（text, bg, blue など）
+// @param $name カラー名（primary, secondary など）
+// @return CSS変数参照
+//  例) get-color('text', 'primary') → var(--color-text-primary)
+//  例) get-color('bg', 'base') → var(--color-bg-base)
+@function get-color($_group, $_name) {
+  @return var(--color-#{$_group}-#{$_name});
 }
 
-// フラット変数（実装API - CSS変数参照）
-// 実装者はこれらの変数を使用するだけで、モード切替が自動的に反映
-//////////////////////////////////////////////
-// 基本色
-$color_base_black: color-var('base', 'black');
-$color_base_white: color-var('base', 'white');
-$color_base_accent: color-var('base', 'accent');
+// ※$color-paletteを直接使用する場合
+// get-color② CSS変数を返す function
+// @param $name カラー名（primary, secondary など）
+// @return $color-paletteの色
+//  例) get-color('black')
+// @function get-color($_key) {
+//   $_value: get-color-palette($_key);
 
-// テキスト色
-$color_text_primary: color-var('text', 'primary');
-$color_text_secondary: color-var('text', 'secondary');
-$color_text_dark: color-var('text', 'dark');
-$color_text_link: color-var('text', 'link');
+//   @if $_value == null {
+//     @error "Color key '#{$_key}' not found in $color-palette.";
+//   }
 
-// 背景色
-$color_bg_base: color-var('bg', 'base');
-$color_button_bg: color-var('bg', 'button');
-$color_tag_bg: color-var('bg', 'tag');
-$color_bg_hover: color-var('bg', 'hover');
-
-// ボーダー色
-$color_tag_border: color-var('border', 'tag');
-$color_border_primary: color-var('border', 'primary');
-$color_border_light: color-var('border', 'light');
-
-// アクセント色
-$color_accent_primary: color-var('accent', 'primary');
-$color_accent_hover: color-var('accent', 'hover');
-$color_accent_light: color-var('accent', 'light');
-
-// UI要素
-$color_placeholder: color-var('ui', 'placeholder');
-$color_highlight: color-var('ui', 'highlight');
-$color_focus_outline: color-var('ui', 'focus-outline');
-$color_hover: color-var('ui', 'hover');
-
-// selection
-$color_selection_text: color-var('selection', 'selection-text');
-$color_selection_bg: color-var('selection', 'selection-bg');
+//   @return $_value;
+// }
 
 /* font
 ----------------------------------------------------------------- */
@@ -461,79 +519,245 @@ $font-configs: (
   ),
 ) !default;
 
-/******************************************************************
-* get-font-family フォントファミリー名を取得する
-* @param $font-key フォントキー名（$font-configsのキー）
-* @return フォントファミリー名（文字列）
-*  例) get-font-family('noto-sans-jp') → 'Noto Sans JP'
-*******************************************************************/
-@function get-font-family($font-key) {
-  $config: map.get($font-configs, $font-key);
+// get-font-family-name フォントファミリー名を取得する
+// @param $font-key フォントキー名（$font-configsのキー）
+// @return フォントファミリー名（文字列）
+//  例) get-font-family('noto-sans-jp') → 'Noto Sans JP'
+@function get-font-family-name($_font-key) {
+  $_config: map.get($font-configs, $_font-key);
 
-  @if $config ==null {
-    @error "Font key '#{$font-key}' not found in $font-configs.";
+  @if $_config ==null {
+    @error "Font key '#{$_font-key}' not found in $font-configs.";
   }
 
-  @return map.get($config, 'family');
+  @return map.get($_config, 'family');
 }
 
-/******************************************************************
-* get-font-fallback フォールバックフォントを取得する
-* @param $font-key フォントキー名（$font-configsのキー）
-* @return フォールバックフォント（sans-serif | serif | monospace など）
-*  例) get-font-fallback('noto-sans-jp') → sans-serif
-*******************************************************************/
-@function get-font-fallback($font-key) {
-  $config: map.get($font-configs, $font-key);
+// get-font-fallback フォールバックフォントを取得する
+// @param $font-key フォントキー名（$font-configsのキー）
+// @return フォールバックフォント（sans-serif | serif | monospace など）
+//  例) get-font-fallback('noto-sans-jp') → sans-serif
+@function get-font-fallback($_font-key) {
+  $_config: map.get($font-configs, $_font-key);
 
-  @if $config ==null {
-    @error "Font key '#{$font-key}' not found in $font-configs.";
+  @if $_config ==null {
+    @error "Font key '#{$_font-key}' not found in $font-configs.";
   }
 
-  @return map.get($config, 'fallback');
+  @return map.get($_config, 'fallback');
 }
 
-// フォントファミリー用の変数（実装の際はこちらを使用する）
-// get-font-*関数を使用して$font-configsから値を取得
-$font-f_notosans: get-font-family('noto-sans-jp'), get-font-fallback('noto-sans-jp');
-$font-f_inter: get-font-family('inter'), get-font-fallback('inter');
-$font-f_mplus1p: get-font-family('mplus1p'), get-font-fallback('mplus1p');
-$font-f_rocknroll-one: get-font-family('rocknroll-one'), get-font-fallback('rocknroll-one');
-$font-f_sahitya: get-font-family('sahitya'), get-font-fallback('sahitya');
+// フォントファミリー一覧マップ（一元管理）
+// 構造: $font-families: (key: (family, fallback))
+// 実装の際は get-font-family() を使用して値を取得
+$font-families: (
+  'notosans': (
+    get-font-family-name('noto-sans-jp'),
+    get-font-fallback('noto-sans-jp'),
+  ),
+  'inter': (
+    get-font-family-name('inter'),
+    get-font-fallback('inter'),
+  ),
+  'mplus1p': (
+    get-font-family-name('mplus1p'),
+    get-font-fallback('mplus1p'),
+  ),
+  'rocknroll-one': (
+    get-font-family-name('rocknroll-one'),
+    get-font-fallback('rocknroll-one'),
+  ),
+  'sahitya': (
+    get-font-family-name('sahitya'),
+    get-font-fallback('sahitya'),
+  ),
+) !default;
 
-// フォントウェイト用の変数（実装の際はこちらを使用する）
-$font-w_thin: 100;
-$font-w_extralight: 200;
-$font-w_light: 300;
-$font-w_normal: 400;
-$font-w_medium: 500;
-$font-w_semibold: 600;
-$font-w_bold: 700;
-$font-w_extrabold: 800;
-$font-w_black: 900;
+// get-font-family フォントファミリー一覧から値を取得する
+// @param $font-key フォントキー名（$font-familiesのキー）
+// @return フォントファミリー名とフォールバックの組み合わせ
+//  例) get-font-family('notosans') → 'Noto Sans JP', sans-serif
+@function get-font-family($_font-key) {
+  $_font-family: map.get($font-families, $_font-key);
+
+  @if $_font-family ==null {
+    @error "Font key '#{$_font-key}' not found in $font-families.";
+  }
+
+  @return $_font-family;
+}
+
+// フォントウェイト一覧マップ（一元管理）
+// 構造: $font-weights: (key: value)
+// 実装の際は get-font-weight() を使用して値を取得
+$font-weights: (
+  'thin': 100,
+  'extralight': 200,
+  'light': 300,
+  'normal': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+  'extrabold': 800,
+  'black': 900,
+) !default;
+
+// get-font-weight フォントウェイトの値を取得する
+// @param $key フォントウェイトのキー名
+// @return フォントウェイトの値（数値）
+//  例) get-font-weight('bold') → 700
+@function get-font-weight($_key) {
+  $_value: map.get($font-weights, $_key);
+
+  @if $_value ==null {
+    @error "Font weight key '#{$_key}' not found in $font-weights.";
+  }
+
+  @return $_value;
+}
 
 /* image
 ----------------------------------------------------------------- */
-//画像ファイルパス
-$image_path_webp: '../../assets/images/webp/';
-$image_path_avif: '../../assets/images/avif/';
-$image_path_compression: '../../assets/images/compression/';
-$image_path_svg: '../../assets/images/svg/';
+// 画像パス一覧マップ（一元管理）
+// 構造: $image-paths: (key: value)
+// 実装の際は get-image-path() を使用して値を取得
+$image-paths: (
+  'webp': '../../assets/images/webp/',
+  'avif': '../../assets/images/avif/',
+  'compression': '../../assets/images/compression/',
+  'svg': '../../assets/images/svg/',
+) !default;
+
+// get-image-path 画像パスの値を取得する
+// @param $key 画像パスのキー名
+// @return 画像パスの値（文字列）
+//  例) get-image-path('webp') → '../../assets/images/webp/'
+@function get-image-path($_key) {
+  $_value: map.get($image-paths, $_key);
+
+  @if $_value ==null {
+    @error "Image path key '#{$_key}' not found in $image-paths.";
+  }
+
+  @return $_value;
+}
 
 /* height
 ----------------------------------------------------------------- */
-$height_header_pc: 80;
-$height_header_sp: 80;
+// 高さ一覧マップ（一元管理）
+// 構造: $heights: (key: value)
+// 実装の際は get-height() を使用して値を取得
+$heights: (
+  'header-pc': 80,
+  'header-sp': 80,
+) !default;
+
+// get-height 高さの値を取得する
+// @param $key 高さのキー名
+// @return 高さの値（数値）
+//  例) get-height('header-pc') → 80
+@function get-height($_key) {
+  $_value: map.get($heights, $_key);
+
+  @if $_value ==null {
+    @error "Height key '#{$_key}' not found in $heights.";
+  }
+
+  @return $_value;
+}
 
 /* transition
 ----------------------------------------------------------------- */
-$transition_normal: 0.3s;
-$transition_fast: 0.2s;
+// トランジション一覧マップ（一元管理）
+// 構造: $transitions: (key: value)
+// 実装の際は get-transition() を使用して値を取得
+$transitions: (
+  'normal': 0.3s,
+  'fast': 0.2s,
+) !default;
+
+// get-transition トランジションの値を取得する
+// @param $key トランジションのキー名
+// @return トランジションの値（時間）
+//  例) get-transition('normal') → 0.3s
+@function get-transition($_key) {
+  $_value: map.get($transitions, $_key);
+
+  @if $_value ==null {
+    @error "Transition key '#{$_key}' not found in $transitions.";
+  }
+
+  @return $_value;
+}
 
 /* border
 ----------------------------------------------------------------- */
-$border_normal: max(0.1rem, 1px) solid $color_base_black;
+// ボーダー一覧マップ（一元管理）
+// 構造: $borders: (key: value)
+// 実装の際は get-border() を使用して値を取得
+$borders: (
+  'normal': max(0.1rem, 1px) solid get-color('base', 'black'),
+) !default;
 
-/* others
+// get-border ボーダーの値を取得する
+// @param $key ボーダーのキー名
+// @return ボーダーの値（文字列）
+//  例) get-border('normal') → max(0.1rem, 1px) solid var(--color-base-black)
+@function get-border($_key) {
+  $_value: map.get($borders, $_key);
+
+  @if $_value ==null {
+    @error "Border key '#{$_key}' not found in $borders.";
+  }
+
+  @return $_value;
+}
+
+/* box-shadow
 ----------------------------------------------------------------- */
-$box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
+// ボックスシャドウ一覧マップ（一元管理）
+// 構造: $box-shadows: (key: value)
+// 実装の際は get-box-shadow() を使用して値を取得
+$box-shadows: (
+  'default': 0 0 1rem rgba(0, 0, 0, 0.3),
+) !default;
+
+// get-box-shadow ボックスシャドウの値を取得する
+// @param $key ボックスシャドウのキー名
+// @return ボックスシャドウの値（文字列）
+//  例) get-box-shadow('default') → 0 0 1rem rgba(0, 0, 0, 0.3)
+@function get-box-shadow($_key) {
+  $_value: map.get($box-shadows, $_key);
+
+  @if $_value ==null {
+    @error "Box shadow key '#{$_key}' not found in $box-shadows.";
+  }
+
+  @return $_value;
+}
+
+/* z-index
+----------------------------------------------------------------- */
+// z-index一覧マップ（一元管理）
+// 構造: $z-indexes: (key: value)
+// 実装の際は get-z-index() を使用して値を取得
+$z-indexes: (
+  'base': 1,
+  'header': 100,
+  'modal': 1000,
+  'tooltip': 2000,
+) !default;
+
+// get-z-index z-indexの値を取得する
+// @param $key z-indexのキー名
+// @return z-indexの値（数値）
+//  例) get-z-index('header') → 100
+@function get-z-index($_key) {
+  $_value: map.get($z-indexes, $_key);
+
+  @if $_value ==null {
+    @error "Z-index key '#{$_key}' not found in $z-indexes.";
+  }
+
+  @return $_value;
+}

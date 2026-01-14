@@ -6,15 +6,15 @@
 * 汎用的に使用できるカードスタイル
 *******************************************************************/
 .bl_card {
-  background-color: $color_bg_base;
-  border: 1px solid $color_tag_border;
+  background-color: get-color('bg', 'base');
+  border: 1px solid get-color('border', 'tag');
   border-radius: s(12);
   padding: s(30);
   transition: all 0.3s ease;
 
   @include hover {
     transform: translateY(-5px);
-    box-shadow: 0 s(10) s(30) rgba($color_base_black, 0.1);
+    box-shadow: 0 s(10) s(30) rgba(get-color('base', 'black'), 0.1);
   }
 
   &_header {
@@ -24,7 +24,7 @@
   &_title {
     font-size: s(20);
     font-weight: 600;
-    color: $color_text_primary;
+    color: get-color('text', 'primary');
     margin-bottom: s(10);
   }
 
@@ -34,14 +34,14 @@
 
   &_text {
     font-size: s(16);
-    color: $color_text_secondary;
+    color: get-color('text', 'secondary');
     line-height: 1.6;
   }
 
   &_footer {
     margin-top: s(20);
     padding-top: s(20);
-    border-top: 1px solid $color_tag_border;
+    border-top: 1px solid get-color('border', 'tag');
   }
 
   &_image {

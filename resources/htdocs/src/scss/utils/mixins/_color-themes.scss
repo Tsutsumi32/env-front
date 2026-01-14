@@ -9,16 +9,16 @@
 *     → --color-text-primary: #2B2D31;
 *     → --color-bg-base: #FFFFFF;
 *******************************************************************/
-@mixin define-color-vars($mode) {
-  $mode-map: map.get($colors, $mode);
+@mixin define-color-vars($_mode) {
+  $_mode-map: map.get($colors, $_mode);
 
-  @if $mode-map == null {
-    @error "Unknown color mode: #{$mode}";
+  @if $_mode-map == null {
+    @error "Unknown color mode: #{$_mode}";
   }
 
-  @each $group, $group-map in $mode-map {
-    @each $name, $value in $group-map {
-      --color-#{"" + $group}-#{"" + $name}: #{$value};
+  @each $_group, $_group-map in $_mode-map {
+    @each $_name, $_value in $_group-map {
+      --color-#{"" + $_group}-#{"" + $_name}: #{$_value};
     }
   }
 }
@@ -33,20 +33,20 @@
 *******************************************************************/
 @mixin generate-color-themes {
   // default が存在するかチェック
-  @if not map.has-key($colors, default) {
+  @if not map.has-key($colors, 'default') {
     @error "$colors must have a 'default' mode.";
   }
 
   // :root（default）
   :root {
-    @include define-color-vars(default);
+    @include define-color-vars('default');
   }
 
   // その他のモード
-  @each $mode, $_ in $colors {
-    @if $mode != default {
-      [data-theme='#{$mode}'] {
-        @include define-color-vars($mode);
+  @each $_mode, $_ in $colors {
+    @if $_mode != 'default' {
+      [data-theme='#{$_mode}'] {
+        @include define-color-vars($_mode);
       }
     }
   }
@@ -75,13 +75,13 @@
 *   color: white;
 * }
 *******************************************************************/
-@mixin mode($mode) {
-  @if $mode == 'default' {
+@mixin mode($_mode) {
+  @if $_mode == 'default' {
     // defaultモードは親セレクタそのまま（通常は:rootで既に定義済み）
     @content;
   } @else {
     // その他のモードは[data-theme="モード名"]で出力
-    [data-theme='#{$mode}'] & {
+    [data-theme='#{$_mode}'] & {
       @content;
     }
   }

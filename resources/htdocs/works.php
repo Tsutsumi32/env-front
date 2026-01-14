@@ -16,8 +16,8 @@ $pageId = PAGE_ID::SAMPLE_WORKS;
 ob_start();
 ?>
 
-<section id="works" class="ly_section">
-    <div class="ly_container">
+<section id="works" class="ly_section __normal">
+    <div class="ly_container __normal">
         <?php include __DIR__ . '/includes/modules/breadcrumbs.php'; ?>
 
         <div class="un_pageHeader">
