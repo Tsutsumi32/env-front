@@ -48,14 +48,15 @@ $min_layout_width: $design_size_sp;
 /* breakpoint
 ----------------------------------------------------------------- */
 // メディアクエリの設計方針
-//////////////////////////////////////////////
 // 'sp-first': SPファースト（小さい画面から大きい画面へ上書き）
 // 'pc-first': PCファースト（大きい画面から小さい画面へ上書き）
+//////////////////////////////////////////////
 $media_query_strategy: 'sp-first' !default;
 
 // ブレイクポイントのキー名一覧マップ（一元管理）
 // 構造: $breakpoint-keys: (key: value)
 // 実装の際は get-breakpoint-key() を使用して値を取得
+//////////////////////////////////////////////
 $breakpoint-keys: (
   'tab': 'tab',
   'tabL': 'tabL',
@@ -68,6 +69,7 @@ $breakpoint-keys: (
 // @param $key ブレイクポイントキーのキー名
 // @return ブレイクポイントのキー名（文字列）
 //  例) get-breakpoint-key('tab') → 'tab'
+//////////////////////////////////////////////
 @function get-breakpoint-key($_key) {
   $_value: map.get($breakpoint-keys, $_key);
 
@@ -96,6 +98,7 @@ $breakpoint-keys: (
 //   'sp': 560
 // 注意: ★sp-firstとpc-firstで、この値自体を手動で書き換える必要があります。
 //       必ずsp-first、pc-firstで順番(小さい順・大きい順)を変えることが必要です。
+//////////////////////////////////////////////
 $breakpoints: (
   get-breakpoint-key('tab'): 580,
   get-breakpoint-key('tabL'): 768,
@@ -108,6 +111,7 @@ $breakpoints: (
 // @param $key ブレイクポイントのキー名
 // @return ブレイクポイントの値（数値）
 //  例) get-breakpoint('tab') → 580
+//////////////////////////////////////////////
 @function get-breakpoint($_key) {
   $_value: map.get($breakpoints, $_key);
 
@@ -135,6 +139,7 @@ $breakpoints: (
 // 'fixed-width': 固定化する時点の画面幅（px、fixedの場合のみ使用）
 // 最初のキーは'default'とし、sp-first/pc-firstのどちらでも、メディアクエリを使用しない範囲の指定を行う
 // default以降は、$breakpointsのキー名で各ブレイクポイントでの設定を行う
+//////////////////////////////////////////////
 $style-settings: (
   'default': (
     'type': 'liquid',
@@ -177,6 +182,7 @@ $style-settings: (
 //   - 'default': メディアクエリを使用しない時のデフォルト値（sp-first/pc-first共通）
 //   - $breakpointsのキー名 : 該当のメディアクエリで値を設定
 // 単位なし => s(数値)
+//////////////////////////////////////////////
 $section-sizes: (
   'small': (
     'default': 50,
@@ -210,6 +216,7 @@ $section-sizes: (
 // 各値は (padding: 余白値, max-width: 最大幅) の形式
 // 単位なし => s(数値)　単位あり => 直接指定
 // max-widthはオプション（nullの場合は設定しない）
+//////////////////////////////////////////////
 $container-sizes: (
   'normal': (
     'default': (
@@ -242,7 +249,7 @@ $container-sizes: (
 /*
 /* <カラー実装パターン>
 /* ・役割毎に色が管理されている場合
-/*   ⇒ $colorsを使用する(モード切り替えがない場合も、defaultだけの運用)
+/*   ⇒ $colorsを使用する(モード切り替えがない場合でもdefaultで運用)
 /* ・役割毎に管理されていない場合
 /*   ⇒ $color-paletteを直接参照するget-color(②)を使用する
 ----------------------------------------------------------------- */
@@ -251,6 +258,7 @@ $container-sizes: (
 // プロジェクト全体で使用する色を定義（役割を持たない単純な色名）
 // 構造: $color-palette: (name: value)
 // 同じ色は1回のみ定義
+//////////////////////////////////////////////
 $color-palette: (
   'black': #000,
   'white': #ffffff,
@@ -276,6 +284,13 @@ $color-palette: (
   @return $value;
 }
 
+// モード切り替えを行うかどうか(CSS変数を生成するかどうか)
+// 行う："true"
+// 行わない：　"false"
+// :rootへのCSS生成及び、$colorsからの取得処理を管理
+//////////////////////////////////////////////
+$theme-change-mode-on: 'true';
+
 // モード別カラーマップ（一元管理）
 // 構造: $colors: (mode: (group: (name: value)))
 // 例: $colors: (default: (text: (primary: #2B2D31)))
@@ -283,6 +298,7 @@ $color-palette: (
 // _color-themes.scssによって、本変数を元に、モード毎のCSS変数を設定
 // 下記get-color() functionで、定義されるCSS変数の取得が可能
 // ※モード切替自体はJSで制御 JSでユーザー設定や切り替えボタンで data-theme属性の切り替えを行う
+//////////////////////////////////////////////
 $colors: (
   'default': (
     // 基本色
@@ -377,18 +393,27 @@ $colors: (
 ) !default;
 
 // モード選択用変数(mod()で使用する)
+//////////////////////////////////////////////
 $color_mode_dark: 'dark';
 
 // ※$colorsを使用する場合
 // get-color① CSS変数を返す function
-// _color-theme.scss(generate-color-themes())で生成したCSS変数を取得
+// $theme-change-mode-on: true
+// ⇒ _color-theme.scss(generate-color-themes())で生成したCSS変数を取得
+// $theme-change-mode-on: false
+// ⇒ $colorsから取得
 // @param $group カラーグループ名（text, bg, blue など）
 // @param $name カラー名（primary, secondary など）
 // @return CSS変数参照
 //  例) get-color('text', 'primary') → var(--color-text-primary)
 //  例) get-color('bg', 'base') → var(--color-bg-base)
+//////////////////////////////////////////////
 @function get-color($_group, $_name) {
-  @return var(--color-#{$_group}-#{$_name});
+  @if $theme-change-mode-on == 'true' {
+    @return var(--color-#{$_group}-#{$_name});
+  } @else {
+    @return map.get(map.get($colors, 'default'), $_group, $_name);
+  }
 }
 
 // ※$color-paletteを直接使用する場合
@@ -396,6 +421,7 @@ $color_mode_dark: 'dark';
 // @param $name カラー名（primary, secondary など）
 // @return $color-paletteの色
 //  例) get-color('black')
+//////////////////////////////////////////////
 // @function get-color($_key) {
 //   $_value: get-color-palette($_key);
 
@@ -409,6 +435,7 @@ $color_mode_dark: 'dark';
 /* font
 ----------------------------------------------------------------- */
 // フォントファイルのベースパス
+//////////////////////////////////////////////
 $font-path-base: '../../assets/fonts/';
 
 // フォント設定マップ(フォントファイルを用意した上で設定 => font-face設定)
@@ -422,6 +449,7 @@ $font-path-base: '../../assets/fonts/';
 //   - 'style': フォントスタイル（'normal' | 'italic'、デフォルト: 'normal'）
 //   - 'variable': 可変フォントかどうか（true | false、デフォルト: false）
 //   - 'variable-axes': 可変フォントの軸（'wght' | 'wght opsz' など、variable: trueの場合のみ）
+//////////////////////////////////////////////
 $font-configs: (
   'noto-sans-jp': (
     'family': 'Noto Sans JP',
@@ -515,6 +543,7 @@ $font-configs: (
 // @param $font-key フォントキー名（$font-configsのキー）
 // @return フォントファミリー名（文字列）
 //  例) get-font-family('noto-sans-jp') → 'Noto Sans JP'
+//////////////////////////////////////////////
 @function get-font-family-name($_font-key) {
   $_config: map.get($font-configs, $_font-key);
 
@@ -529,6 +558,7 @@ $font-configs: (
 // @param $font-key フォントキー名（$font-configsのキー）
 // @return フォールバックフォント（sans-serif | serif | monospace など）
 //  例) get-font-fallback('noto-sans-jp') → sans-serif
+//////////////////////////////////////////////
 @function get-font-fallback($_font-key) {
   $_config: map.get($font-configs, $_font-key);
 
@@ -542,6 +572,7 @@ $font-configs: (
 // フォントファミリー一覧マップ（一元管理）
 // 構造: $font-families: (key: (family, fallback))
 // 実装の際は get-font-family() を使用して値を取得
+//////////////////////////////////////////////
 $font-families: (
   'notosans': (
     get-font-family-name('noto-sans-jp'),
@@ -569,6 +600,7 @@ $font-families: (
 // @param $font-key フォントキー名（$font-familiesのキー）
 // @return フォントファミリー名とフォールバックの組み合わせ
 //  例) get-font-family('notosans') → 'Noto Sans JP', sans-serif
+//////////////////////////////////////////////
 @function get-font-family($_font-key) {
   $_font-family: map.get($font-families, $_font-key);
 
@@ -582,6 +614,7 @@ $font-families: (
 // フォントウェイト一覧マップ（一元管理）
 // 構造: $font-weights: (key: value)
 // 実装の際は get-font-weight() を使用して値を取得
+//////////////////////////////////////////////
 $font-weights: (
   'thin': 100,
   'extralight': 200,
@@ -598,6 +631,7 @@ $font-weights: (
 // @param $key フォントウェイトのキー名
 // @return フォントウェイトの値（数値）
 //  例) get-font-weight('bold') → 700
+//////////////////////////////////////////////
 @function get-font-weight($_key) {
   $_value: map.get($font-weights, $_key);
 
@@ -613,6 +647,7 @@ $font-weights: (
 // 画像パス一覧マップ（一元管理）
 // 構造: $image-paths: (key: value)
 // 実装の際は get-image-path() を使用して値を取得
+//////////////////////////////////////////////
 $image-paths: (
   'webp': '../../assets/images/webp/',
   'avif': '../../assets/images/avif/',
@@ -624,6 +659,7 @@ $image-paths: (
 // @param $key 画像パスのキー名
 // @return 画像パスの値（文字列）
 //  例) get-image-path('webp') → '../../assets/images/webp/'
+//////////////////////////////////////////////
 @function get-image-path($_key) {
   $_value: map.get($image-paths, $_key);
 
@@ -639,6 +675,7 @@ $image-paths: (
 // 高さ一覧マップ（一元管理）
 // 構造: $heights: (key: value)
 // 実装の際は get-height() を使用して値を取得
+//////////////////////////////////////////////
 $heights: (
   'header-pc': 80,
   'header-sp': 80,
@@ -648,6 +685,7 @@ $heights: (
 // @param $key 高さのキー名
 // @return 高さの値（数値）
 //  例) get-height('header-pc') → 80
+//////////////////////////////////////////////
 @function get-height($_key) {
   $_value: map.get($heights, $_key);
 
@@ -663,6 +701,7 @@ $heights: (
 // トランジション一覧マップ（一元管理）
 // 構造: $transitions: (key: value)
 // 実装の際は get-transition() を使用して値を取得
+//////////////////////////////////////////////
 $transitions: (
   'normal': 0.3s,
   'fast': 0.2s,
@@ -672,6 +711,7 @@ $transitions: (
 // @param $key トランジションのキー名
 // @return トランジションの値（時間）
 //  例) get-transition('normal') → 0.3s
+//////////////////////////////////////////////
 @function get-transition($_key) {
   $_value: map.get($transitions, $_key);
 
@@ -687,6 +727,7 @@ $transitions: (
 // ボーダー一覧マップ（一元管理）
 // 構造: $borders: (key: value)
 // 実装の際は get-border() を使用して値を取得
+//////////////////////////////////////////////
 $borders: (
   'normal': max(0.1rem, 1px) solid get-color('base', 'black'),
 ) !default;
@@ -695,6 +736,7 @@ $borders: (
 // @param $key ボーダーのキー名
 // @return ボーダーの値（文字列）
 //  例) get-border('normal') → max(0.1rem, 1px) solid var(--color-base-black)
+//////////////////////////////////////////////
 @function get-border($_key) {
   $_value: map.get($borders, $_key);
 
@@ -710,6 +752,7 @@ $borders: (
 // ボックスシャドウ一覧マップ（一元管理）
 // 構造: $box-shadows: (key: value)
 // 実装の際は get-box-shadow() を使用して値を取得
+//////////////////////////////////////////////
 $box-shadows: (
   'default': 0 0 1rem rgba(0, 0, 0, 0.3),
 ) !default;
@@ -718,6 +761,7 @@ $box-shadows: (
 // @param $key ボックスシャドウのキー名
 // @return ボックスシャドウの値（文字列）
 //  例) get-box-shadow('default') → 0 0 1rem rgba(0, 0, 0, 0.3)
+//////////////////////////////////////////////
 @function get-box-shadow($_key) {
   $_value: map.get($box-shadows, $_key);
 
@@ -733,6 +777,7 @@ $box-shadows: (
 // z-index一覧マップ（一元管理）
 // 構造: $z-indexes: (key: value)
 // 実装の際は get-z-index() を使用して値を取得
+//////////////////////////////////////////////
 $z-indexes: (
   'base': 1,
   'header': 100,
@@ -744,6 +789,7 @@ $z-indexes: (
 // @param $key z-indexのキー名
 // @return z-indexの値（数値）
 //  例) get-z-index('header') → 100
+//////////////////////////////////////////////
 @function get-z-index($_key) {
   $_value: map.get($z-indexes, $_key);
 

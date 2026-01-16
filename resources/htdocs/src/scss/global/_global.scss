@@ -3,8 +3,12 @@
 /******************************************************************
 * 共通設定
 *******************************************************************/
+// スタイル計算 s()の設定
 @include style-settings-vars;
-@include generate-color-themes;
+// テーマ切り替え用CSSの生成
+@if $theme-change-mode-on == 'true' {
+  @include generate-color-themes;
+}
 
 html {
   // スムーススクロールはjsで制御
