@@ -130,9 +130,8 @@ $breakpoints: (
 //   - 'responsive': remで計算（レスポンシブ(rem値を使用、$min_layout_width以下はvw)）
 //   - 'fixed': 前時点のリキッドの変化において、指定時点でのサイズに固定化（vw-to-pixelを使用）
 //   - 'none': 変更しない（前のブレイクポイントの値を継承）
-// 'base-size': 基準となるフォントサイズ（px、通常は1、または計算値）
-// 'viewport-base': vwの計算基準となる画面幅（px、リキッドまたはfixedの場合に使用）
-//   - responsiveの場合: 原則 $font-s_base を指定する
+// 'base-size': 計算値の倍率を設定(基本は1 s(20) => 1:20px  2:40px)
+// 'viewport-base': vwの計算基準となる画面幅（リキッドまたはfixedの場合に使用）
 // 'fixed-width': 固定化する時点の画面幅（px、fixedの場合のみ使用）
 // 最初のキーは'default'とし、sp-first/pc-firstのどちらでも、メディアクエリを使用しない範囲の指定を行う
 // default以降は、$breakpointsのキー名で各ブレイクポイントでの設定を行う
@@ -145,30 +144,23 @@ $style-settings: (
   // get-breakpoint-key('tab'): (
   //     'type': 'fixed',
   //     'base-size': 1,
-  //     'viewport-base': $design_size_sp,
   //     // SPのリキッド基準点
-  //     'fixed-width': get-breakpoint('tab'),
+  //     'viewport-base': $design_size_sp,
   //     // TABの時点で固定化
+  //     'fixed-width': get-breakpoint('tab'),
   //   ),
   get-breakpoint-key('tab'): (
       'type': 'responsive',
       'base-size': 1,
-      'viewport-base': $font-s_base,
     ),
   get-breakpoint-key('tabL'): (
-    'type': 'responsive',
-    'base-size': 1,
-    'viewport-base': $font-s_base,
+    'type': 'none',
   ),
   get-breakpoint-key('pc'): (
-    'type': 'responsive',
-    'base-size': 1,
-    'viewport-base': $font-s_base,
+    'type': 'none',
   ),
   get-breakpoint-key('pcL'): (
-    'type': 'responsive',
-    'base-size': 1,
-    'viewport-base': $font-s_base,
+    'type': 'none',
   ),
   get-breakpoint-key('pcLL'): (
     'type': 'liquid',

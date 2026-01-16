@@ -22,8 +22,8 @@
     $_default: map.get($style-settings, $_default-key);
     $_default-type: map.get($_default, 'type');
     $_default-base: map.get($_default, 'base-size');
-    $_default-viewport-base: map.get($_default, 'viewport-base');
 
+    // CSS変数の生成処理
     // base-sizeが数値の場合はstrip-unit、文字列（計算値）の場合はそのまま使用
     $_default-base-value: null;
     @if meta.type-of($_default-base) == 'string' {
@@ -31,18 +31,23 @@
     } @else {
       $_default-base-value: strip-unit($_default-base);
     }
-    $_default-viewport-base-stripped: strip-unit($_default-viewport-base);
 
     @if $_default-type == 'liquid' {
+      $_default-viewport-base: map.get($_default, 'viewport-base');
+      $_default-viewport-base-stripped: strip-unit($_default-viewport-base);
+      // base-size(基本は1）により、指定した画面サイズにおけるベースサイズ(基本1px)のvw値を計算
       --liq-unit: calc(#{$_default-base-value} / #{$_default-viewport-base-stripped} * 100vw);
     } @else if $_default-type == 'responsive' {
       // $min_layout_width以下ではvw、それ以上ではrem
       $_min-layout-width-stripped: strip-unit($min_layout_width);
+      // base-size(基本は1)により、倍率を考慮
       --liq-unit: min(
         calc(#{$_default-base-value} / #{$_min-layout-width-stripped} * 100vw),
         calc(#{$_default-base-value} / #{strip-unit($font-s_base)} * 1rem)
       );
     } @else if $_default-type == 'fixed' {
+      $_default-viewport-base: map.get($_default, 'viewport-base');
+      $_default-viewport-base-stripped: strip-unit($_default-viewport-base);
       $_default-fixed-width: map.get($_default, 'fixed-width');
       $_default-fixed-width-stripped: strip-unit($_default-fixed-width);
       $_font-s-base-stripped: strip-unit($font-s_base);
@@ -67,8 +72,6 @@
           // type='none'の場合は何もしない（前の値を継承）
           @if $_type != 'none' {
             $_base: map.get($_setting, 'base-size');
-            $_viewport-base: map.get($_setting, 'viewport-base');
-            $_fixed-width: map.get($_setting, 'fixed-width');
 
             $_base-value: null;
             @if meta.type-of($_base) == 'string' {
@@ -76,9 +79,10 @@
             } @else {
               $_base-value: strip-unit($_base);
             }
-            $_viewport-base-stripped: strip-unit($_viewport-base);
 
             @if $_type == 'liquid' {
+              $_viewport-base: map.get($_setting, 'viewport-base');
+              $_viewport-base-stripped: strip-unit($_viewport-base);
               --liq-unit: calc(#{$_base-value} / #{$_viewport-base-stripped} * 100vw);
             } @else if $_type == 'responsive' {
               // $min_layout_width以下ではvw、それ以上ではrem
@@ -88,6 +92,9 @@
                 calc(#{$_base-value} / #{strip-unit($font-s_base)} * 1rem)
               );
             } @else if $_type == 'fixed' {
+              $_viewport-base: map.get($_setting, 'viewport-base');
+              $_viewport-base-stripped: strip-unit($_viewport-base);
+              $_fixed-width: map.get($_setting, 'fixed-width');
               $_fixed-width-stripped: strip-unit($_fixed-width);
               $_font-s-base-stripped: strip-unit($font-s_base);
               // vw-to-pixelの計算式を展開してremに変換
