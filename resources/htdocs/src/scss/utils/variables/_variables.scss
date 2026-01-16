@@ -432,6 +432,17 @@ $color_mode_dark: 'dark';
 //   @return $_value;
 // }
 
+// 役割が確定しているカラーはフラットで管理(主にglobalに設定する値)
+// デフォルトテキスト色
+$color_base_text: get-color('text', 'primary');
+// bodyの色
+$color_body_bg: get-color('base', 'white');
+// 選択色
+$color_selection_text: get-color('base', 'white');
+$color_selection_bg: get-color('base', 'black');
+// focus
+$color_focus_outline: get-color('base', 'black');
+
 /* font
 ----------------------------------------------------------------- */
 // フォントファイルのベースパス

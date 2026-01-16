@@ -25,8 +25,8 @@ body {
   line-break: strict;
   font-family: get-font-family(notosans);
 
-  background-color: get-color('bg', 'base');
-  color: get-color('text', 'primary');
+  background-color: $color_body_bg;
+  color: $color_base_text;
   width: 100%;
 }
 
@@ -37,7 +37,7 @@ select {
   &::picker(select) {
     appearance: base-select;
     border: none;
-    background-color: get-color(base, black);
+    background-color: black;
     backdrop-filter: blur(1rem);
     -webkit-backdrop-filter: blur(1rem);
     /* アニメーションも設定できる */
@@ -54,20 +54,20 @@ select {
 
   option {
     padding-inline: 1rem;
-    color: get-color('base', 'white');
+    color: wheat;
 
     &::checkmark {
       display: none;
     }
 
     &:checked {
-      background-color: get-color('base', 'accent') !important;
-      color: get-color('base', 'black');
+      background-color: blue;
+      color: black;
     }
 
     &:hover {
-      background-color: get-color('base', 'black');
-      color: get-color('base', 'black');
+      background-color: white;
+      color: black;
     }
   }
 }
@@ -123,18 +123,18 @@ h6 {
 
 // テキスト選択時のスタイル
 ::selection {
-  color: get-color('selection', 'selection-text');
-  background-color: get-color('selection', 'selection-bg');
+  color: $color_selection_text;
+  background-color: $color_selection_bg;
 }
 
 ::-moz-selection {
-  color: get-color('selection', 'selection-text');
-  background-color: get-color('selection', 'selection-bg');
+  color: $color_selection_text;
+  background-color: $color_selection_bg;
 }
 
 // フォーカス時のoutlineスタイル
 :focus-visible {
-  outline: 2px solid get-color('ui', 'focus-outline');
+  outline: 2px solid $color_focus_outline;
   outline-offset: 2px;
 }
 

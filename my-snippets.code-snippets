@@ -1,60 +1,60 @@
 {
-    "src-svg": {
-        "prefix": "src-svg",
-        "body": [
-            "./assets/images/svg/"
-        ],
-        "description": "画像パス",
-    },
-    "html-img-convert": {
-        "prefix": "html-img-convert",
-        "body": [
-            "<picture>",
-            "  <source srcset=\"./assets/images/avif/$2\" type=\"image/avif\">",
-            "  <source srcset=\"./assets/images/webp/$2\" type=\"image/webp\">",
-            "  <img",
-            "  src=\"./assets/images/compression/$1\"",
-            "  width=\"$5\" height=\"$6\"",
-            "  alt=\"$7\">",
-            "</picture>"
-        ],
-        "description": "画像セット",
-    },
-    "html-img-convert-responsive": {
-        "prefix": "html-img-convert-responsive",
-        "body": [
-            "<picture>",
-            "  <source media=\"(min-width: 769px)\" srcset=\"./assets/images/webp/$2\" type=\"image/webp\">",
-            "  <source srcset=\"./assets/images/webp/$2\" type=\"image/webp\">",
-            "  <source media=\"(min-width: 769px)\" srcset=\"./assets/images/compression/$2\">",
-            "  <img",
-            "  src=\"./assets/images/compression/$1\"",
-            "  width=\"$5\" height=\"$6\"",
-            "  alt=\"$7\">",
-            "</picture>"
-        ],
-        "description": "画像セット",
-    },
-    "html-img-responsive": {
+	"src-svg": {
+		"prefix": "src-svg",
+		"body": [
+			"./assets/images/svg/"
+		],
+		"description": "画像パス",
+	},
+	"html-img-convert": {
+		"prefix": "html-img-convert",
+		"body": [
+			"<picture>",
+			"  <source srcset=\"./assets/images/avif/$2\" type=\"image/avif\">",
+			"  <source srcset=\"./assets/images/webp/$2\" type=\"image/webp\">",
+			"  <img",
+			"  src=\"./assets/images/compression/$1\"",
+			"  width=\"$5\" height=\"$6\"",
+			"  alt=\"$7\">",
+			"</picture>"
+		],
+		"description": "画像セット",
+	},
+	"html-img-convert-responsive": {
+		"prefix": "html-img-convert-responsive",
+		"body": [
+			"<picture>",
+			"  <source media=\"(min-width: 769px)\" srcset=\"./assets/images/webp/$2\" type=\"image/webp\">",
+			"  <source srcset=\"./assets/images/webp/$2\" type=\"image/webp\">",
+			"  <source media=\"(min-width: 769px)\" srcset=\"./assets/images/compression/$2\">",
+			"  <img",
+			"  src=\"./assets/images/compression/$1\"",
+			"  width=\"$5\" height=\"$6\"",
+			"  alt=\"$7\">",
+			"</picture>"
+		],
+		"description": "画像セット",
+	},
+	"html-img-responsive": {
 		"prefix": "html-img-responsive",
 		"body": [
 			"<picture>",
-            "  <source media=\"(min-width: 768px)\" srcset=\"\">",
-            "  <img src=\"\" alt=\"\" width=\"\" height=\"\">",
-            "</picture>",
+			"  <source media=\"(min-width: 768px)\" srcset=\"\">",
+			"  <img src=\"\" alt=\"\" width=\"\" height=\"\">",
+			"</picture>",
 		],
 		"description": "画像セット",
 	},
-    "html-img-default": {
+	"html-img-default": {
 		"prefix": "html-img-default",
 		"body": [
 			"<picture>",
-            "  <img src=\"\" alt=\"\" width=\"\" height=\"\">",
-            "</picture>",
+			"  <img src=\"\" alt=\"\" width=\"\" height=\"\">",
+			"</picture>",
 		],
 		"description": "画像セット",
 	},
-    "html-video": {
+	"html-video": {
 		"prefix": "html-video",
 		"body": [
 			"<video controls autoplay muted loop playsinline width=\"640\" height=\"360\" poster=\"thumbnail.jpg\">",
@@ -66,7 +66,7 @@
 		],
 		"description": "動画セット",
 	},
-    "php-render-img": {
+	"php-render-img": {
 		"prefix": "php-render-img",
 		"body": [
 			"<?php",
@@ -80,58 +80,128 @@
 		],
 		"description": "PHP render_img関数",
 	},
-		"scss-breakpoint-sp": {
-		"prefix": "bp-sp",
+	"scss-breakpoint-sp": {
+		"prefix": "break-sp",
 		"body": [
-			"@include media(\\$bp_sp) {",
+			"@include media(get-breakpoint-key('sp')) {",
+			"  $0",
+			"}"
+		],
+		"description": "メディアクエリ sp",
+	},
+	"scss-breakpoint-tab": {
+		"prefix": "break-tab",
+		"body": [
+			"@include media(get-breakpoint-key('tab')) {",
 			"  $0",
 			"}"
 		],
 		"description": "メディアクエリ tab",
 	},
-    "scss-breakpoint-tab": {
-		"prefix": "bp-tab",
+	"scss-breakpoint-tabL": {
+		"prefix": "break-tabL",
 		"body": [
-			"@include media(\\$bp_tab) {",
-			"  $0",
-			"}"
-		],
-		"description": "メディアクエリ tab",
-	},
-    "scss-breakpoint-tabL": {
-		"prefix": "bp-tabL",
-		"body": [
-			"@include media(\\$bp_tabL) {",
+			"@include media(get-breakpoint-key('tabL')) {",
 			"  $0",
 			"}"
 		],
 		"description": "メディアクエリ tabL",
 	},
-    "scss-breakpoint-pc": {
-		"prefix": "bp-pc",
+	"scss-breakpoint-pc": {
+		"prefix": "break-pc",
 		"body": [
-			"@include media(\\$bp_pc) {",
+			"@include media(get-breakpoint-key('pc')) {",
 			"  $0",
 			"}"
 		],
 		"description": "メディアクエリ pc",
 	},
-    "scss-breakpoint-pcL": {
-		"prefix": "bp-pcL",
+	"scss-breakpoint-pcL": {
+		"prefix": "break-pcL",
 		"body": [
-			"@include media(\\$bp_pcL) {",
+			"@include media(get-breakpoint-key('pcL')) {",
 			"  $0",
 			"}"
 		],
 		"description": "メディアクエリ pcL",
 	},
-    "scss-breakpoint-pcLL": {
-		"prefix": "bp-pcLL",
+	"scss-breakpoint-pcLL": {
+		"prefix": "break-pcLL",
 		"body": [
-			"@include media(\\$bp_pcLL) {",
+			"@include media(get-breakpoint-key('pcLL')) {",
 			"  $0",
 			"}"
 		],
 		"description": "メディアクエリ pcLL",
+	},
+	"scss-get-font-family": {
+		"prefix": "get-font-family",
+		"body": [
+			"get-font-family('$0');"
+		],
+		"description": "SCSS font-family function",
+	},
+	"scss-get-font-weight": {
+		"prefix": "get-font-weight",
+		"body": [
+			"get-font-weight('$0');"
+		],
+		"description": "SCSS font-weight function",
+	},
+	"scss-get-image-path": {
+		"prefix": "get-image-path",
+		"body": [
+			"get-image-path('$0');"
+		],
+		"description": "SCSS image-path function",
+	},
+	"scss-get-height": {
+		"prefix": "get-height",
+		"body": [
+			"get-height('$0');"
+		],
+		"description": "SCSS height function",
+	},
+	"scss-get-transition": {
+		"prefix": "get-transition",
+		"body": [
+			"get-transition('$0');"
+		],
+		"description": "SCSS transition function",
+	},
+	"scss-get-border": {
+		"prefix": "get-border",
+		"body": [
+			"get-border('$0');"
+		],
+		"description": "SCSS border function",
+	},
+	"scss-get-box-shadow": {
+		"prefix": "get-box-shadow",
+		"body": [
+			"get-box-shadow('$0');"
+		],
+		"description": "SCSS box-shadow function",
+	},
+	"scss-get-z-index": {
+		"prefix": "get-z-index",
+		"body": [
+			"get-z-index('$0');"
+		],
+		"description": "SCSS z-index function",
+	},
+	// "scss-get-color": {
+	// 	"prefix": "get-color",
+	// 	"body": [
+	// 		"get-color('$0')"
+	// 	],
+	// 	"description": "SCSS color function",
+	// },
+	"scss-get-color": {
+		"prefix": "get-color",
+		"body": [
+			"get-color('$1', '$2')"
+		],
+		"description": "SCSS color function",
 	}
 }
