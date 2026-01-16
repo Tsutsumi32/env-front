@@ -439,11 +439,12 @@ $color_mode_dark: 'dark';
 $font-path-base: '../../assets/fonts/';
 
 // フォント設定マップ(フォントファイルを用意した上で設定 => font-face設定)
-// CDNを使用する場合は、フラット変数のみで運用
 // 各フォントファミリーの設定を定義
 // key名：フォントファミリー名(小文字 スペースは「-」つなぎ)
 // 'family': フォントファミリー名（CSSで使用する名前）
+// 'fallback': フォールバック用のフォント
 // 'files': フォントファイルの設定配列
+// ※CDNを利用する場合、filesは設定不要
 //   - 'file': ファイル名（$font-path-baseからの相対パス）
 //   - 'weight': フォントウェイト（数値または範囲文字列 '100 900'）
 //   - 'style': フォントスタイル（'normal' | 'italic'、デフォルト: 'normal'）
@@ -454,88 +455,22 @@ $font-configs: (
   'noto-sans-jp': (
     'family': 'Noto Sans JP',
     'fallback': sans-serif,
-    'files': (
-      (
-        'file': 'NotoSansJP-VariableFont_wght.woff2',
-        'weight': '100 900',
-        'style': 'normal',
-        'variable': true,
-        'variable-axes': 'wght',
-      ),
-    ),
   ),
   'inter': (
     'family': 'Inter',
     'fallback': sans-serif,
-    'files': (
-      (
-        'file': 'Inter-VariableFont_opsz,wght.woff2',
-        'weight': '100 900',
-        'style': 'normal',
-        'variable': true,
-        'variable-axes': 'wght opsz',
-      ),
-    ),
   ),
   'mplus1p': (
     'family': 'M PLUS 1p',
     'fallback': sans-serif,
-    'files': (
-      (
-        'file': 'MPLUS1p-Regular.woff2',
-        'weight': 400,
-        'style': 'normal',
-        'variable': false,
-      ),
-      (
-        'file': 'MPLUS1p-Medium.woff2',
-        'weight': 500,
-        'style': 'normal',
-        'variable': false,
-      ),
-      (
-        'file': 'MPLUS1p-Bold.woff2',
-        'weight': 700,
-        'style': 'normal',
-        'variable': false,
-      ),
-      (
-        'file': 'MPLUS1p-Black.woff2',
-        'weight': 900,
-        'style': 'normal',
-        'variable': false,
-      ),
-    ),
   ),
   'rocknroll-one': (
     'family': 'RocknRoll One',
     'fallback': sans-serif,
-    'files': (
-      (
-        'file': 'RocknRollOne-Regular.woff2',
-        'weight': 400,
-        'style': 'normal',
-        'variable': false,
-      ),
-    ),
   ),
   'sahitya': (
     'family': 'Sahitya',
     'fallback': serif,
-    'files': (
-      (
-        'file': 'Sahitya-Regular.woff2',
-        'weight': 400,
-        'style': 'normal',
-        'variable': false,
-      ),
-      (
-        'file': 'Sahitya-Bold.woff2',
-        'weight': 700,
-        'style': 'normal',
-        'variable': false,
-      ),
-    ),
   ),
 ) !default;
 

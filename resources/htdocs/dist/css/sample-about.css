@@ -1,2 +1,1528 @@
-:after,:before,a,abbr,address,article,aside,body,button,caption,cite,code,dd,del,div,dl,dt,em,fieldset,figure,font,footer,form,h1,h2,h3,h4,h5,h6,header,html,iframe,img,input,label,legend,li,main,nav,object,ol,optgroup,option,p,pre,q,s,section,select,span,sub,sup,table,tbody,td,textarea,tfoot,th,thead,tr,tt,ul,var{border:0;-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0}html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}main{display:block}ol,ul{list-style:none}a{background-color:transparent;color:inherit;text-decoration:none}img{border-style:none}button,input,optgroup,select,textarea{-moz-appearance:none;appearance:none;-webkit-appearance:none;background:transparent;border-radius:0;vertical-align:middle}input,textarea{cursor:text}[type=checkbox]{-moz-appearance:checkbox;appearance:checkbox;-webkit-appearance:checkbox;cursor:pointer}[type=radio]{-moz-appearance:radio;appearance:radio;-webkit-appearance:radio;cursor:pointer}[type=date]::-webkit-calendar-picker-indicator,[type=time]::-webkit-calendar-picker-indicator{cursor:pointer}button,label[for],select{cursor:pointer}[type=button]:disabled,[type=reset]:disabled,[type=submit]:disabled,button:disabled{cursor:default}select:disabled{opacity:inherit}select::-ms-expand{display:none}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{cursor:pointer;height:auto}optgroup,th{font-weight:700}fieldset{min-width:0}legend{border:0;color:inherit;display:table;font-weight:700;max-width:100%;white-space:normal}[hidden]{display:none}dd{margin-left:0}@font-face{font-display:swap;font-family:Noto Sans JP;font-style:"normal";font-weight:"100 900";src:url(../../assets/fonts/NotoSansJP-VariableFont_wght.woff2) format("woff2 supports variations")}@font-face{font-display:swap;font-family:Inter;font-style:"normal";font-weight:"100 900";src:url(../../assets/fonts/Inter-VariableFont_opsz,wght.woff2) format("woff2 supports variations")}@font-face{font-display:swap;font-family:M PLUS\ 1p;font-style:"normal";font-weight:400;src:url(../../assets/fonts/MPLUS1p-Regular.woff2) format("woff2")}@font-face{font-display:swap;font-family:M PLUS\ 1p;font-style:"normal";font-weight:500;src:url(../../assets/fonts/MPLUS1p-Medium.woff2) format("woff2")}@font-face{font-display:swap;font-family:M PLUS\ 1p;font-style:"normal";font-weight:700;src:url(../../assets/fonts/MPLUS1p-Bold.woff2) format("woff2")}@font-face{font-display:swap;font-family:M PLUS\ 1p;font-style:"normal";font-weight:900;src:url(../../assets/fonts/MPLUS1p-Black.woff2) format("woff2")}@font-face{font-display:swap;font-family:RocknRoll One;font-style:"normal";font-weight:400;src:url(../../assets/fonts/RocknRollOne-Regular.woff2) format("woff2")}@font-face{font-display:swap;font-family:Sahitya;font-style:"normal";font-weight:400;src:url(../../assets/fonts/Sahitya-Regular.woff2) format("woff2")}@font-face{font-display:swap;font-family:Sahitya;font-style:"normal";font-weight:700;src:url(../../assets/fonts/Sahitya-Bold.woff2) format("woff2")}:root{--liq-unit:0.26667vw}@media screen and (580px <= width){:root{--liq-unit:min(0.26667vw,0.0625rem)}}@media screen and (1600px <= width){:root{--liq-unit:0.0625vw}}:root{--color-base-black:#000;--color-base-white:#f2f2f2;--color-base-accent:#f6b40a;--color-text-primary:#271a06;--color-text-secondary:#4a4133;--color-text-dark:#000;--color-text-link:#271a06;--color-bg-base:#ebebeb;--color-bg-button:hsla(38,31%,86%,.9);--color-bg-tag:hsla(38,31%,86%,.15);--color-bg-hover:hsla(38,31%,86%,.3);--color-border-tag:hsla(39,17%,68%,.5);--color-border-primary:#271a06;--color-border-light:hsla(38,31%,86%,.5);--color-accent-primary:#f6b40a;--color-accent-hover:#f9ebc6;--color-accent-light:#f9ebc6;--color-ui-placeholder:#4a4133;--color-ui-highlight:#f6b40a;--color-ui-focus-outline:#f6b40a;--color-ui-hover:#f6b40a;--color-selection-selection-text:#271a06;--color-selection-selection-bg:#f6b40a}[data-theme=dark]{--color-base-black:#fafafa;--color-base-white:#271a06;--color-base-accent:#f6b40a;--color-text-primary:#fafafa;--color-text-secondary:hsla(0,0%,98%,.7);--color-text-dark:#fff;--color-text-link:#fafafa;--color-bg-base:#271a06;--color-bg-button:rgba(39,26,6,.95);--color-bg-tag:rgba(121,109,87,.83);--color-bg-hover:rgba(74,65,51,.5);--color-border-tag:hsla(39,17%,68%,.3);--color-border-primary:hsla(0,0%,98%,.3);--color-border-light:hsla(39,17%,68%,.2);--color-accent-primary:#f6b40a;--color-accent-hover:#f9ebc6;--color-accent-light:#f9ebc6;--color-ui-placeholder:hsla(0,0%,98%,.5);--color-ui-highlight:#f6b40a;--color-ui-focus-outline:#f6b40a;--color-ui-hover:#f6b40a;--color-selection-selection-text:#271a06;--color-selection-selection-bg:#f6b40a}html{scroll-behavior:smooth;scroll-padding-top:calc(var(--liq-unit)*80 + 5.2rem)}body{background-color:var(--color-bg-base);color:var(--color-text-primary);font-family:Noto Sans JP,sans-serif;line-break:strict;width:100%;word-break:break-word}select{-webkit-appearance:base-select;-moz-appearance:base-select;appearance:base-select}select::picker(select){-webkit-appearance:base-select;-moz-appearance:base-select;appearance:base-select;backdrop-filter:blur(1rem);-webkit-backdrop-filter:blur(1rem);background-color:var(--color-base-black);border:none}select option{color:var(--color-base-white);padding-inline:1rem}select option::checkmark{display:none}select option:checked{background-color:var(--color-base-accent)!important;color:var(--color-base-black)}select option:hover{background-color:var(--color-base-black);color:var(--color-base-black)}picture{display:contents}img{display:block;height:auto;width:100%}button,dd,dt,textarea{line-height:inherit}address{font-style:normal}textarea{overflow-y:auto;resize:vertical}a,button,span{display:inline-block}button{color:inherit;font:inherit;text-align:left}h1,h2,h3,h4,h5,h6{font-family:RocknRoll One,sans-serif}::selection{background-color:var(--color-selection-selection-bg);color:var(--color-selection-selection-text)}::-moz-selection{background-color:var(--color-selection-selection-bg);color:var(--color-selection-selection-text)}:focus-visible{outline:2px solid var(--color-ui-focus-outline);outline-offset:2px}input:-internal-autofill-selected,textarea:-internal-autofill-selected{background-color:transparent!important}.hp_tac{text-align:center!important}.hp_block{display:block!important}.hp_hidden{display:none!important}@media screen and (width < 580px){.hp_hidden_default_tab{display:none!important}}@media screen and (width < 768px){.hp_hidden_default_tabL{display:none!important}}@media screen and (width < 1080px){.hp_hidden_default_pc{display:none!important}}@media screen and (width < 1171px){.hp_hidden_default_pcL{display:none!important}}@media screen and (width < 1600px){.hp_hidden_default_pcLL{display:none!important}}@media screen and (580px <= width){.hp_hidden_tab_{display:none!important}}@media screen and (768px <= width){.hp_hidden_tabL_{display:none!important}}@media screen and (1080px <= width){.hp_hidden_pc_{display:none!important}}@media screen and (1171px <= width){.hp_hidden_pcL_{display:none!important}}@media screen and (1600px <= width){.hp_hidden_pcLL_{display:none!important}}@media screen and (580px <= width < 768px){.hp_hidden_tab_tabL{display:none!important}}@media screen and (580px <= width < 1080px){.hp_hidden_tab_pc{display:none!important}}@media screen and (580px <= width < 1171px){.hp_hidden_tab_pcL{display:none!important}}@media screen and (580px <= width < 1600px){.hp_hidden_tab_pcLL{display:none!important}}@media screen and (768px <= width < 1080px){.hp_hidden_tabL_pc{display:none!important}}@media screen and (768px <= width < 1171px){.hp_hidden_tabL_pcL{display:none!important}}@media screen and (768px <= width < 1600px){.hp_hidden_tabL_pcLL{display:none!important}}@media screen and (1080px <= width < 1171px){.hp_hidden_pc_pcL{display:none!important}}@media screen and (1080px <= width < 1600px){.hp_hidden_pc_pcLL{display:none!important}}@media screen and (1171px <= width < 1600px){.hp_hidden_pcL_pcLL{display:none!important}}.ly_header{backdrop-filter:blur(10px);background-color:var(--color-bg-base);background-color:rgba(var(--color-bg-base),.95);border-bottom:1px solid var(--color-border-tag);padding:calc(var(--liq-unit)*20) 0;position:sticky;top:0;z-index:100}.ly_header_inner{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:justify;-ms-flex-pack:justify;gap:calc(var(--liq-unit)*20);justify-content:space-between}.ly_header_logo{display:block}.ly_header_logoLink{background-image:url(../../assets/images/compression/logo_ithingstudio_black.jpg)}@supports (background-image:url(../../assets/images/webp/logo_ithingstudio_black.webp)){.ly_header_logoLink{background-image:url(../../assets/images/webp/logo_ithingstudio_black.webp)}}@supports (background-image:url(../../assets/images/avif/logo_ithingstudio_black.avif)){.ly_header_logoLink{background-image:url(../../assets/images/avif/logo_ithingstudio_black.avif)}}.ly_header_logoLink{aspect-ratio:169/50;background-position:50%;background-repeat:no-repeat;background-size:contain;display:block;height:auto;width:calc(var(--liq-unit)*169)}[data-theme=dark] .ly_header_logoLink{background-image:url(../../assets/images/compression/logo_ithingstudio_light.jpg)}@supports (background-image:url(../../assets/images/webp/logo_ithingstudio_light.webp)){[data-theme=dark] .ly_header_logoLink{background-image:url(../../assets/images/webp/logo_ithingstudio_light.webp)}}@supports (background-image:url(../../assets/images/avif/logo_ithingstudio_light.avif)){[data-theme=dark] .ly_header_logoLink{background-image:url(../../assets/images/avif/logo_ithingstudio_light.avif)}}[data-theme=dark] .ly_header_logoLink{background-position:50%;background-repeat:no-repeat;background-size:contain}.ly_header_logoText{color:var(--color-text-primary);font-size:calc(var(--liq-unit)*20);font-weight:700}.ly_header_nav{display:none}.ly_header_navList{gap:calc(var(--liq-unit)*30);list-style:none;margin:0;padding:0}.ly_header_navItem,.ly_header_navList{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.ly_header_navLink{color:var(--color-text-primary);font-size:calc(var(--liq-unit)*16);text-decoration:none;-webkit-transition:color .3s ease;transition:color .3s ease}@media (hover:hover) and (pointer:fine){.ly_header_navLink:hover{color:var(--color-ui-hover)}}@media (hover:none) and (pointer:coarse){.ly_header_navLink:active{color:var(--color-ui-hover)}}.ly_header_actions{gap:calc(var(--liq-unit)*10)}.ly_header_actions,.ly_header_themeToggle{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.ly_header_themeToggle{background:none;border:1px solid var(--color-border-tag);border-radius:calc(var(--liq-unit)*8);cursor:pointer;padding:calc(var(--liq-unit)*8);-webkit-transition:all .3s ease;transition:all .3s ease;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}@media (hover:hover) and (pointer:fine){.ly_header_themeToggle:hover{background-color:var(--color-bg-hover);border-color:var(--color-border-primary)}}@media (hover:none) and (pointer:coarse){.ly_header_themeToggle:active{background-color:var(--color-bg-hover);border-color:var(--color-border-primary)}}.ly_header_themeToggleIcon{font-size:calc(var(--liq-unit)*20);line-height:1}.ly_header_themeToggle__dark{display:-webkit-box;display:-ms-flexbox;display:flex}.ly_header_themeToggle__light,[data-theme=dark] .ly_header_themeToggle__dark{display:none}[data-theme=dark] .ly_header_themeToggle__light{display:-webkit-box;display:-ms-flexbox;display:flex}.ly_footer{background-color:var(--color-bg-base);border-top:1px solid var(--color-border-tag);margin-top:calc(var(--liq-unit)*60);padding:calc(var(--liq-unit)*40) 0}.ly_footer_inner{text-align:center}.ly_footer_copyright{margin-bottom:calc(var(--liq-unit)*20)}.ly_footer_address,.ly_footer_copyright{color:var(--color-text-secondary);font-size:calc(var(--liq-unit)*14)}.ly_footer_address{font-style:normal}.ly_footer_addressText{margin-bottom:calc(var(--liq-unit)*10)}.ly_footer_addressLink{color:var(--color-text-link);text-decoration:none}@media (hover:hover) and (pointer:fine){.ly_footer_addressLink:hover{text-decoration:underline}}@media (hover:none) and (pointer:coarse){.ly_footer_addressLink:active{text-decoration:underline}}.ly_container.__normal{margin-inline:auto;padding-inline:calc(var(--liq-unit)*30)}@media screen and (580px <= width){.ly_container.__normal{padding-inline:calc(var(--liq-unit)*80)}}@media screen and (1080px <= width){.ly_container.__normal{max-width:calc(var(--liq-unit)*1200);padding-inline:calc(var(--liq-unit)*120)}}.ly_section.__small{padding-block:calc(var(--liq-unit)*50)}@media screen and (580px <= width){.ly_section.__small{padding-block:calc(var(--liq-unit)*80)}}@media screen and (1080px <= width){.ly_section.__small{padding-block:calc(var(--liq-unit)*100)}}.ly_section.__small.__top{padding-bottom:0}.ly_section.__small.__bottom{padding-top:0}.ly_section.__small.__mg{margin-block:calc(var(--liq-unit)*50)}@media screen and (580px <= width){.ly_section.__small.__mg{margin-block:calc(var(--liq-unit)*80)}}@media screen and (1080px <= width){.ly_section.__small.__mg{margin-block:calc(var(--liq-unit)*100)}}.ly_section.__small.__mg{padding-block:0}.ly_section.__small.__mg.__top{margin-bottom:0}.ly_section.__small.__mg.__bottom{margin-top:0}.ly_section.__normal{padding-block:calc(var(--liq-unit)*80)}@media screen and (580px <= width){.ly_section.__normal{padding-block:calc(var(--liq-unit)*100)}}@media screen and (1080px <= width){.ly_section.__normal{padding-block:calc(var(--liq-unit)*140)}}.ly_section.__normal.__top{padding-bottom:0}.ly_section.__normal.__bottom{padding-top:0}.ly_section.__normal.__mg{margin-block:calc(var(--liq-unit)*80)}@media screen and (580px <= width){.ly_section.__normal.__mg{margin-block:calc(var(--liq-unit)*100)}}@media screen and (1080px <= width){.ly_section.__normal.__mg{margin-block:calc(var(--liq-unit)*140)}}.ly_section.__normal.__mg{padding-block:0}.ly_section.__normal.__mg.__top{margin-bottom:0}.ly_section.__normal.__mg.__bottom{margin-top:0}.ly_section.__large{padding-block:calc(var(--liq-unit)*90)}@media screen and (580px <= width){.ly_section.__large{padding-block:calc(var(--liq-unit)*110)}}@media screen and (1080px <= width){.ly_section.__large{padding-block:calc(var(--liq-unit)*150)}}.ly_section.__large.__top{padding-bottom:0}.ly_section.__large.__bottom{padding-top:0}.ly_section.__large.__mg{margin-block:calc(var(--liq-unit)*90)}@media screen and (580px <= width){.ly_section.__large.__mg{margin-block:calc(var(--liq-unit)*110)}}@media screen and (1080px <= width){.ly_section.__large.__mg{margin-block:calc(var(--liq-unit)*150)}}.ly_section.__large.__mg{padding-block:0}.ly_section.__large.__mg.__top{margin-bottom:0}.ly_section.__large.__mg.__bottom{margin-top:0}.ly_section.__xlarge{padding-block:calc(var(--liq-unit)*100)}@media screen and (580px <= width){.ly_section.__xlarge{padding-block:calc(var(--liq-unit)*120)}}@media screen and (1080px <= width){.ly_section.__xlarge{padding-block:calc(var(--liq-unit)*160)}}.ly_section.__xlarge.__top{padding-bottom:0}.ly_section.__xlarge.__bottom{padding-top:0}.ly_section.__xlarge.__mg{margin-block:calc(var(--liq-unit)*100)}@media screen and (580px <= width){.ly_section.__xlarge.__mg{margin-block:calc(var(--liq-unit)*120)}}@media screen and (1080px <= width){.ly_section.__xlarge.__mg{margin-block:calc(var(--liq-unit)*160)}}.ly_section.__xlarge.__mg{padding-block:0}.ly_section.__xlarge.__mg.__top{margin-bottom:0}.ly_section.__xlarge.__mg.__bottom{margin-top:0}.el_btn{background-color:var(--color-bg-base);border:1px solid var(--color-border-primary);border-radius:calc(var(--liq-unit)*8);color:var(--color-text-primary);cursor:pointer;display:inline-block;font-size:calc(var(--liq-unit)*16);font-weight:500;padding:calc(var(--liq-unit)*12) calc(var(--liq-unit)*24);text-align:center;text-decoration:none;-webkit-transition:all .3s ease;transition:all .3s ease}@media (hover:hover) and (pointer:fine){.el_btn:hover{background-color:var(--color-accent-primary);border-color:var(--color-accent-primary);color:var(--color-ui-hover)}}@media (hover:none) and (pointer:coarse){.el_btn:active{background-color:var(--color-accent-primary);border-color:var(--color-accent-primary);color:var(--color-ui-hover)}}.el_btn__primary{background-color:var(--color-accent-primary);border-color:var(--color-accent-primary);color:var(--color-base-white)}@media (hover:hover) and (pointer:fine){.el_btn__primary:hover{background-color:var(--color-accent-hover);border-color:var(--color-accent-hover)}}@media (hover:none) and (pointer:coarse){.el_btn__primary:active{background-color:var(--color-accent-hover);border-color:var(--color-accent-hover)}}.el_btn__outline{background-color:transparent;border-color:var(--color-border-primary);color:var(--color-text-primary)}@media (hover:hover) and (pointer:fine){.el_btn__outline:hover{background-color:var(--color-bg-hover);border-color:var(--color-border-primary)}}@media (hover:none) and (pointer:coarse){.el_btn__outline:active{background-color:var(--color-bg-hover);border-color:var(--color-border-primary)}}.el_btn__small{font-size:calc(var(--liq-unit)*14);padding:calc(var(--liq-unit)*8) calc(var(--liq-unit)*16)}.el_btn__large{font-size:calc(var(--liq-unit)*18);padding:calc(var(--liq-unit)*16) calc(var(--liq-unit)*32)}.bl_breadcrumbs{margin-bottom:calc(var(--liq-unit)*30)}.bl_breadcrumbs_list{-ms-flex-wrap:wrap;flex-wrap:wrap;gap:calc(var(--liq-unit)*10);list-style:none;margin:0;padding:0}.bl_breadcrumbs_item,.bl_breadcrumbs_list{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.bl_breadcrumbs_link{color:var(--color-text-secondary);font-size:calc(var(--liq-unit)*14);text-decoration:none;-webkit-transition:color .3s ease;transition:color .3s ease}@media (hover:hover) and (pointer:fine){.bl_breadcrumbs_link:hover{color:var(--color-text-primary)}}@media (hover:none) and (pointer:coarse){.bl_breadcrumbs_link:active{color:var(--color-text-primary)}}.bl_breadcrumbs_text{color:var(--color-text-primary);font-size:calc(var(--liq-unit)*14);font-weight:500}.bl_breadcrumbs_separator{color:var(--color-text-secondary);font-size:calc(var(--liq-unit)*14);margin:0 calc(var(--liq-unit)*5)}.bl_card{background-color:var(--color-bg-base);border:1px solid var(--color-border-tag);border-radius:calc(var(--liq-unit)*12);padding:calc(var(--liq-unit)*30);-webkit-transition:all .3s ease;transition:all .3s ease}@media (hover:hover) and (pointer:fine){.bl_card:hover{-webkit-box-shadow:0 calc(var(--liq-unit)*10) calc(var(--liq-unit)*30) rgba(var(--color-base-black),.1);box-shadow:0 calc(var(--liq-unit)*10) calc(var(--liq-unit)*30) rgba(var(--color-base-black),.1);-webkit-transform:translateY(-5px);transform:translateY(-5px)}}@media (hover:none) and (pointer:coarse){.bl_card:active{-webkit-box-shadow:0 calc(var(--liq-unit)*10) calc(var(--liq-unit)*30) rgba(var(--color-base-black),.1);box-shadow:0 calc(var(--liq-unit)*10) calc(var(--liq-unit)*30) rgba(var(--color-base-black),.1);-webkit-transform:translateY(-5px);transform:translateY(-5px)}}.bl_card_header{margin-bottom:calc(var(--liq-unit)*20)}.bl_card_title{color:var(--color-text-primary);font-size:calc(var(--liq-unit)*20);font-weight:600;margin-bottom:calc(var(--liq-unit)*10)}.bl_card_body{margin-bottom:calc(var(--liq-unit)*20)}.bl_card_text{color:var(--color-text-secondary);font-size:calc(var(--liq-unit)*16);line-height:1.6}.bl_card_footer{border-top:1px solid var(--color-border-tag);margin-top:calc(var(--liq-unit)*20);padding-top:calc(var(--liq-unit)*20)}.bl_card_image{border-radius:calc(var(--liq-unit)*8);margin-bottom:calc(var(--liq-unit)*20);overflow:hidden}.bl_card_img{display:block;height:auto;-webkit-transition:-webkit-transform .3s ease;transition:-webkit-transform .3s ease;transition:transform .3s ease;transition:transform .3s ease,-webkit-transform .3s ease;width:100%}@media (hover:hover) and (pointer:fine){.bl_card:hover .bl_card_img{-webkit-transform:scale(1.05);transform:scale(1.05)}}@media (hover:none) and (pointer:coarse){.bl_card:active .bl_card_img{-webkit-transform:scale(1.05);transform:scale(1.05)}}.un_pageHeader{margin-bottom:calc(var(--liq-unit)*60);padding:calc(var(--liq-unit)*40) 0;text-align:center}.un_pageHeader_title{color:var(--color-text-primary);font-size:calc(var(--liq-unit)*32);font-weight:700;margin-bottom:calc(var(--liq-unit)*15)}@media screen and (580px <= width){.un_pageHeader_title{font-size:calc(var(--liq-unit)*40)}}.un_pageHeader_description{color:var(--color-text-secondary);font-size:calc(var(--liq-unit)*18)}@media screen and (580px <= width){.un_pageHeader_description{font-size:calc(var(--liq-unit)*20)}}.un_aboutContent_section{margin-bottom:calc(var(--liq-unit)*40)}.un_aboutContent_title{color:var(--color-text-primary);font-size:calc(var(--liq-unit)*24);font-weight:600;margin-bottom:calc(var(--liq-unit)*20)}.un_aboutContent_text{color:var(--color-text-secondary);font-size:calc(var(--liq-unit)*16);line-height:1.8}.un_aboutContent_list{list-style:none;margin:0;padding:0}.un_aboutContent_listItem{border-bottom:1px solid var(--color-border-tag);color:var(--color-text-secondary);font-size:calc(var(--liq-unit)*16);padding:calc(var(--liq-unit)*10) 0}.un_aboutContent_listItem:last-child{border-bottom:none}.un_aboutContent_image{border-radius:calc(var(--liq-unit)*12);margin-top:calc(var(--liq-unit)*40);overflow:hidden}.un_aboutContent_img{display:block;height:auto;width:100%}.un_aboutContent_techGrid{display:grid;gap:calc(var(--liq-unit)*20);grid-template-columns:1fr}.un_aboutContent_section .el_btn,.un_aboutContent_techGrid{margin-top:calc(var(--liq-unit)*20)}
+@charset "UTF-8";
+/************************************************************
+/*  initpage - ページファイル用の初期設定
+/*  各ページファイルで @use './initpage' as *; で使用
+/*  utils と Sass組み込みモジュール（map, meta, list）を提供
+/*  共通スタイル（global, helpers, header, footer, layouts）も読み込み
+************************************************************/
+/************************************************************
+/*  functions
+************************************************************/
+/******************************************************************
+* strip-unit　単位を除去する、または指定した単位に変換する
+* @param $value 単位を除去したい値(単位有)
+* @param $unit オプション: 変換したい単位(単位有) 例: 1px, 1rem, 1%
+*  例) strip-unit(32px) → 32
+*  例) strip-unit(32px, 1rem) → 2rem
+*******************************************************************/
+/******************************************************************
+* height-string　行の高さを取得する
+* @param $_line 行数
+* @param $_font_size フォントサイズ (単位あり)
+* @param $_line-height 行間
+* 例) 3行 サイズ16px 行間1.5 (3, 16px, 1.5);
+*******************************************************************/
+/******************************************************************
+* 変数・取得設定
+* ※mapなども定義されていますが、各実装の場面では、フラットな変数を使用します
+* Mapの取得用functionがある場合は、該当のfunctionを使用して値を設定します。
+* (スニペット使用推奨)
+*******************************************************************/
+/* base font size
+----------------------------------------------------------------- */
+/* size
+----------------------------------------------------------------- */
+/* breakpoint
+----------------------------------------------------------------- */
+/* style
+----------------------------------------------------------------- */
+/* section
+----------------------------------------------------------------- */
+/* container
+----------------------------------------------------------------- */
+/* color
+/* _color-themes.scss 「mod()」にて、data-theme属性を元に色を出し分け可能
+/* ①-1 モード切り替えあり - 自動色変換
+/*     ⇒ ・$colorsにモード毎の色を定義
+/*        ・_color-themes.scss generate-color-themes()にて
+            data-theme属性毎に、$colorsの色をCSSに設定(globalで呼び出し)
+/*        ・get-color(①)で、設定したCSS変数を取得する
+/* ①-2 モード切り替えあり - mod()を使用して手動で変換
+/*     ⇒ ・上記のCSS生成不要(generate-color-themes()不要)
+/*        ・※下記のカラー実装パターン参照
+/* ②   モード切り替えなし
+/*     ⇒ ・※下記のカラー実装パターン参照
+/*
+/* <カラー実装パターン>
+/* ・役割毎に色が管理されている場合
+/*   ⇒ $colorsを使用する(モード切り替えがない場合でもdefaultで運用)
+/* ・役割毎に管理されていない場合
+/*   ⇒ $color-paletteを直接参照するget-color(②)を使用する
+----------------------------------------------------------------- */
+/* font
+----------------------------------------------------------------- */
+/* image
+----------------------------------------------------------------- */
+/* height
+----------------------------------------------------------------- */
+/* transition
+----------------------------------------------------------------- */
+/* border
+----------------------------------------------------------------- */
+/* box-shadow
+----------------------------------------------------------------- */
+/* z-index
+----------------------------------------------------------------- */
+/******************************************************************
+* s　リキッド対応の値変換（res()の仕様も統合）
+* CSS変数(--liq-unit)を使用して、各ブレイクポイントで自動的に計算が変更される
+* $style-settingsの設定に基づいて、以下の4つのタイプに対応:
+*   - type="liquid" => リキッド（vw）
+*   - type="responsive" => レスポンシブ（rem、res()の仕様を統合）
+*   - type="fixed" => 前時点のリキッドでの固定化
+*   - type="none" => 変更しない（前の値を継承）
+* @param $_number 数値
+*  例) padding: s(30);
+*  - SP: calc(30 * var(--liq-unit)) → レスポンシブ（res()の仕様: $min_layout_width以下ではvw、それ以上ではrem）
+*  - TAB: calc(30 * var(--liq-unit)) → 固定値（前時点のリキッドでの固定化）
+*  - PC: calc(30 * var(--liq-unit)) → レスポンシブ（rem）
+* メディアクエリを書かなくても、自動的にブレイクポイントで計算が変更される
+*******************************************************************/
+/******************************************************************
+* setVw　vw値を返す
+* @param $_size 計算したい値(単位無し)
+* @param $_base 基準となる値(単位無し)
+* @param $_min	最小値(単位有)　※値がマイナスでも、大小は絶対値で考える
+* @param $_min	最大値(単位有)　※値がマイナスでも、大小は絶対値で考える
+*******************************************************************/
+/******************************************************************
+* %計算
+* @param $number 数値
+* @param $basis %を計算するための基準値(幅)
+* 例) 値1000に対して50の%値 (50, 1000);
+*******************************************************************/
+/******************************************************************
+* vw(%)指定時、指定幅時点の固定値取得
+* @param $number 数値
+* @param $basis vw(%)を計算するための基準幅
+* @param $width 求めたい時点の幅
+* 例) 画面幅1280px時点で100pxとなるvw変化において、画面幅1400px時点での値を取得する。(100, 1280, 1400);
+*******************************************************************/
+/******************************************************************
+* width-string　行の高さを取得する
+* @param $num 文字数
+* @param $font_size フォントサイズ (単位あり)
+* @param $letter-spacing 文字間
+* 例) 30文字の横幅 サイズ16px 文字間0.03em (30, 16px, 0.03em);
+*******************************************************************/
+/************************************************************
+/*  mixins
+************************************************************/
+/******************************************************************
+* メディアクエリ
+* $media_query_strategy で 'sp-first' または 'pc-first' を切り替え可能
+*******************************************************************/
+/* 連番ベースの汎用メディアクエリ
+* $key: ブレイクポイントのキー（文字列のみ）
+* $max-key: オプション。範囲指定の場合の最大キー
+* variablesで設定した順序に応じて適用
+*
+* sp-first: 1が最小、数が大きくなるほど画面サイズが大きい
+*   media('tab') => 560px以上
+*   media('tab', 'pc') => 560px以上、1120px未満（範囲指定）
+*   media('pc') => 1120px以上
+*
+* pc-first: 1が最大、数が大きくなるほど画面サイズが小さい
+*   media('pcLL') => 1920px未満
+*   media('pcLL', 'pc') => 1120px以上、1920px未満（範囲指定、大きい方を先に書く）
+*   media('pc') => 1120px未満
+*   注意: 範囲指定の場合、引数の順序は任意（実際の値の大小関係で自動判定）
+*
+* 使用例:
+*   @include media('tab') { ... }        // tab以上（sp-first）または未満（pc-first）
+*   @include media('pc') { ... }         // pc以上（sp-first）または未満（pc-first）
+*   @include media('tab', 'pc') { ... }  // tab以上、pc未満（範囲指定）
+*   @include media('pc', 'pcL') { ... }  // pc以上、pcL未満（範囲指定）
+*
+* variablesで定義した文字列キーに自動的に依存します
+----------------------------------------------------------------- */
+/* 高さメディアクエリ
+$break ～$break(含まない)の高さに適用
+----------------------------------------------------------------- */
+/* 高さメディアクエリ
+$break $break～の高さに適用
+----------------------------------------------------------------- */
+/* 印刷時
+----------------------------------------------------------------- */
+/******************************************************************
+* style-settings-vars　値をセットするfunction(s)のためのCSS変数を生成する
+* $style-settingsに基づいて、各ブレイクポイントで:rootにCSS変数(--liq-unit)を設定
+* これにより、s()関数を使用した値が自動的にブレイクポイントで計算が変更される
+* 各設定方法については、変数$style-settingsの箇所に記載する
+* :root内でCSS変数を定義する
+* @example
+*   @include style-settings-vars;
+*******************************************************************/
+/******************************************************************
+* define-color-vars CSS変数を一括定義する mixin
+* @param $mode モード名（default | dark など）
+* ネスト map をフラットな CSS変数に変換する
+* 例) @include define-color-vars('default');
+*     → --color-text-primary: #2B2D31;
+*     → --color-bg-base: #FFFFFF;
+*******************************************************************/
+/******************************************************************
+* generate-color-themes テーマ全体を生成する mixin
+* defaultモードを:rootに、それ以外のモードを[data-theme="モード名"]に出力する
+* $colorsマップにモードを追加するだけで、自動的にすべてのテーマが生成される
+* 例) @include generate-color-themes;
+*     → :root { --color-text-primary: ...; }
+*     → [data-theme="dark"] { --color-text-primary: ...; }
+*******************************************************************/
+/******************************************************************
+* mode テーマモード別のスタイルを定義する mixin
+* @param $mode モード名（'default' | 'dark' など）
+* defaultモードの場合は親セレクタそのまま、それ以外は[data-theme="モード名"]で出力
+*
+* 使用例:
+* .my-element {
+*   color: red;
+*
+*   @include mode('dark') {
+*     color: white;
+*   }
+* }
+*
+* 出力結果:
+* .my-element {
+*   color: red;
+* }
+*
+* [data-theme="dark"] .my-element {
+*   color: white;
+* }
+*******************************************************************/
+/******************************************************************
+* background-image　背景画像を設定する
+* @param $_filename ファイル名
+* @param $_size background-size
+* @param $_type 拡張子 jpg or png(デフォルト)
+* @param $_position background-position
+* @param $_repeat background-repeat
+*******************************************************************/
+/******************************************************************
+* container　コンテナの余白と最大幅を設定する
+* @param $_type コンテナの種類（_variables.scssの$container-sizesで定義）
+* $media_query_strategy で 'sp-first' または 'pc-first' を切り替え可能
+*   - 'sp-first': SPをデフォルト、大きい画面で上書き
+*   - 'pc-first': PCをデフォルト、小さい画面で上書き
+*
+* $container-sizesのキー名は$breakpointsのキー名と統一されています
+*******************************************************************/
+/******************************************************************
+* font フォントスタイルを設定する
+* @param $_size サイズ
+* @param $_line 行間
+* @param $_space 文字間
+* @param $_weight 太さ
+* @param $_family フォント
+*******************************************************************/
+/* 汎用指定スタイル
+----------------------------------------------------------------- */
+/* デザイン用スタイル
+----------------------------------------------------------------- */
+/******************************************************************
+* hover判定
+*******************************************************************/
+/* hover 非hover
+----------------------------------------------------------------- */
+/* hoverのみ
+----------------------------------------------------------------- */
+/* hover時　カラースタイル
+----------------------------------------------------------------- */
+/* hover時　透過スタイル
+----------------------------------------------------------------- */
+/************************************************************
+/*  functions
+************************************************************/
+/******************************************************************
+* ommision　行数による末尾「...」省略
+* @param $_line:行数
+* @param $_font_size:フォントサイズ 単位あり
+* @param $_line_height:行間 (例 1.5)
+* @param $_height_set:heightに高さを設定するかどうか(設定する場合true)
+*******************************************************************/
+/******************************************************************
+* スクロールバーデザイン
+*******************************************************************/
+/******************************************************************
+* section　section余白を設定する
+* @param $_type 大きさのタイプ（_variables.scssの$section-sizesで定義）
+* @param $_margin padding(pd)・margin(mg)
+* $media_query_strategy で 'sp-first' または 'pc-first' を切り替え可能
+*   - 'sp-first': SPをデフォルト、大きい画面で上書き
+*   - 'pc-first': PCをデフォルト、小さい画面で上書き
+*
+* $section-sizesのキー名は$breakpointsのキー名と統一されています
+*******************************************************************/
+/******************************************************************
+* width-string-set　文字数による横幅を取得し、最大幅にセットする
+* @param $_num 文字数
+* @param $_font_size フォントサイズ (単位あり)
+* @param $_letter_spacing letter spacing
+*******************************************************************/
+/******************************************************************
+* ruled-underline　行ごとにボックス幅いっぱいの破線下線を設定する
+* 要素に line-height を設定し、1行＝1タイルとして破線背景を分割
+* マスクで各タイルの最下部のみ見せる → 行間に線が出ない
+* 背景は ::after に描画し、テキストはマスク対象外（消えない）
+* @param $color 色（デフォルト: #000）例: #0d47a1 または var(--colors-main) 形式の RGB 変数名（中身が "R,G,B"）
+* @param $alpha 不透明度（デフォルト: 0.4、0〜1）
+* @param $dash-on 破線の線の長さ（デフォルト: 5px）
+* @param $dash-off 破線の空白の長さ（デフォルト: 10px）
+* @param $thickness 下線の太さ（デフォルト: 1px）
+* @param $offset 文字ベースラインからの下げ量（デフォルト: 3px）
+* @param $line-height 行高（デフォルト: 1.8、数値指定を推奨）
+* @param $z-index 擬似要素の z-index（デフォルト: -1、背面にしたいので通常は -1）
+*  例) @include ruled-underline(#000, 0.4, 5px, 10px, 1px, 3px, 1.8, -1);
+*******************************************************************/
+/******************************************************************
+* dashed-underline　破線の下線を設定する
+* @param $_width 線の太さ（デフォルト: 1px）
+* @param $_dash-length 線の長さ（デフォルト: 8px）
+* @param $_gap 間隔（デフォルト: 4px）
+* @param $_color 線の色（デフォルト: currentColor）
+*  例) @include dashed-underline(2px, 8px, 4px, #000);
+*******************************************************************/
+/************************************************************
+/*  variables
+************************************************************/
+/************************************************************
+/*  project
+************************************************************/
+/******************************************************************
+* プロジェクト固有のutilsを記載する
+*******************************************************************/
+/******************************************************************
+* reset
+*******************************************************************/
+a,
+abbr,
+address,
+aside,
+article,
+body,
+button,
+caption,
+cite,
+code,
+div,
+del,
+dl,
+dt,
+dd,
+em,
+font,
+form,
+figure,
+footer,
+fieldset,
+header,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+html,
+img,
+iframe,
+input,
+legend,
+li,
+label,
+main,
+nav,
+object,
+ol,
+option,
+optgroup,
+p,
+pre,
+q,
+s,
+sub,
+sup,
+select,
+span,
+section,
+tt,
+textarea,
+table,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+ul,
+var,
+::before,
+::after {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+main {
+  display: block;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+a {
+  background-color: transparent;
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  border-style: none;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  appearance: none;
+  background: transparent;
+  border-radius: 0;
+  vertical-align: middle;
+  -webkit-appearance: none;
+}
+
+input,
+textarea {
+  cursor: text;
+}
+
+[type=checkbox] {
+  appearance: checkbox;
+  cursor: pointer;
+  -webkit-appearance: checkbox;
+}
+
+[type=radio] {
+  appearance: radio;
+  cursor: pointer;
+  -webkit-appearance: radio;
+}
+
+[type=date]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+[type=time]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+label[for] {
+  cursor: pointer;
+}
+
+button:disabled,
+[type=button]:disabled,
+[type=reset]:disabled,
+[type=submit]:disabled {
+  cursor: default;
+}
+
+select:disabled {
+  opacity: inherit;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+[type=number]::-webkit-inner-spin-button,
+[type=number]::-webkit-outer-spin-button {
+  cursor: pointer;
+  height: auto;
+}
+
+th {
+  font-weight: bold;
+}
+
+optgroup {
+  font-weight: bold;
+}
+
+fieldset {
+  min-width: 0;
+}
+
+legend {
+  border: 0;
+  color: inherit;
+  display: table;
+  font-weight: bold;
+  max-width: 100%;
+  white-space: normal;
+}
+
+[hidden] {
+  display: none;
+}
+
+dd {
+  margin-left: 0;
+}
+
+/************************************************************
+/*  initpage - ページファイル用の初期設定
+/*  各ページファイルで @use './initpage' as *; で使用
+/*  utils と Sass組み込みモジュール（map, meta, list）を提供
+/*  共通スタイル（global, helpers, header, footer, layouts）も読み込み
+************************************************************/
+/************************************************************
+/*  initpage - ページファイル用の初期設定
+/*  各ページファイルで @use './initpage' as *; で使用
+/*  utils と Sass組み込みモジュール（map, meta, list）を提供
+/*  共通スタイル（global, helpers, header, footer, layouts）も読み込み
+************************************************************/
+/******************************************************************
+* 共通設定
+*******************************************************************/
+:root {
+  --liq-unit: calc(1 / 375 * 100vw);
+}
+@media screen and (580px <= width) {
+  :root {
+    --liq-unit: min(
+      calc(1 / 375 * 100vw),
+      calc(1 / 16 * 1rem)
+    );
+  }
+}
+@media screen and (1600px <= width) {
+  :root {
+    --liq-unit: calc(1 / 1600 * 100vw);
+  }
+}
+
+:root {
+  --color-base-black: #000;
+  --color-base-white: #f2f2f2;
+  --color-base-accent: #f6b40a;
+  --color-text-primary: #271a06;
+  --color-text-secondary: #4a4133;
+  --color-text-dark: #000;
+  --color-text-link: #271a06;
+  --color-bg-base: #ebebeb;
+  --color-bg-button: rgba(231, 223, 209, 0.9);
+  --color-bg-tag: rgba(231, 223, 209, 0.15);
+  --color-bg-hover: rgba(231, 223, 209, 0.3);
+  --color-border-tag: rgba(188, 178, 160, 0.5);
+  --color-border-primary: #271a06;
+  --color-border-light: rgba(231, 223, 209, 0.5);
+  --color-accent-primary: #f6b40a;
+  --color-accent-hover: #f9ebc6;
+  --color-accent-light: #f9ebc6;
+  --color-ui-placeholder: #4a4133;
+  --color-ui-highlight: #f6b40a;
+  --color-ui-focus-outline: #f6b40a;
+  --color-ui-hover: #f6b40a;
+  --color-selection-selection-text: #271a06;
+  --color-selection-selection-bg: #f6b40a;
+}
+
+[data-theme=dark] {
+  --color-base-black: #fafafa;
+  --color-base-white: #271a06;
+  --color-base-accent: #f6b40a;
+  --color-text-primary: #fafafa;
+  --color-text-secondary: rgba(250, 250, 250, 0.7);
+  --color-text-dark: #ffffff;
+  --color-text-link: #fafafa;
+  --color-bg-base: #271a06;
+  --color-bg-button: rgba(39, 26, 6, 0.95);
+  --color-bg-tag: rgba(121, 109, 87, 0.83);
+  --color-bg-hover: rgba(74, 65, 51, 0.5);
+  --color-border-tag: rgba(188, 178, 160, 0.3);
+  --color-border-primary: rgba(250, 250, 250, 0.3);
+  --color-border-light: rgba(188, 178, 160, 0.2);
+  --color-accent-primary: #f6b40a;
+  --color-accent-hover: #f9ebc6;
+  --color-accent-light: #f9ebc6;
+  --color-ui-placeholder: rgba(250, 250, 250, 0.5);
+  --color-ui-highlight: #f6b40a;
+  --color-ui-focus-outline: #f6b40a;
+  --color-ui-hover: #f6b40a;
+  --color-selection-selection-text: #271a06;
+  --color-selection-selection-bg: #f6b40a;
+}
+
+html {
+  scroll-padding-top: calc(80 * var(--liq-unit) + 5.2rem);
+  scroll-behavior: smooth;
+}
+
+body {
+  word-break: break-word;
+  line-break: strict;
+  font-family: "Noto Sans JP", sans-serif;
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  width: 100%;
+}
+
+select {
+  appearance: base-select;
+}
+select::picker(select) {
+  appearance: base-select;
+  border: none;
+  background-color: var(--color-base-black);
+  backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
+  /* アニメーションも設定できる */
+}
+select option {
+  padding-inline: 1rem;
+  color: var(--color-base-white);
+}
+select option::checkmark {
+  display: none;
+}
+select option:checked {
+  background-color: var(--color-base-accent) !important;
+  color: var(--color-base-black);
+}
+select option:hover {
+  background-color: var(--color-base-black);
+  color: var(--color-base-black);
+}
+
+picture {
+  display: contents;
+}
+
+img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+textarea,
+dt,
+dd,
+button {
+  line-height: inherit;
+}
+
+address {
+  font-style: normal;
+}
+
+textarea {
+  resize: vertical;
+  overflow-y: auto;
+}
+
+a,
+span {
+  display: inline-block;
+}
+
+button {
+  display: inline-block;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "RocknRoll One", sans-serif;
+}
+
+::selection {
+  color: var(--color-selection-selection-text);
+  background-color: var(--color-selection-selection-bg);
+}
+
+::-moz-selection {
+  color: var(--color-selection-selection-text);
+  background-color: var(--color-selection-selection-bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ui-focus-outline);
+  outline-offset: 2px;
+}
+
+input:-internal-autofill-selected,
+textarea:-internal-autofill-selected {
+  background-color: transparent !important;
+}
+
+/************************************************************
+/*  initpage - ページファイル用の初期設定
+/*  各ページファイルで @use './initpage' as *; で使用
+/*  utils と Sass組み込みモジュール（map, meta, list）を提供
+/*  共通スタイル（global, helpers, header, footer, layouts）も読み込み
+************************************************************/
+/******************************************************************
+* helper
+* ブレイクポイントによって柔軟に非表示・表示を制御するクラス
+*******************************************************************/
+/* text-align
+----------------------------------------------------------------- */
+.hp_tac {
+  text-align: center !important;
+}
+
+/* display - 基本クラス
+----------------------------------------------------------------- */
+.hp_block {
+  display: block !important;
+}
+
+.hp_hidden {
+  display: none !important;
+}
+
+/* hidden ブレイクポイントベースの非表示クラス
+----------------------------------------------------------------- */
+@media screen and (width < 580px) {
+  .hp_hidden_default_tab {
+    display: none !important;
+  }
+}
+
+@media screen and (width < 768px) {
+  .hp_hidden_default_tabL {
+    display: none !important;
+  }
+}
+
+@media screen and (width < 1080px) {
+  .hp_hidden_default_pc {
+    display: none !important;
+  }
+}
+
+@media screen and (width < 1171px) {
+  .hp_hidden_default_pcL {
+    display: none !important;
+  }
+}
+
+@media screen and (width < 1600px) {
+  .hp_hidden_default_pcLL {
+    display: none !important;
+  }
+}
+
+@media screen and (580px <= width) {
+  .hp_hidden_tab_ {
+    display: none !important;
+  }
+}
+
+@media screen and (768px <= width) {
+  .hp_hidden_tabL_ {
+    display: none !important;
+  }
+}
+
+@media screen and (1080px <= width) {
+  .hp_hidden_pc_ {
+    display: none !important;
+  }
+}
+
+@media screen and (1171px <= width) {
+  .hp_hidden_pcL_ {
+    display: none !important;
+  }
+}
+
+@media screen and (1600px <= width) {
+  .hp_hidden_pcLL_ {
+    display: none !important;
+  }
+}
+
+@media screen and (580px <= width < 768px) {
+  .hp_hidden_tab_tabL {
+    display: none !important;
+  }
+}
+
+@media screen and (580px <= width < 1080px) {
+  .hp_hidden_tab_pc {
+    display: none !important;
+  }
+}
+
+@media screen and (580px <= width < 1171px) {
+  .hp_hidden_tab_pcL {
+    display: none !important;
+  }
+}
+
+@media screen and (580px <= width < 1600px) {
+  .hp_hidden_tab_pcLL {
+    display: none !important;
+  }
+}
+
+@media screen and (768px <= width < 1080px) {
+  .hp_hidden_tabL_pc {
+    display: none !important;
+  }
+}
+
+@media screen and (768px <= width < 1171px) {
+  .hp_hidden_tabL_pcL {
+    display: none !important;
+  }
+}
+
+@media screen and (768px <= width < 1600px) {
+  .hp_hidden_tabL_pcLL {
+    display: none !important;
+  }
+}
+
+@media screen and (1080px <= width < 1171px) {
+  .hp_hidden_pc_pcL {
+    display: none !important;
+  }
+}
+
+@media screen and (1080px <= width < 1600px) {
+  .hp_hidden_pc_pcLL {
+    display: none !important;
+  }
+}
+
+@media screen and (1171px <= width < 1600px) {
+  .hp_hidden_pcL_pcLL {
+    display: none !important;
+  }
+}
+
+/************************************************************
+/*  initpage - ページファイル用の初期設定
+/*  各ページファイルで @use './initpage' as *; で使用
+/*  utils と Sass組み込みモジュール（map, meta, list）を提供
+/*  共通スタイル（global, helpers, header, footer, layouts）も読み込み
+************************************************************/
+/******************************************************************
+* header
+* ヘッダーコンポーネントのスタイル
+*******************************************************************/
+.ly_header {
+  background-color: var(--color-bg-base);
+  border-bottom: 1px solid var(--color-border-tag);
+  padding: calc(20 * var(--liq-unit)) 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  background-color: rgba(var(--color-bg-base), 0.95);
+}
+.ly_header_inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(20 * var(--liq-unit));
+}
+.ly_header_logo {
+  display: block;
+}
+.ly_header_logoLink {
+  background-image: url(../../assets/images/compression/logo_ithingstudio_black.jpg);
+}
+@supports (background-image: url(../../assets/images/webp/logo_ithingstudio_black.webp)) {
+  .ly_header_logoLink {
+    background-image: url(../../assets/images/webp/logo_ithingstudio_black.webp);
+  }
+}
+@supports (background-image: url(../../assets/images/avif/logo_ithingstudio_black.avif)) {
+  .ly_header_logoLink {
+    background-image: url(../../assets/images/avif/logo_ithingstudio_black.avif);
+  }
+}
+.ly_header_logoLink {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: block;
+  aspect-ratio: 169/50;
+  width: calc(169 * var(--liq-unit));
+  height: auto;
+}
+[data-theme=dark] .ly_header_logoLink {
+  background-image: url(../../assets/images/compression/logo_ithingstudio_light.jpg);
+}
+@supports (background-image: url(../../assets/images/webp/logo_ithingstudio_light.webp)) {
+  [data-theme=dark] .ly_header_logoLink {
+    background-image: url(../../assets/images/webp/logo_ithingstudio_light.webp);
+  }
+}
+@supports (background-image: url(../../assets/images/avif/logo_ithingstudio_light.avif)) {
+  [data-theme=dark] .ly_header_logoLink {
+    background-image: url(../../assets/images/avif/logo_ithingstudio_light.avif);
+  }
+}
+[data-theme=dark] .ly_header_logoLink {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.ly_header_logoText {
+  font-size: calc(20 * var(--liq-unit));
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.ly_header_nav {
+  display: none;
+}
+.ly_header_navList {
+  display: flex;
+  align-items: center;
+  gap: calc(30 * var(--liq-unit));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ly_header_navItem {
+  display: flex;
+  align-items: center;
+}
+.ly_header_navLink {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-size: calc(16 * var(--liq-unit));
+  transition: color 0.3s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ly_header_navLink:hover {
+    color: var(--color-ui-hover);
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .ly_header_navLink:active {
+    color: var(--color-ui-hover);
+  }
+}
+.ly_header_actions {
+  display: flex;
+  align-items: center;
+  gap: calc(10 * var(--liq-unit));
+}
+.ly_header_themeToggle {
+  background: none;
+  border: 1px solid var(--color-border-tag);
+  border-radius: calc(8 * var(--liq-unit));
+  padding: calc(8 * var(--liq-unit));
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ly_header_themeToggle:hover {
+    background-color: var(--color-bg-hover);
+    border-color: var(--color-border-primary);
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .ly_header_themeToggle:active {
+    background-color: var(--color-bg-hover);
+    border-color: var(--color-border-primary);
+  }
+}
+.ly_header_themeToggleIcon {
+  font-size: calc(20 * var(--liq-unit));
+  line-height: 1;
+}
+.ly_header_themeToggle__dark {
+  display: flex;
+}
+[data-theme=dark] .ly_header_themeToggle__dark {
+  display: none;
+}
+.ly_header_themeToggle__light {
+  display: none;
+}
+[data-theme=dark] .ly_header_themeToggle__light {
+  display: flex;
+}
+
+/************************************************************
+/*  initpage - ページファイル用の初期設定
+/*  各ページファイルで @use './initpage' as *; で使用
+/*  utils と Sass組み込みモジュール（map, meta, list）を提供
+/*  共通スタイル（global, helpers, header, footer, layouts）も読み込み
+************************************************************/
+/******************************************************************
+* footer
+* フッターコンポーネントのスタイル
+*******************************************************************/
+.ly_footer {
+  background-color: var(--color-bg-base);
+  border-top: 1px solid var(--color-border-tag);
+  padding: calc(40 * var(--liq-unit)) 0;
+  margin-top: calc(60 * var(--liq-unit));
+}
+.ly_footer_inner {
+  text-align: center;
+}
+.ly_footer_copyright {
+  font-size: calc(14 * var(--liq-unit));
+  color: var(--color-text-secondary);
+  margin-bottom: calc(20 * var(--liq-unit));
+}
+.ly_footer_address {
+  font-size: calc(14 * var(--liq-unit));
+  color: var(--color-text-secondary);
+  font-style: normal;
+}
+.ly_footer_addressText {
+  margin-bottom: calc(10 * var(--liq-unit));
+}
+.ly_footer_addressLink {
+  color: var(--color-text-link);
+  text-decoration: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ly_footer_addressLink:hover {
+    text-decoration: underline;
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .ly_footer_addressLink:active {
+    text-decoration: underline;
+  }
+}
+
+/************************************************************
+/*  initpage - ページファイル用の初期設定
+/*  各ページファイルで @use './initpage' as *; で使用
+/*  utils と Sass組み込みモジュール（map, meta, list）を提供
+/*  共通スタイル（global, helpers, header, footer, layouts）も読み込み
+************************************************************/
+/******************************************************************
+* layout - container
+* $container-sizesで定義されたサイズごとにモディファイアクラスを生成
+* 例）ly_container __normal, __large,  __small, ・・・
+*******************************************************************/
+.ly_container.__normal {
+  margin-inline: auto;
+  padding-inline: calc(30 * var(--liq-unit));
+}
+@media screen and (580px <= width) {
+  .ly_container.__normal {
+    padding-inline: calc(80 * var(--liq-unit));
+  }
+}
+@media screen and (1080px <= width) {
+  .ly_container.__normal {
+    padding-inline: calc(120 * var(--liq-unit));
+    max-width: calc(1200 * var(--liq-unit));
+  }
+}
+
+/************************************************************
+/*  initpage - ページファイル用の初期設定
+/*  各ページファイルで @use './initpage' as *; で使用
+/*  utils と Sass組み込みモジュール（map, meta, list）を提供
+/*  共通スタイル（global, helpers, header, footer, layouts）も読み込み
+************************************************************/
+/******************************************************************
+* layout - main
+*******************************************************************/
+/************************************************************
+/*  initpage - ページファイル用の初期設定
+/*  各ページファイルで @use './initpage' as *; で使用
+/*  utils と Sass組み込みモジュール（map, meta, list）を提供
+/*  共通スタイル（global, helpers, header, footer, layouts）も読み込み
+************************************************************/
+/******************************************************************
+* layout - section
+* $section-sizesで定義されたサイズごとにモディファイアクラスを生成
+* デフォルトはpadding marginにしたい場合は「__mg」を付与
+* デフォルトは上下余白　上だけにしたい場合「__top」 下だけにしたい場合「__bottom」付与
+* 例）ly_section __normal,  __large,  __small, ・・・
+*******************************************************************/
+.ly_section.__small {
+  padding-block: calc(50 * var(--liq-unit));
+}
+@media screen and (580px <= width) {
+  .ly_section.__small {
+    padding-block: calc(80 * var(--liq-unit));
+  }
+}
+@media screen and (1080px <= width) {
+  .ly_section.__small {
+    padding-block: calc(100 * var(--liq-unit));
+  }
+}
+.ly_section.__small.__top {
+  padding-bottom: 0;
+}
+.ly_section.__small.__bottom {
+  padding-top: 0;
+}
+.ly_section.__small.__mg {
+  margin-block: calc(50 * var(--liq-unit));
+}
+@media screen and (580px <= width) {
+  .ly_section.__small.__mg {
+    margin-block: calc(80 * var(--liq-unit));
+  }
+}
+@media screen and (1080px <= width) {
+  .ly_section.__small.__mg {
+    margin-block: calc(100 * var(--liq-unit));
+  }
+}
+.ly_section.__small.__mg {
+  padding-block: 0;
+}
+.ly_section.__small.__mg.__top {
+  margin-bottom: 0;
+}
+.ly_section.__small.__mg.__bottom {
+  margin-top: 0;
+}
+.ly_section.__normal {
+  padding-block: calc(80 * var(--liq-unit));
+}
+@media screen and (580px <= width) {
+  .ly_section.__normal {
+    padding-block: calc(100 * var(--liq-unit));
+  }
+}
+@media screen and (1080px <= width) {
+  .ly_section.__normal {
+    padding-block: calc(140 * var(--liq-unit));
+  }
+}
+.ly_section.__normal.__top {
+  padding-bottom: 0;
+}
+.ly_section.__normal.__bottom {
+  padding-top: 0;
+}
+.ly_section.__normal.__mg {
+  margin-block: calc(80 * var(--liq-unit));
+}
+@media screen and (580px <= width) {
+  .ly_section.__normal.__mg {
+    margin-block: calc(100 * var(--liq-unit));
+  }
+}
+@media screen and (1080px <= width) {
+  .ly_section.__normal.__mg {
+    margin-block: calc(140 * var(--liq-unit));
+  }
+}
+.ly_section.__normal.__mg {
+  padding-block: 0;
+}
+.ly_section.__normal.__mg.__top {
+  margin-bottom: 0;
+}
+.ly_section.__normal.__mg.__bottom {
+  margin-top: 0;
+}
+.ly_section.__large {
+  padding-block: calc(90 * var(--liq-unit));
+}
+@media screen and (580px <= width) {
+  .ly_section.__large {
+    padding-block: calc(110 * var(--liq-unit));
+  }
+}
+@media screen and (1080px <= width) {
+  .ly_section.__large {
+    padding-block: calc(150 * var(--liq-unit));
+  }
+}
+.ly_section.__large.__top {
+  padding-bottom: 0;
+}
+.ly_section.__large.__bottom {
+  padding-top: 0;
+}
+.ly_section.__large.__mg {
+  margin-block: calc(90 * var(--liq-unit));
+}
+@media screen and (580px <= width) {
+  .ly_section.__large.__mg {
+    margin-block: calc(110 * var(--liq-unit));
+  }
+}
+@media screen and (1080px <= width) {
+  .ly_section.__large.__mg {
+    margin-block: calc(150 * var(--liq-unit));
+  }
+}
+.ly_section.__large.__mg {
+  padding-block: 0;
+}
+.ly_section.__large.__mg.__top {
+  margin-bottom: 0;
+}
+.ly_section.__large.__mg.__bottom {
+  margin-top: 0;
+}
+.ly_section.__xlarge {
+  padding-block: calc(100 * var(--liq-unit));
+}
+@media screen and (580px <= width) {
+  .ly_section.__xlarge {
+    padding-block: calc(120 * var(--liq-unit));
+  }
+}
+@media screen and (1080px <= width) {
+  .ly_section.__xlarge {
+    padding-block: calc(160 * var(--liq-unit));
+  }
+}
+.ly_section.__xlarge.__top {
+  padding-bottom: 0;
+}
+.ly_section.__xlarge.__bottom {
+  padding-top: 0;
+}
+.ly_section.__xlarge.__mg {
+  margin-block: calc(100 * var(--liq-unit));
+}
+@media screen and (580px <= width) {
+  .ly_section.__xlarge.__mg {
+    margin-block: calc(120 * var(--liq-unit));
+  }
+}
+@media screen and (1080px <= width) {
+  .ly_section.__xlarge.__mg {
+    margin-block: calc(160 * var(--liq-unit));
+  }
+}
+.ly_section.__xlarge.__mg {
+  padding-block: 0;
+}
+.ly_section.__xlarge.__mg.__top {
+  margin-bottom: 0;
+}
+.ly_section.__xlarge.__mg.__bottom {
+  margin-top: 0;
+}
+
+/******************************************************************
+* page - sample-about
+* Aboutページ用のスタイル
+*******************************************************************/
+/* use elements
+----------------------------------------------------------------- */
+/******************************************************************
+* element - btn
+* ボタン要素コンポーネント
+* 汎用的に使用できるボタンスタイル
+*******************************************************************/
+.el_btn {
+  display: inline-block;
+  padding: calc(12 * var(--liq-unit)) calc(24 * var(--liq-unit));
+  font-size: calc(16 * var(--liq-unit));
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid var(--color-border-primary);
+  border-radius: calc(8 * var(--liq-unit));
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .el_btn:hover {
+    background-color: var(--color-accent-primary);
+    color: var(--color-ui-hover);
+    border-color: var(--color-accent-primary);
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .el_btn:active {
+    background-color: var(--color-accent-primary);
+    color: var(--color-ui-hover);
+    border-color: var(--color-accent-primary);
+  }
+}
+.el_btn__primary {
+  background-color: var(--color-accent-primary);
+  color: var(--color-base-white);
+  border-color: var(--color-accent-primary);
+}
+@media (hover: hover) and (pointer: fine) {
+  .el_btn__primary:hover {
+    background-color: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .el_btn__primary:active {
+    background-color: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+  }
+}
+.el_btn__outline {
+  background-color: transparent;
+  border-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+}
+@media (hover: hover) and (pointer: fine) {
+  .el_btn__outline:hover {
+    background-color: var(--color-bg-hover);
+    border-color: var(--color-border-primary);
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .el_btn__outline:active {
+    background-color: var(--color-bg-hover);
+    border-color: var(--color-border-primary);
+  }
+}
+.el_btn__small {
+  padding: calc(8 * var(--liq-unit)) calc(16 * var(--liq-unit));
+  font-size: calc(14 * var(--liq-unit));
+}
+.el_btn__large {
+  padding: calc(16 * var(--liq-unit)) calc(32 * var(--liq-unit));
+  font-size: calc(18 * var(--liq-unit));
+}
+
+/* use blocks
+----------------------------------------------------------------- */
+/******************************************************************
+* block - breadcrumbs
+* パンくずリストブロックコンポーネント
+* 汎用的に使用できるパンくずリストスタイル
+*******************************************************************/
+.bl_breadcrumbs {
+  margin-bottom: calc(30 * var(--liq-unit));
+}
+.bl_breadcrumbs_list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: calc(10 * var(--liq-unit));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.bl_breadcrumbs_item {
+  display: flex;
+  align-items: center;
+}
+.bl_breadcrumbs_link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: calc(14 * var(--liq-unit));
+  transition: color 0.3s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .bl_breadcrumbs_link:hover {
+    color: var(--color-text-primary);
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .bl_breadcrumbs_link:active {
+    color: var(--color-text-primary);
+  }
+}
+.bl_breadcrumbs_text {
+  color: var(--color-text-primary);
+  font-size: calc(14 * var(--liq-unit));
+  font-weight: 500;
+}
+.bl_breadcrumbs_separator {
+  color: var(--color-text-secondary);
+  margin: 0 calc(5 * var(--liq-unit));
+  font-size: calc(14 * var(--liq-unit));
+}
+
+/******************************************************************
+* block - card
+* カード型のブロックコンポーネント
+* 汎用的に使用できるカードスタイル
+*******************************************************************/
+.bl_card {
+  background-color: var(--color-bg-base);
+  border: 1px solid var(--color-border-tag);
+  border-radius: calc(12 * var(--liq-unit));
+  padding: calc(30 * var(--liq-unit));
+  transition: all 0.3s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .bl_card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 calc(10 * var(--liq-unit)) calc(30 * var(--liq-unit)) rgba(var(--color-base-black), 0.1);
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .bl_card:active {
+    transform: translateY(-5px);
+    box-shadow: 0 calc(10 * var(--liq-unit)) calc(30 * var(--liq-unit)) rgba(var(--color-base-black), 0.1);
+  }
+}
+.bl_card_header {
+  margin-bottom: calc(20 * var(--liq-unit));
+}
+.bl_card_title {
+  font-size: calc(20 * var(--liq-unit));
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: calc(10 * var(--liq-unit));
+}
+.bl_card_body {
+  margin-bottom: calc(20 * var(--liq-unit));
+}
+.bl_card_text {
+  font-size: calc(16 * var(--liq-unit));
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+.bl_card_footer {
+  margin-top: calc(20 * var(--liq-unit));
+  padding-top: calc(20 * var(--liq-unit));
+  border-top: 1px solid var(--color-border-tag);
+}
+.bl_card_image {
+  margin-bottom: calc(20 * var(--liq-unit));
+  border-radius: calc(8 * var(--liq-unit));
+  overflow: hidden;
+}
+.bl_card_img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .bl_card:hover .bl_card_img {
+    transform: scale(1.05);
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .bl_card:active .bl_card_img {
+    transform: scale(1.05);
+  }
+}
+
+/* page-header
+----------------------------------------------------------------- */
+.un_pageHeader {
+  text-align: center;
+  padding: calc(40 * var(--liq-unit)) 0;
+  margin-bottom: calc(60 * var(--liq-unit));
+}
+.un_pageHeader_title {
+  font-size: calc(32 * var(--liq-unit));
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: calc(15 * var(--liq-unit));
+}
+@media screen and (580px <= width) {
+  .un_pageHeader_title {
+    font-size: calc(40 * var(--liq-unit));
+  }
+}
+.un_pageHeader_description {
+  font-size: calc(18 * var(--liq-unit));
+  color: var(--color-text-secondary);
+}
+@media screen and (580px <= width) {
+  .un_pageHeader_description {
+    font-size: calc(20 * var(--liq-unit));
+  }
+}
+
+/* about-content
+----------------------------------------------------------------- */
+.un_aboutContent_section {
+  margin-bottom: calc(40 * var(--liq-unit));
+}
+.un_aboutContent_title {
+  font-size: calc(24 * var(--liq-unit));
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: calc(20 * var(--liq-unit));
+}
+.un_aboutContent_text {
+  font-size: calc(16 * var(--liq-unit));
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+}
+.un_aboutContent_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.un_aboutContent_listItem {
+  font-size: calc(16 * var(--liq-unit));
+  color: var(--color-text-secondary);
+  padding: calc(10 * var(--liq-unit)) 0;
+  border-bottom: 1px solid var(--color-border-tag);
+}
+.un_aboutContent_listItem:last-child {
+  border-bottom: none;
+}
+.un_aboutContent_image {
+  margin-top: calc(40 * var(--liq-unit));
+  border-radius: calc(12 * var(--liq-unit));
+  overflow: hidden;
+}
+.un_aboutContent_img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.un_aboutContent_techGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(20 * var(--liq-unit));
+  margin-top: calc(20 * var(--liq-unit));
+}
+
+.un_aboutContent_section .el_btn {
+  margin-top: calc(20 * var(--liq-unit));
+}
+
 /*# sourceMappingURL=sample-about.css.map */
