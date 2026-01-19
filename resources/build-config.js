@@ -7,8 +7,11 @@
  */
 export const BUILD_CONFIG = {
   // パス設定(npm実行階層からの相対)
+  // scss js の格納親ディレクトリ
   DIR_SRC_PATH: 'htdocs/src/',
+  // css js の出力先ディレクトリ
   DIR_DIST_PATH: 'htdocs/dist/',
+  // 画像の格納親ディレクトリ
   DIR_IMAGE_TARGET_PATH: 'htdocs/assets/images/',
 
   // SCSS/CSS関連設定

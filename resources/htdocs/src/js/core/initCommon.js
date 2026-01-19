@@ -36,6 +36,9 @@ export function initCommon({ bag, signal }) {
 
   // img保存策
   imgDisabled(signal);
+
+  // mainの高さを画面の高さからfooterの高さを引いた値に設定
+  setMainMinHeight(signal);
 }
 
 const imgDisabled = (signal) => {
@@ -62,4 +65,36 @@ const imgDisabled = (signal) => {
       { signal }
     );
   });
+};
+
+/**
+ * mainの最小高さを設定（画面の高さ - footerの高さ）
+ * @param {AbortSignal} signal - AbortSignal
+ */
+const setMainMinHeight = (signal) => {
+  const main = document.querySelector('.ly_main');
+  const footer = document.querySelector('.ly_footer');
+
+  if (!main || !footer) {
+    return;
+  }
+
+  const updateMainMinHeight = () => {
+    const windowHeight = window.innerHeight;
+    const footerHeight = footer.offsetHeight;
+    const minHeight = windowHeight - footerHeight;
+    main.style.minHeight = `${minHeight}px`;
+  };
+
+  // 初期設定
+  updateMainMinHeight();
+
+  // リサイズ時にも再計算
+  window.addEventListener(
+    'resize',
+    () => {
+      updateMainMinHeight();
+    },
+    { signal }
+  );
 };

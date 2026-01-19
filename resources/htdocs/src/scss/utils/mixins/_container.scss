@@ -14,6 +14,8 @@
 * $container-sizesのキー名は$breakpointsのキー名と統一されています
 *******************************************************************/
 @mixin container($_type: 'normal') {
+  width: 100%;
+
   // $container-sizesから指定されたタイプのサイズを取得
   @if not map.has-key($container-sizes, $_type) {
     @error "container(): 指定されたタイプ '#{$_type}' は $container-sizes に定義されていません。";

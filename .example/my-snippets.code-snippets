@@ -137,71 +137,78 @@
 	"scss-get-font-family": {
 		"prefix": "get-font-family",
 		"body": [
-			"get-font-family('$0');"
+			"get-font-family('$0')"
 		],
 		"description": "SCSS font-family function",
 	},
 	"scss-get-font-weight": {
 		"prefix": "get-font-weight",
 		"body": [
-			"get-font-weight('$0');"
+			"get-font-weight('$0')"
 		],
 		"description": "SCSS font-weight function",
 	},
 	"scss-get-image-path": {
 		"prefix": "get-image-path",
 		"body": [
-			"get-image-path('$0');"
+			"get-image-path('$0')"
 		],
 		"description": "SCSS image-path function",
 	},
 	"scss-get-height": {
 		"prefix": "get-height",
 		"body": [
-			"get-height('$0');"
+			"get-height('$0')"
 		],
 		"description": "SCSS height function",
 	},
 	"scss-get-transition": {
 		"prefix": "get-transition",
 		"body": [
-			"get-transition('$0');"
+			"get-transition('$0')"
 		],
 		"description": "SCSS transition function",
 	},
 	"scss-get-border": {
 		"prefix": "get-border",
 		"body": [
-			"get-border('$0');"
+			"get-border('$0')"
 		],
 		"description": "SCSS border function",
 	},
 	"scss-get-box-shadow": {
 		"prefix": "get-box-shadow",
 		"body": [
-			"get-box-shadow('$0');"
+			"get-box-shadow('$0')"
 		],
 		"description": "SCSS box-shadow function",
 	},
 	"scss-get-z-index": {
 		"prefix": "get-z-index",
 		"body": [
-			"get-z-index('$0');"
+			"get-z-index('$0')"
 		],
 		"description": "SCSS z-index function",
+	},
+	"scss-get-color": {
+		"prefix": "get-color",
+		"body": [
+			"get-color('$0')"
+		],
+		"description": "SCSS color function",
 	},
 	// "scss-get-color": {
 	// 	"prefix": "get-color",
 	// 	"body": [
-	// 		"get-color('$0')"
+	// 		"get-color('$1', '$2')"
 	// 	],
 	// 	"description": "SCSS color function",
-	// },
-	"scss-get-color": {
-		"prefix": "get-color",
-		"body": [
-			"get-color('$1', '$2')"
-		],
-		"description": "SCSS color function",
-	}
+	// }
+	// "scss-get-color": {
+	// 	"prefix": "get-color",
+	// 	"body": [
+	// 		"get-color('$1', '$2', '$3')"
+	// 	],
+	// 	"description": "SCSS color function",
+	// }
 }

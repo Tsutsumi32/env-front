@@ -59,8 +59,10 @@ $media_query_strategy: 'sp-first' !default;
 //////////////////////////////////////////////
 $breakpoint-keys: (
   'tab': 'tab',
+  // layout change
   'tabL': 'tabL',
   'pc': 'pc',
+  // layout change
   'pcL': 'pcL',
   'pcLL': 'pcLL',
 ) !default;
@@ -218,6 +220,20 @@ $section-sizes: (
 // max-widthはオプション（nullの場合は設定しない）
 //////////////////////////////////////////////
 $container-sizes: (
+  'small': (
+    'default': (
+      'padding': 5%,
+      'max-width': null,
+    ),
+    get-breakpoint-key('tab'): (
+      'padding': 5%,
+      'max-width': null,
+    ),
+    get-breakpoint-key('pc'): (
+      'padding': 5%,
+      'max-width': 840px,
+    ),
+  ),
   'normal': (
     'default': (
       'padding': 30,
@@ -442,6 +458,9 @@ $color_selection_text: get-color('base', 'white');
 $color_selection_bg: get-color('base', 'black');
 // focus
 $color_focus_outline: get-color('base', 'black');
+// scrollbar
+$color_scrollbar_track: black;
+$color_scrollbar_thumb: white;
 
 /* font
 ----------------------------------------------------------------- */

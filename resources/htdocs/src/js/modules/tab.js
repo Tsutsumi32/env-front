@@ -23,7 +23,7 @@ export class TabControl extends BaseModuleClass {
       activeClass = 'is_active',
       enableFadeAnimation = true,
       fadeDuration = 300,
-      fadeDisplay = true
+      fadeDisplay = true,
     } = this.options;
 
     // タブの親要素を取得
@@ -35,7 +35,7 @@ export class TabControl extends BaseModuleClass {
     }
 
     // 各親要素ごとにタブ機能を初期化
-    tabParents.forEach(parent => {
+    tabParents.forEach((parent) => {
       // 親要素内でのみタブとコンテンツを検索
       const tabs = parent.querySelectorAll(tabSelector);
       const contents = parent.querySelectorAll(contentSelector);
@@ -46,108 +46,120 @@ export class TabControl extends BaseModuleClass {
       }
 
       // 各タブにクリックイベントを追加
-      tabs.forEach(tab => {
-        tab.addEventListener('click', (e) => {
-          e.preventDefault();
-          const targetTab = tab.getAttribute('data-tab');
+      tabs.forEach((tab) => {
+        tab.addEventListener(
+          'click',
+          (e) => {
+            e.preventDefault();
+            const targetTab = tab.getAttribute('data-tab');
 
-          if (!targetTab) {
-            console.warn('data-tab属性が設定されていません');
-            return;
-          }
+            if (!targetTab) {
+              console.warn('data-tab属性が設定されていません');
+              return;
+            }
 
-          // 既にアクティブなタブの場合は何もしない
-          if (tab.classList.contains(activeClass)) {
-            return;
-          }
+            // 既にアクティブなタブの場合は何もしない
+            if (tab.classList.contains(activeClass)) {
+              return;
+            }
 
-          // コンテンツの表示切替（フェードアニメーション付き）
-          if (enableFadeAnimation) {
-            // 現在表示中のコンテンツを取得（タブの切り替え前に取得、親要素内でのみ検索）
-            const currentContent = parent.querySelector(`${contentSelector}.${activeClass}`);
+            // コンテンツの表示切替（フェードアニメーション付き）
+            if (enableFadeAnimation) {
+              // 現在表示中のコンテンツを取得（タブの切り替え前に取得、親要素内でのみ検索）
+              const currentContent = parent.querySelector(`${contentSelector}.${activeClass}`);
 
-            // 新しいコンテンツを取得（親要素内でのみ検索）
-            const newContent = parent.querySelector(`${contentSelector}[data-tab="${targetTab}"]`);
+              // 新しいコンテンツを取得（親要素内でのみ検索）
+              const newContent = parent.querySelector(
+                `${contentSelector}[data-tab="${targetTab}"]`
+              );
 
-            if (currentContent && newContent && currentContent !== newContent) {
-              // js_tabParentの高さを取得
-              const currentHeight = parent.offsetHeight;
+              if (currentContent && newContent && currentContent !== newContent) {
+                // js_tabParentの高さを取得
+                const currentHeight = parent.offsetHeight;
 
-              // js_tabParentの高さを強制的に指定（レイアウト保持）
-              parent.style.height = currentHeight + 'px';
+                // js_tabParentの高さを強制的に指定（レイアウト保持）
+                parent.style.minHeight = currentHeight + 'px';
 
-              // 高さが確実に適用されるまで待機してから切り替え処理を開始
-              requestAnimationFrame(() => {
+                // 高さが確実に適用されるまで待機してから切り替え処理を開始
                 requestAnimationFrame(() => {
-                  // 現在のコンテンツをフェードアウト
-                  fadeOut(currentContent, fadeDuration, fadeDisplay, signal);
+                  requestAnimationFrame(() => {
+                    // 現在のコンテンツをフェードアウト
+                    fadeOut(currentContent, fadeDuration, fadeDisplay, signal);
 
-                  // フェードアウト完了後にクラスを切り替え
-                  const timeoutId1 = setTimeout(() => {
-                    currentContent.classList.remove(activeClass);
+                    // フェードアウト完了後にクラスを切り替え
+                    const timeoutId1 = setTimeout(() => {
+                      currentContent.classList.remove(activeClass);
 
-                    // 新しいコンテンツを準備
-                    newContent.classList.add(activeClass);
-                    if (fadeDisplay) {
-                      newContent.style.display = 'block';
-                      newContent.style.opacity = '0';
-                    }
+                      // 新しいコンテンツを準備
+                      newContent.classList.add(activeClass);
+                      if (fadeDisplay) {
+                        newContent.style.display = 'block';
+                        newContent.style.opacity = '0';
+                      }
 
-                    // 新しいコンテンツをフェードイン
-                    const timeoutId2 = setTimeout(() => {
-                      fadeIn(newContent, fadeDuration, fadeDisplay, signal);
+                      // 新しいコンテンツをフェードイン
+                      const timeoutId2 = setTimeout(() => {
+                        fadeIn(newContent, fadeDuration, fadeDisplay, signal);
 
-                      // フェードイン完了後にjs_tabParentの高さを解除
-                      const timeoutId3 = setTimeout(() => {
-                        parent.style.height = '';
-                      }, fadeDuration);
+                        // フェードイン完了後にjs_tabParentの高さを解除
+                        const timeoutId3 = setTimeout(() => {
+                          parent.style.height = '';
+                        }, fadeDuration);
+                        // signalでタイムアウトをクリーンアップ
+                        if (signal) {
+                          signal.addEventListener('abort', () => clearTimeout(timeoutId3), {
+                            once: true,
+                          });
+                        }
+                      }, 50); // 少し遅延を入れてスムーズに
                       // signalでタイムアウトをクリーンアップ
                       if (signal) {
-                        signal.addEventListener('abort', () => clearTimeout(timeoutId3), { once: true });
+                        signal.addEventListener('abort', () => clearTimeout(timeoutId2), {
+                          once: true,
+                        });
                       }
-                    }, 50); // 少し遅延を入れてスムーズに
+                    }, fadeDuration);
                     // signalでタイムアウトをクリーンアップ
                     if (signal) {
-                      signal.addEventListener('abort', () => clearTimeout(timeoutId2), { once: true });
+                      signal.addEventListener('abort', () => clearTimeout(timeoutId1), {
+                        once: true,
+                      });
                     }
-                  }, fadeDuration);
-                  // signalでタイムアウトをクリーンアップ
-                  if (signal) {
-                    signal.addEventListener('abort', () => clearTimeout(timeoutId1), { once: true });
-                  }
+                  });
                 });
+              } else if (newContent) {
+                // 現在のコンテンツがない場合（初回表示など）
+                newContent.classList.add(activeClass);
+                if (fadeDisplay) {
+                  newContent.style.display = 'block';
+                  newContent.style.opacity = '0';
+                }
+                const timeoutId = setTimeout(() => {
+                  fadeIn(newContent, fadeDuration, fadeDisplay, signal);
+                }, 50);
+                // signalでタイムアウトをクリーンアップ
+                if (signal) {
+                  signal.addEventListener('abort', () => clearTimeout(timeoutId), { once: true });
+                }
+              }
+            } else {
+              // フェードアニメーション無効の場合は従来通り
+              contents.forEach((content) => {
+                const contentTab = content.getAttribute('data-tab');
+                if (contentTab === targetTab) {
+                  content.classList.add(activeClass);
+                } else {
+                  content.classList.remove(activeClass);
+                }
               });
-            } else if (newContent) {
-              // 現在のコンテンツがない場合（初回表示など）
-              newContent.classList.add(activeClass);
-              if (fadeDisplay) {
-                newContent.style.display = 'block';
-                newContent.style.opacity = '0';
-              }
-              const timeoutId = setTimeout(() => {
-                fadeIn(newContent, fadeDuration, fadeDisplay, signal);
-              }, 50);
-              // signalでタイムアウトをクリーンアップ
-              if (signal) {
-                signal.addEventListener('abort', () => clearTimeout(timeoutId), { once: true });
-              }
             }
-          } else {
-            // フェードアニメーション無効の場合は従来通り
-            contents.forEach(content => {
-              const contentTab = content.getAttribute('data-tab');
-              if (contentTab === targetTab) {
-                content.classList.add(activeClass);
-              } else {
-                content.classList.remove(activeClass);
-              }
-            });
-          }
 
-          // アクティブタブの切り替え（コンテンツの処理後に実行、親要素内のタブのみ）
-          tabs.forEach(t => t.classList.remove(activeClass));
-          tab.classList.add(activeClass);
-        }, { signal });
+            // アクティブタブの切り替え（コンテンツの処理後に実行、親要素内のタブのみ）
+            tabs.forEach((t) => t.classList.remove(activeClass));
+            tab.classList.add(activeClass);
+          },
+          { signal }
+        );
       });
 
       // 初期状態の設定（最初のタブをアクティブに）
@@ -156,7 +168,9 @@ export class TabControl extends BaseModuleClass {
 
       if (firstTabTarget) {
         firstTab.classList.add(activeClass);
-        const firstContent = parent.querySelector(`${contentSelector}[data-tab="${firstTabTarget}"]`);
+        const firstContent = parent.querySelector(
+          `${contentSelector}[data-tab="${firstTabTarget}"]`
+        );
         if (firstContent) {
           firstContent.classList.add(activeClass);
 
@@ -180,4 +194,3 @@ export class TabControl extends BaseModuleClass {
     });
   }
 }
-

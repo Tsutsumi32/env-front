@@ -35,7 +35,7 @@
 @mixin hover-color() {
   transition: color get-transition(normal);
   @include hover {
-    color: colors(get-color('ui', 'hover'));
+    // color: get-color('ui', 'hover');
   }
 }
 

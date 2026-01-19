@@ -19,11 +19,12 @@ html {
 }
 
 body {
+  @include scrollbar();
   // デザインの改行方法によって変更する
   // word-break: break-all;
   word-break: break-word;
   line-break: strict;
-  font-family: get-font-family(notosans);
+  font-family: get-font-family('notosans');
 
   background-color: $color_body_bg;
   color: $color_base_text;
@@ -95,6 +96,7 @@ address {
 }
 
 textarea {
+  @include scrollbar();
   resize: vertical;
   overflow-y: auto;
 }
@@ -111,16 +113,6 @@ button {
   color: inherit;
 }
 
-// 見出し要素（タイトル的な英文字にRocknRollフォントを適用）
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: get-font-family('rocknroll-one');
-}
-
 // テキスト選択時のスタイル
 ::selection {
   color: $color_selection_text;
@@ -135,7 +127,7 @@ h6 {
 // フォーカス時のoutlineスタイル
 :focus-visible {
   outline: 2px solid $color_focus_outline;
-  outline-offset: 2px;
+  // outline-offset: 2px;
 }
 
 // 補正入力選択時
