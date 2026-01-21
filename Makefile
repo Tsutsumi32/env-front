@@ -1,4 +1,4 @@
-.PHONY: help up down restart build rebuild logs shell start watch build-scss build-js build-convert-images meta-convert-images watch-scss watch-js watch-convert-images serve clean clean-all clean-docker install
+.PHONY: help up down restart build rebuild logs shell start watch build-scss build-js build-convert-images build-scss-index meta-convert-images watch-scss watch-js watch-convert-images watch-scss-index serve clean clean-all clean-docker install
 
 # デフォルトターゲット
 .DEFAULT_GOAL := help
@@ -92,6 +92,11 @@ build-convert-images: up ## 画像変換のみビルド
 	@sleep 2
 	docker exec -it $(CONTAINER_NAME) bash -c "npm run build:convert-images"
 
+build-scss-index: up ## SCSSインデックスのみビルド
+	@echo "コンテナ起動を待機中..."
+	@sleep 2
+	docker exec -it $(CONTAINER_NAME) bash -c "npm run build:scss-index"
+
 meta-convert-images: up ## 画像変換のメタファイルを生成
 	@echo "コンテナ起動を待機中..."
 	@sleep 2
@@ -111,6 +116,11 @@ watch-convert-images: up ## 画像変換の監視を開始
 	@echo "コンテナ起動を待機中..."
 	@sleep 2
 	docker exec -it $(CONTAINER_NAME) bash -c "npm run watch:convert-images"
+
+watch-scss-index: up ## SCSSインデックスの監視を開始
+	@echo "コンテナ起動を待機中..."
+	@sleep 2
+	docker exec -it $(CONTAINER_NAME) bash -c "npm run watch:scss-index"
 
 serve: up ## ブラウザシンクサーバーを起動
 	@echo "コンテナ起動を待機中..."

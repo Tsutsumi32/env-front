@@ -9,11 +9,13 @@
     "watch:convert-images": "run-s meta:convert-images && node node/convert-images/watch-convert-images.js",
     "build:scss": "node node/scss/build-scss.js",
     "watch:scss": "node node/scss/watch-scss.js",
+    "build:scss-index": "node node/scss-index/build-scss-index.js",
+    "watch:scss-index": "node node/scss-index/watch-scss-index.js",
     "build:js": "node node/js/build-js.js",
     "watch:js": "node node/js/watch-js.js",
     "serve": "node node/serve/browser-sync.js",
-    "build": "run-s build:scss build:js build:convert-images",
-    "watch": "concurrently \"npm run watch:scss\" \"npm run watch:js\" \"npm run watch:convert-images\"",
+    "build": "run-s build:scss-index build:scss build:js build:convert-images",
+    "watch": "concurrently \"npm run watch:scss-index\" \"npm run watch:scss\" \"npm run watch:js\" \"npm run watch:convert-images\"",
     "start": "concurrently \"npm run watch\" \"npm run serve\""
   },
   "devDependencies": {

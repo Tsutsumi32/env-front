@@ -35,6 +35,11 @@ body {
 select {
   appearance: base-select;
 
+  // placehoder式にする(hidden + checked属性付与)
+  :has(option[value='']:checked) {
+    color: gray;
+  }
+
   &::picker(select) {
     appearance: base-select;
     border: none;

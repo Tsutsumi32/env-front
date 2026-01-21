@@ -2,10 +2,11 @@
 
 ## 開発環境の立ち上げ
 
-### 1. .envファイルの作成
+### 1. .envファイルの作成・docker-compose.overrideの作成
 
-プロジェクトルートにある`.env.example`を複製し、`.env`ファイルを作成してください。
+- プロジェクトルートにある`.env.example`を複製し、`.env`ファイルを作成してください。
 ※中身の内容についてはプロジェクト毎に指示があります。
+- **必要に応じて**、`docker-compose.override.sample`を複製し、`docker-compose.override`ファイルを作成してください。自身の環境に必要な設定がある場合、本ファイルを編集します。
 
 ```
 
@@ -86,10 +87,12 @@ env-front/
 - `make build` - ビルドを実行（SCSS + JS + 画像変換）
 - `make watch` - ファイル監視を開始（SCSS + JS + 画像変換）
 - `make build-scss` - SCSSのみビルド
+- `make build-scss-index` - SCSSインデックスのみビルド
 - `make build-js` - JSのみビルド
 - `make build-convert-images` - 画像変換のみビルド
 - `make meta-convert-images` - 画像変換のメタファイルを生成
 - `make watch-scss` - SCSSの監視を開始
+- `make watch-scss-index` - SCSSインデックスの監視を開始
 - `make watch-js` - JSの監視を開始
 - `make watch-convert-images` - 画像変換の監視を開始
 - `make serve` - ブラウザシンクサーバーを起動
@@ -111,15 +114,17 @@ env-front/
 
 ### ビルド関連
 
-- `npm run build` - 全ビルド（SCSS + JS + 画像変換）
+- `npm run build` - 全ビルド（SCSSインデックス + SCSS + JS + 画像変換）
 - `npm run build:scss` - SCSSのみビルド
+- `npm run build:scss-index` - SCSSインデックスのみビルド
 - `npm run build:js` - JSのみビルド
 - `npm run build:convert-images` - 画像変換のみビルド
 
 ### 監視（Watch）関連
 
-- `npm run watch` - 全監視（SCSS + JS + 画像変換）
+- `npm run watch` - 全監視（SCSSインデックス + SCSS + JS + 画像変換）
 - `npm run watch:scss` - SCSSの監視
+- `npm run watch:scss-index` - SCSSインデックスの監視
 - `npm run watch:js` - JSの監視
 - `npm run watch:convert-images` - 画像変換の監視
 
@@ -142,6 +147,28 @@ env-front/
 - **出力ディレクトリ**: `resources/htdocs/dist/css/`
 - **機能**: SCSSのコンパイル、minify化、PostCSS処理
 - **設定**: `resources/build-config.js`の`PRESERVE_DIRECTORY_STRUCTURE`で出力ディレクトリ構造を制御
+
+#### SCSSインデックス生成（common.scss）
+
+SCSSファイルのエントリーポイントとなる`common.scss`を自動生成する機能です。
+
+- **生成ファイル**: `resources/htdocs/src/scss/common.scss`
+- **設定**: `resources/build-config.js`の`SCSS_INDEX`セクション
+  - `OUTPUT_FILE`: 生成するエントリーファイルのパス（npm実行階層からの相対パス）
+  - `TARGET_DIRS`: 対象ディレクトリの配列（npm実行階層からの相対パス）
+  
+**動作**:
+- 各対象ディレクトリごとにディレクトリコメントを追加
+- 対象ディレクトリ内に`index.scss`がある場合: そのディレクトリの`index.scss`のみを`@use`する（拡張子なしで`@use './ディレクトリ名';`の形式）
+- 対象ディレクトリ内に`index.scss`がない場合: ディレクトリ内のすべてのSCSSファイル（`index.scss`と`_`で始まるパーシャルファイルを除く）を`@use`する
+
+**コマンド**:
+- `npm run build:scss-index` - SCSSインデックスを生成
+- `npm run watch:scss-index` - 対象ディレクトリのファイル変更を監視して自動再生成
+- `make build-scss-index` - SCSSインデックスを生成（Makefile経由）
+- `make watch-scss-index` - SCSSインデックスの監視を開始（Makefile経由）
+
+**注意**: `npm run build`と`npm run watch`には自動的に含まれています。
 
 ### JavaScript
 

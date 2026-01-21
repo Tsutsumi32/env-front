@@ -20,6 +20,24 @@ export const BUILD_CONFIG = {
   // 出力の際にディレクトリ階層を維持するか
   PRESERVE_DIRECTORY_STRUCTURE: false,
 
+  // SCSSインデックス生成設定
+  // SCSSコンパイル時のファイル依存関係にも使用(common.scssで読み込んでいるファイルの場合は、common.scssだけコンパイル)
+  SCSS_INDEX: {
+    // 生成するエントリーファイルのパス（npm実行階層からの相対パス）
+    OUTPUT_FILE: 'htdocs/src/scss/common.scss',
+    // 対象ディレクトリの配列（上から順に@useされる）
+    // 各ディレクトリは npm実行階層からの相対パス
+    TARGET_DIRS: [
+      'htdocs/src/scss/global',
+      'htdocs/src/scss/modules/animations',
+      'htdocs/src/scss/modules/elements',
+      'htdocs/src/scss/modules/footer',
+      'htdocs/src/scss/modules/header',
+      'htdocs/src/scss/modules/helpers',
+      'htdocs/src/scss/modules/layouts',
+    ],
+  },
+
   // Browser Sync設定
   // プロキシモード: 例: 'php:80'、サーバーモード: null
   BROWSER_SYNC_PROXY: 'php:80',

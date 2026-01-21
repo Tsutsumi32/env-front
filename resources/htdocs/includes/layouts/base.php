@@ -36,12 +36,15 @@ $pageContents = $pageContents ?? '';
     <?php
     // ページID（画面キー）をそのままファイル名としてCSS/JSを自動読み込み
     // 共通スタイル（global, helpers, header, footer, layouts）は各ページのCSSファイルに含まれます
+    $distPath = "/dist/css/";
     if (!empty($pageId)) {
-        $cssPath = "/dist/css/{$pageId}.css";
-        $jsPath = "/dist/js/{$pageId}.js";
+        $cssPath = "{$distPath}{$pageId}.css";
+        $jsPath = "{$distPath}{$pageId}.js";
     ?>
     <!-- css page -->
     <link rel="stylesheet" href="<?php echo htmlspecialchars($cssPath, ENT_QUOTES, 'UTF-8'); ?>">
+    <!-- css common -->
+    <link rel="stylesheet" href="<?php echo htmlspecialchars("{$distPath}common.css", ENT_QUOTES, 'UTF-8'); ?>">
     <!-- js -->
     <script type="module" src="<?php echo htmlspecialchars($jsPath, ENT_QUOTES, 'UTF-8'); ?>" defer></script>
     <?php
