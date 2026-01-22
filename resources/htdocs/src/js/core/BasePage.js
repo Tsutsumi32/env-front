@@ -102,7 +102,7 @@ export class BasePageClass {
    * @private
    */
   waitForDOM() {
-    const initInstance = () => {
+    const initInstance = async () => {
       this.element = this.selector ? document.querySelector(this.selector) : document.body;
 
       // セレクターが指定されている場合、要素が存在しない場合は処理を実行しない
@@ -111,7 +111,7 @@ export class BasePageClass {
         return;
       }
 
-      this.init();
+      await this.init();
     };
 
     if (document.readyState === 'loading') {
@@ -127,7 +127,7 @@ export class BasePageClass {
    * クリーンアップ処理は提供するが、初期化処理内では実行しない
    * @private
    */
-  init() {
+  async init() {
     // 新しいAbortControllerとdisposeBagを作成
     this.ctrl = new AbortController();
     this.bag = createDisposeBag();
@@ -136,7 +136,7 @@ export class BasePageClass {
     this.ctrl.signal.addEventListener('abort', () => this.bag.flush(), { once: true });
 
     // 全画面共通の処理
-    this.initCommon();
+    await this.initCommon();
 
     // ページ固有の処理（bagとsignalを渡す）
     this.initPage();
@@ -147,9 +147,9 @@ export class BasePageClass {
    * ヘッダー、アニメーション、画像保護などの処理を含む
    * @private
    */
-  initCommon() {
+  async initCommon() {
     // 全画面共通で実行される処理（別ファイルから呼び出し）
-    initCommon({
+    await initCommon({
       bag: this.bag,
       signal: this.ctrl.signal,
     });

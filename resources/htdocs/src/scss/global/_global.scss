@@ -24,58 +24,23 @@ body {
   // word-break: break-all;
   word-break: break-word;
   line-break: strict;
-  font-family: get-font-family('notosans');
-
+  font-family: get-font-family(notosans);
   background-color: $color_body_bg;
   color: $color_base_text;
   width: 100%;
 }
 
-// セレクトスタイル
-select {
-  appearance: base-select;
-
-  // placehoder式にする(hidden + checked属性付与)
-  :has(option[value='']:checked) {
-    color: gray;
-  }
-
-  &::picker(select) {
-    appearance: base-select;
-    border: none;
-    background-color: black;
-    backdrop-filter: blur(1rem);
-    -webkit-backdrop-filter: blur(1rem);
-    /* アニメーションも設定できる */
-    // transition: scale 0.2s;
-
-    @include hover-only {
-      // scale: 1.02;
-    }
-  }
-
-  &::picker-icon {
-    // display: none;
-  }
-
-  option {
-    padding-inline: 1rem;
-    color: wheat;
-
-    &::checkmark {
-      display: none;
-    }
-
-    &:checked {
-      background-color: blue;
-      color: black;
-    }
-
-    &:hover {
-      background-color: white;
-      color: black;
-    }
-  }
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a {
+  // テキストの上下トリミング指定
+  //text-box: trim-both cap alphabetic;
 }
 
 // picutreはスタイル上無視
@@ -101,7 +66,6 @@ address {
 }
 
 textarea {
-  @include scrollbar();
   resize: vertical;
   overflow-y: auto;
 }
@@ -131,12 +95,52 @@ button {
 
 // フォーカス時のoutlineスタイル
 :focus-visible {
-  outline: 2px solid $color_focus_outline;
-  // outline-offset: 2px;
+  outline: 1px solid $color_focus_outline;
 }
 
 // 補正入力選択時
 input:-internal-autofill-selected,
 textarea:-internal-autofill-selected {
   background-color: transparent !important;
+}
+
+// セレクトスタイル
+select {
+  appearance: base-select;
+
+  &::picker(select) {
+    appearance: base-select;
+    border: none;
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    box-shadow: 0 0 s(10) rgba(#000, 0.3);
+    /* アニメーションも設定できる */
+    // transition: scale 0.2s;
+
+    @include hover-only {
+      // scale: 1.02;
+    }
+  }
+
+  &::picker-icon {
+    display: none;
+  }
+
+  option {
+    padding-inline: 1rem;
+
+    &::checkmark {
+      display: none;
+    }
+
+    &:checked {
+      background-color: get-color('background', 'brand', 'default');
+      color: get-color('text', 'mono', 'white');
+      pointer-events: none;
+    }
+
+    &:hover {
+      background-color: get-color('background', 'brand', 'secondary-hover');
+    }
+  }
 }
