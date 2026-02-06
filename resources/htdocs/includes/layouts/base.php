@@ -35,7 +35,7 @@ $pageContents = $pageContents ?? '';
 
     <?php
     // ページID（画面キー）をそのままファイル名としてCSS/JSを自動読み込み
-    // 共通スタイル（global, helpers, header, footer, layouts）は各ページのCSSファイルに含まれます
+    // 共通スタイル（global, helpers, header, footer, layouts）は各ページのCSSファイルに含まれます。
     $distPath = "/dist/css/";
     if (!empty($pageId)) {
         $cssPath = "{$distPath}{$pageId}.css";
