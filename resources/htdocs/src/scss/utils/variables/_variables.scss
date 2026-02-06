@@ -3,7 +3,6 @@
 @use 'sass:list';
 /******************************************************************
 * 変数・取得設定
-* ※mapなども定義されていますが、各実装の場面では、フラットな変数を使用します
 * Mapの取得用functionがある場合は、該当のfunctionを使用して値を設定します。
 * (スニペット使用推奨)
 *******************************************************************/
@@ -191,7 +190,7 @@ $section-sizes: (
     get-breakpoint-key('tab'): 80,
     get-breakpoint-key('pc'): 100,
   ),
-  'normal': (
+  'medium': (
     'default': 80,
     get-breakpoint-key('tab'): 100,
     get-breakpoint-key('pc'): 140,
@@ -234,7 +233,7 @@ $container-sizes: (
       'max-width': 840px,
     ),
   ),
-  'normal': (
+  'medium': (
     'default': (
       'padding': 30,
       'max-width': null,
