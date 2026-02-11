@@ -17,7 +17,7 @@ ob_start();
 ?>
 
 <section id="works" class="ly_section __normal">
-    <div class="ly_container __normal">
+    <div class="ly_container __medium">
         <?php include __DIR__ . '/includes/modules/breadcrumbs.php'; ?>
 
         <div class="un_pageHeader">

@@ -85,10 +85,7 @@ function collectCssFiles(dir) {
 export async function runPostcss() {
   console.log('🛠️ PostCSS 開始...');
 
-  // 設定を定数から取得
-  const DIR_DIST_PATH = BUILD_CONFIG.DIR_DIST_PATH;
-  const DIR_CSS_NAME = BUILD_CONFIG.DIR_CSS_NAME;
-  const cssDir = `${DIR_DIST_PATH}${DIR_CSS_NAME}`;
+  const cssDir = BUILD_CONFIG.SCSS.DIR_DIST;
 
   // ディレクトリ構造維持モードに関係なく、再帰的にすべてのCSSファイルを処理
   const cssFiles = collectCssFiles(cssDir);
@@ -105,15 +102,10 @@ export async function runPostcss() {
 export function cleanOrphanCssFiles() {
   console.log('🗑️ 不要な CSS / MAP ファイル削除チェック...');
 
-  // 設定を定数から取得
-  const DIR_SRC_PATH = BUILD_CONFIG.DIR_SRC_PATH;
-  const DIR_DIST_PATH = BUILD_CONFIG.DIR_DIST_PATH;
-  const DIR_SCSS_NAME = BUILD_CONFIG.DIR_SCSS_NAME;
-  const DIR_CSS_NAME = BUILD_CONFIG.DIR_CSS_NAME;
+  const SCSS_CONFIG = BUILD_CONFIG.SCSS;
+  const cssDir = SCSS_CONFIG.DIR_DIST;
+  const scssDir = SCSS_CONFIG.DIR_SRC;
   const PRESERVE_DIRECTORY_STRUCTURE = BUILD_CONFIG.PRESERVE_DIRECTORY_STRUCTURE;
-
-  const cssDir = `${DIR_DIST_PATH}${DIR_CSS_NAME}`;
-  const scssDir = `${DIR_SRC_PATH}${DIR_SCSS_NAME}`;
 
   // コンパイル対象のSCSSファイル一覧を取得
   const validScssFiles = collectScssFiles(scssDir);

@@ -17,7 +17,7 @@ ob_start();
 ?>
 
 <section id="top">
-    <div class="ly_container __normal">
+    <div class="ly_container __medium">
         <?php include __DIR__ . '/includes/modules/breadcrumbs.php'; ?>
 
         <div class="un_hero">
@@ -29,7 +29,7 @@ ob_start();
         </div>
 
         <div class="ly_section __small _top">
-            <div class="ly_container __normal">
+            <div class="ly_container __medium">
                 <p class="un_media">
                     メディアクエリテスト
                 </p>

@@ -45,14 +45,17 @@ export function collectScssFiles(targetDir) {
 }
 
 /**
- * SCSSインデックスファイルのコンテンツを生成
+ * 1エントリ分のSCSSインデックスファイルのコンテンツを生成
+ * @param {Object} entry - { OUTPUT_FILE, TARGET_DIRS, IMPORT_TYPE }
+ * @returns {string}
  */
-export function generateScssIndexContent() {
-  const SCSS_INDEX = BUILD_CONFIG.SCSS_INDEX;
-  const outputFile = SCSS_INDEX.OUTPUT_FILE;
-  const targetDirs = SCSS_INDEX.TARGET_DIRS;
+export function generateScssIndexContent(entry) {
+  const outputFile = entry.OUTPUT_FILE;
+  const targetDirs = entry.TARGET_DIRS;
+  const importType = entry.IMPORT_TYPE || 'use'; // 'use' | 'forward'
+  const directive = importType === 'forward' ? '@forward' : '@use';
 
-  // common.scssのディレクトリを取得（相対パス計算用）
+  // 出力ファイルのディレクトリを取得（相対パス計算用）
   const outputDirPath = dirname(outputFile);
 
   let content = '';
@@ -72,10 +75,10 @@ export function generateScssIndexContent() {
     const hasIndexScss = existsSync(indexScssPath);
 
     if (hasIndexScss) {
-      // index.scssがある場合は、それだけを@useする（拡張子なしのディレクトリパス）
+      // index.scssがある場合は、それだけを読み込む（拡張子なしのディレクトリパス）
       const relativePath = relative(outputDirPath, targetDir);
       const usePath = `./${relativePath.replace(/\\/g, '/')}`;
-      content += `@use '${usePath}';\n`;
+      content += `${directive} '${usePath}';\n`;
       content += '\n';
     } else {
       // index.scssがない場合は、ディレクトリ内のSCSSファイルを収集
@@ -84,14 +87,13 @@ export function generateScssIndexContent() {
       // ファイルをソート（アルファベット順）
       scssFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
 
-      // @use文を追加
+      // ディレクティブ文を追加（@use または @forward）
       scssFiles.forEach((file) => {
-        // 相対パスを作成（common.scssからの相対パス）
-        // 各ファイルのフルパス = targetDir + file.relativePath
+        // 相対パスを作成（出力ファイルからの相対パス）
         const fileFullPath = join(targetDir, file.relativePath);
         const relativePath = relative(outputDirPath, fileFullPath);
         const usePath = `./${relativePath.replace(/\\/g, '/')}`;
-        content += `@use '${usePath}';\n`;
+        content += `${directive} '${usePath}';\n`;
       });
 
       // ディレクトリ間に空行を追加
@@ -105,21 +107,25 @@ export function generateScssIndexContent() {
 }
 
 /**
- * SCSSインデックスファイルを生成
+ * SCSSインデックスファイルを生成（設定された全エントリ分）
  */
 export function generateScssIndexFile() {
   const SCSS_INDEX = BUILD_CONFIG.SCSS_INDEX;
-  const outputFile = SCSS_INDEX.OUTPUT_FILE;
+  const entries = Array.isArray(SCSS_INDEX) ? SCSS_INDEX : [SCSS_INDEX];
 
-  // 出力ファイルのディレクトリが存在しない場合は作成
-  const outputDir = dirname(outputFile);
-  if (!existsSync(outputDir)) {
-    mkdirSync(outputDir, { recursive: true });
-  }
+  entries.forEach((entry) => {
+    const outputFile = entry.OUTPUT_FILE;
 
-  // コンテンツを生成
-  const content = generateScssIndexContent();
+    // 出力ファイルのディレクトリが存在しない場合は作成
+    const outputDir = dirname(outputFile);
+    if (!existsSync(outputDir)) {
+      mkdirSync(outputDir, { recursive: true });
+    }
 
-  // ファイルに書き込み
-  writeFileSync(outputFile, content, 'utf8');
+    // コンテンツを生成
+    const content = generateScssIndexContent(entry);
+
+    // ファイルに書き込み
+    writeFileSync(outputFile, content, 'utf8');
+  });
 }

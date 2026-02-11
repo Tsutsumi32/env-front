@@ -3,16 +3,17 @@ import { BUILD_CONFIG } from '../../build-config.js';
 import { generateScssIndexFile } from './logic-scss-index.js';
 
 /**
- * common.scssファイルを生成
+ * SCSSインデックスファイルを生成（設定された全エントリ分）
  */
 function generateScssIndex() {
   console.log('🟢 SCSSインデックス生成開始...');
 
   const SCSS_INDEX = BUILD_CONFIG.SCSS_INDEX;
-  const outputFile = SCSS_INDEX.OUTPUT_FILE;
+  const entries = Array.isArray(SCSS_INDEX) ? SCSS_INDEX : [SCSS_INDEX];
 
   generateScssIndexFile();
-  console.log(`✅ SCSSインデックス生成完了: ${outputFile}`);
+  entries.forEach((e) => console.log(`✅ ${e.OUTPUT_FILE}`));
+  console.log('✅ SCSSインデックス生成完了');
 }
 
 // 実行

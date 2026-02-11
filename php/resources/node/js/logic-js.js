@@ -12,12 +12,11 @@ import path from 'path';
 import { BUILD_CONFIG } from '../../build-config.js';
 import fs from 'fs/promises';
 
-// 設定を定数から取得
-const DIR_SRC_PATH = BUILD_CONFIG.DIR_SRC_PATH;
-const DIR_DIST_PATH = BUILD_CONFIG.DIR_DIST_PATH;
-
-export const ENTRY_DIR = `${DIR_SRC_PATH}js/pages`; // 各ページJSがここにある前提
-export const OUTPUT_DIR = `${DIR_DIST_PATH}js`;
+// 設定を定数から取得（build-config の JS でパス連結済み）
+const JS_CONFIG = BUILD_CONFIG.JS;
+export const OUTPUT_DIR = JS_CONFIG.DIR_DIST;
+/** 個別コンパイル対象のディレクトリ配列（ここに含まれる直下の .js がエントリ） */
+export const ENTRY_DIRS = JS_CONFIG.ENTRY_DIRS;
 
 // 出力フォルダを確実に作成
 export function ensureOutputDir() {
@@ -32,8 +31,68 @@ async function listJsInDir(dir) {
     .map((e) => path.join(dir, e.name));
 }
 
+const esbuildOptions = {
+  bundle: true,
+  minify: false,
+  format: 'iife',
+  target: ['es2020'],
+  sourcemap: false,
+  legalComments: 'none',
+  keepNames: false,
+  loader: {
+    '.css': 'empty' // CSSファイルを無視（SCSSで管理するため）
+  }
+};
+
+/** 単一ファイルに Babel → Terser を適用 */
+async function babelTerserFile(file) {
+  const babelResult = await transformFileAsync(file, {
+    presets: [['@babel/preset-env', { targets: ['defaults'], useBuiltIns: false }]],
+    sourceMaps: false
+  });
+  if (!babelResult?.code) throw new Error(`Babel Failed: ${file}`);
+  const terserResult = await minify(babelResult.code, {
+    compress: true,
+    mangle: true,
+    format: { beautify: false, comments: false }
+  });
+  if (!terserResult?.code) throw new Error(`Terser Failed: ${file}`);
+  await fs.writeFile(file, terserResult.code);
+}
+
 /**
- * JSビルド関数（Babel + Terser対応版）
+ * 単一エントリ（pages配下の1ファイル）のみビルド。watch時用。出力ディレクトリは削除しない。
+ */
+export async function buildJsSingle(entryFilePath) {
+  try {
+    ensureOutputDir();
+    const entryPath = path.resolve(entryFilePath);
+
+    await build({
+      entryPoints: [entryPath],
+      outdir: OUTPUT_DIR,
+      ...esbuildOptions
+    });
+
+    const outputFile = path.join(OUTPUT_DIR, path.basename(entryPath));
+    await babelTerserFile(outputFile);
+
+    console.log(`✅ JS build complete: ${path.basename(entryPath)}`);
+  } catch (error) {
+    console.error(`❌ JS build Error: ${error.message}`);
+  }
+}
+
+/**
+ * 全エントリディレクトリから直下の .js を収集
+ */
+async function collectEntryFiles() {
+  const lists = await Promise.all(ENTRY_DIRS.map((dir) => listJsInDir(dir)));
+  return lists.flat();
+}
+
+/**
+ * JSビルド関数（全エントリ一括・Babel + Terser対応版）
  */
 export async function buildJs() {
   try {
@@ -41,8 +100,8 @@ export async function buildJs() {
     await fs.rm(OUTPUT_DIR, { recursive: true, force: true });
     ensureOutputDir();
 
-    // Step 1: エントリーファイル取得（pages配下直下の *.js）
-    const entryFiles = await listJsInDir(ENTRY_DIR);
+    // Step 1: エントリーファイル取得（ENTRY_DIRS 各直下の *.js）
+    const entryFiles = await collectEntryFiles();
     if (entryFiles.length === 0) {
       console.warn('⚠️ エントリーファイルが見つかりません');
       return;
@@ -52,48 +111,16 @@ export async function buildJs() {
     await build({
       entryPoints: entryFiles,
       outdir: OUTPUT_DIR,
-      bundle: true,
-      minify: false,
-      format: 'iife',
-      target: ['es2020'],
-      sourcemap: false,
-      legalComments: 'none',
-      keepNames: false,
-      loader: {
-        '.css': 'empty' // CSSファイルを無視（SCSSで管理するため）
-      }
+      ...esbuildOptions
     });
 
     // Step 3: 出力された各ファイルを順に Babel → Terser
     const outputFiles = await listJsInDir(OUTPUT_DIR);
     for (const file of outputFiles) {
-      const babelResult = await transformFileAsync(file, {
-        presets: [['@babel/preset-env', { targets: ['defaults'], useBuiltIns: false }]],
-        sourceMaps: false
-      });
-
-      if (!babelResult?.code) {
-        throw new Error(`Babel Failed: ${file}`);
-      }
-
-      const terserResult = await minify(babelResult.code, {
-        compress: true,
-        mangle: true,
-        format: {
-          beautify: false,
-          comments: false
-        }
-      });
-
-      if (!terserResult?.code) {
-        throw new Error(`Terser Failed: ${file}`);
-      }
-
-      await fs.writeFile(file, terserResult.code);
+      await babelTerserFile(file);
     }
 
     console.log(`✅ JS build complete (${outputFiles.length} files)`);
-
   } catch (error) {
     console.error(`❌ JS build Error: ${error.message}`);
   }
@@ -103,8 +130,8 @@ export async function buildJs() {
  * ESLint 実行（全体）
  */
 export function runLintAll() {
-  console.log(`📝 ESLint check...: ${DIR_SRC_PATH}js/**/*.js`);
-  exec(`npx eslint "${DIR_SRC_PATH}js/**/*.js"`, (error, stdout, stderr) => {
+  console.log(`📝 ESLint check...: ${JS_CONFIG.DIR_SRC}**/*.js`);
+  exec(`npx eslint "${JS_CONFIG.DIR_SRC}**/*.js"`, (error, stdout, stderr) => {
     if (error) {
       console.error('❌ ESLint Error');
       if (stdout) console.log(stdout);

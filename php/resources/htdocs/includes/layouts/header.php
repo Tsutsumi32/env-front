@@ -8,7 +8,7 @@
 ?>
 
 <header class="ly_header">
-    <div class="ly_container __normal">
+    <div class="ly_container __medium">
         <div class="ly_header_inner">
             <div class="ly_header_logo">
                 <a href="/" class="ly_header_logoLink"></a>

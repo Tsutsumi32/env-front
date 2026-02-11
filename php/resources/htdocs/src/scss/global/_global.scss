@@ -134,13 +134,13 @@ select {
     }
 
     &:checked {
-      background-color: get-color('background', 'brand', 'default');
-      color: get-color('text', 'mono', 'white');
+      // background-color: get-color('background', 'brand', 'default');
+      // color: get-color('text', 'mono', 'white');
       pointer-events: none;
     }
 
     &:hover {
-      background-color: get-color('background', 'brand', 'secondary-hover');
+      // background-color: get-color('background', 'brand', 'secondary-hover');
     }
   }
 }

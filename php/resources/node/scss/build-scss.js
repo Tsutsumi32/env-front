@@ -13,15 +13,10 @@ import { mkdirSync } from 'fs';
 async function runOnce() {
   console.log('🟢 Sass コンパイル開始...');
 
-  // 設定を定数から取得
-  const DIR_SRC_PATH = BUILD_CONFIG.DIR_SRC_PATH;
-  const DIR_DIST_PATH = BUILD_CONFIG.DIR_DIST_PATH;
-  const DIR_SCSS_NAME = BUILD_CONFIG.DIR_SCSS_NAME;
-  const DIR_CSS_NAME = BUILD_CONFIG.DIR_CSS_NAME;
+  const SCSS_CONFIG = BUILD_CONFIG.SCSS;
+  const scssDir = SCSS_CONFIG.DIR_SRC;
+  const cssDir = SCSS_CONFIG.DIR_DIST;
   const PRESERVE_DIRECTORY_STRUCTURE = BUILD_CONFIG.PRESERVE_DIRECTORY_STRUCTURE;
-
-  const scssDir = `${DIR_SRC_PATH}${DIR_SCSS_NAME}`;
-  const cssDir = `${DIR_DIST_PATH}${DIR_CSS_NAME}`;
 
   // 再帰的にSCSSファイルを収集（index.scssと_で始まるファイルを除外）
   const scssFiles = collectScssFiles(scssDir);

@@ -1,37 +1,39 @@
-/************************************************************
+/***********************************************************
 /*  functions
 ************************************************************/
-@forward './functions/height-string';
-@forward './functions/style-settings';
-@forward './functions/set-vw';
-@forward './functions/strip-unit';
-@forward './functions/to-per';
-@forward './functions/vw-to-pixcel';
-@forward './functions/width-string';
+@forward './functions/_height-string.scss';
+@forward './functions/_set-vw.scss';
+@forward './functions/_strip-unit.scss';
+@forward './functions/_style-settings.scss';
+@forward './functions/_to-per.scss';
+@forward './functions/_vw-to-pixcel.scss';
+@forward './functions/_width-string.scss';
 
-/************************************************************
+/***********************************************************
 /*  mixins
 ************************************************************/
-@forward './mixins/style-settings-vars';
-@forward './mixins/color-themes';
-@forward './mixins/background-image';
-@forward './mixins/container';
-@forward './mixins/font';
-@forward './mixins/hover';
-@forward './mixins/media';
-@forward './mixins/omission';
-@forward './mixins/scrollbar';
-@forward './mixins/section';
-@forward './mixins/width-string-set';
-@forward './mixins/ruled-underline';
-@forward './mixins/dashed-underline';
+@forward './mixins/_background-image.scss';
+@forward './mixins/_color-themes.scss';
+@forward './mixins/_container.scss';
+@forward './mixins/_dashed-underline.scss';
+@forward './mixins/_flex-size.scss';
+@forward './mixins/_font.scss';
+@forward './mixins/_hover.scss';
+@forward './mixins/_media.scss';
+@forward './mixins/_omission.scss';
+@forward './mixins/_ruled-underline.scss';
+@forward './mixins/_scrollbar.scss';
+@forward './mixins/_section.scss';
+@forward './mixins/_style-settings-vars.scss';
+@forward './mixins/_width-string-set.scss';
 
-/************************************************************
+/***********************************************************
 /*  variables
 ************************************************************/
-@forward './variables/variables';
+@forward './variables/_variables.scss';
 
-/************************************************************
+/***********************************************************
 /*  project
 ************************************************************/
-@forward './project/project-utils';
+@forward './project/_project-utils.scss';
+

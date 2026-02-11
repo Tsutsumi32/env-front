@@ -8,7 +8,7 @@
 ?>
 
 <footer class="ly_footer">
-    <div class="ly_container __normal">
+    <div class="ly_container __medium">
         <div class="ly_footer_inner">
             <div class="ly_footer_info">
                 <p class="ly_footer_copyright">&copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars(COMPANY_NAME, ENT_QUOTES, 'UTF-8'); ?>. All rights reserved.</p>

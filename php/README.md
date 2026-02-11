@@ -1,4 +1,4 @@
-# フロント環境について
+# 環境について
 
 ## 開発環境の立ち上げ
 
@@ -39,180 +39,40 @@ make start
 
 ---
 
-## プロジェクト構成
-
-```
-env-front/
-├── docker/              # Docker関連ファイル
-│   ├── frontend/        # フロントエンド用Dockerfile
-│   ├── php/             # PHP用Dockerfile
-│   └── db/              # データベース関連
-├── resources/           # 開発リソース
-│   ├── htdocs/          # 公開ディレクトリ
-│   │   ├── src/         # ソースファイル
-│   │   │   ├── scss/    # SCSSファイル
-│   │   │   └── js/      # JavaScriptファイル
-│   │   ├── dist/        # ビルド成果物（自動生成）
-│   │   └── assets/      # 静的アセット
-│   │       └── images/  # 画像ファイル
-│   │           ├── _origin/    # 元画像（PNG/JPG）
-│   │           ├── avif/       # AVIF画像（自動生成）
-│   │           ├── webp/       # WebP画像（自動生成）
-│   │           ├── compression/ # 圧縮画像（自動生成）
-│   │           └── svg/        # SVG画像
-│   ├── node/            # Node.jsスクリプト
-│   └── package.json     # npm依存関係
-├── docker-compose.yml   # Docker Compose設定
-├── Makefile            # Makeコマンド定義
-└── .env                # 環境変数（要作成）
-```
-
----
-
-## Makeコマンド一覧
-
-### Docker操作
-
-- `make up` - Dockerコンテナを起動
-- `make down` - Dockerコンテナを停止
-- `make restart` - Dockerコンテナを再起動
-- `make rebuild` - Dockerイメージを再ビルド
-- `make logs` - Dockerコンテナのログを表示
-- `make shell` - Dockerコンテナ内のシェルに接続
-- `make init` - 初回セットアップ（docker compose up -d & pre-commitフック設置）
-
-### 開発コマンド
-
-- `make start` - 開発環境を起動（ビルド + 監視 + サーバー）
-- `make build` - ビルドを実行（SCSS + JS + 画像変換）
-- `make watch` - ファイル監視を開始（SCSS + JS + 画像変換）
-- `make build-scss` - SCSSのみビルド
-- `make build-scss-index` - SCSSインデックスのみビルド
-- `make build-js` - JSのみビルド
-- `make build-convert-images` - 画像変換のみビルド
-- `make meta-convert-images` - 画像変換のメタファイルを生成
-- `make watch-scss` - SCSSの監視を開始
-- `make watch-scss-index` - SCSSインデックスの監視を開始
-- `make watch-js` - JSの監視を開始
-- `make watch-convert-images` - 画像変換の監視を開始
-- `make serve` - ブラウザシンクサーバーを起動
-- `make install` - 依存関係をインストール
-
-### クリーンアップ
-
-- `make clean` - ビルド成果物を削除
-- `make clean-docker` - Dockerコンテナ、イメージ、ボリュームを完全削除
-- `make clean-all` - コンテナ、イメージ、ボリューム、ビルド成果物をすべて削除
-
-### ヘルプ
-
-- `make help` - 利用可能なコマンド一覧を表示
-
----
-
-## npmスクリプト
-
-### ビルド関連
-
-- `npm run build` - 全ビルド（SCSSインデックス + SCSS + JS + 画像変換）
-- `npm run build:scss` - SCSSのみビルド
-- `npm run build:scss-index` - SCSSインデックスのみビルド
-- `npm run build:js` - JSのみビルド
-- `npm run build:convert-images` - 画像変換のみビルド
-
-### 監視（Watch）関連
-
-- `npm run watch` - 全監視（SCSSインデックス + SCSS + JS + 画像変換）
-- `npm run watch:scss` - SCSSの監視
-- `npm run watch:scss-index` - SCSSインデックスの監視
-- `npm run watch:js` - JSの監視
-- `npm run watch:convert-images` - 画像変換の監視
-
-### 開発サーバー
-
-- `npm run start` - ビルド + 監視 + ブラウザシンクを同時実行
-- `npm run serve` - ブラウザシンクサーバーのみ起動
-
-### 画像変換
-
-- `npm run meta:convert-images` - 画像変換のメタファイルを生成
-
----
-
 ## ビルドシステム
 
 ### SCSS
-
-- **ソースディレクトリ**: `resources/htdocs/src/scss/`
-- **出力ディレクトリ**: `resources/htdocs/dist/css/`
 - **機能**: SCSSのコンパイル、minify化、PostCSS処理
-- **設定**: `resources/build-config.js`の`PRESERVE_DIRECTORY_STRUCTURE`で出力ディレクトリ構造を制御
+- **memo**: indexまたは「_」ファイル変更時には、属するエントリーファイルをコンパイル(または全ファイル ※設定ファイルで指定可能)。エントリーファイルに属さない場合は全ファイルをコンパイル。コンパイル対象のファイル修正時には、該当ファイルのみコンパイル
 
-#### SCSSインデックス生成（common.scss）
-
-SCSSファイルのエントリーポイントとなる`common.scss`を自動生成する機能です。
-
-- **生成ファイル**: `resources/htdocs/src/scss/common.scss`
-- **設定**: `resources/build-config.js`の`SCSS_INDEX`セクション
-  - `OUTPUT_FILE`: 生成するエントリーファイルのパス（npm実行階層からの相対パス）
-  - `TARGET_DIRS`: 対象ディレクトリの配列（npm実行階層からの相対パス）
-  
-**動作**:
-- 各対象ディレクトリごとにディレクトリコメントを追加
-- 対象ディレクトリ内に`index.scss`がある場合: そのディレクトリの`index.scss`のみを`@use`する（拡張子なしで`@use './ディレクトリ名';`の形式）
-- 対象ディレクトリ内に`index.scss`がない場合: ディレクトリ内のすべてのSCSSファイル（`index.scss`と`_`で始まるパーシャルファイルを除く）を`@use`する
-
-**コマンド**:
-- `npm run build:scss-index` - SCSSインデックスを生成
-- `npm run watch:scss-index` - 対象ディレクトリのファイル変更を監視して自動再生成
-- `make build-scss-index` - SCSSインデックスを生成（Makefile経由）
-- `make watch-scss-index` - SCSSインデックスの監視を開始（Makefile経由）
-
-**注意**: `npm run build`と`npm run watch`には自動的に含まれています。
+### SCSSインデックス生成（common.scss）
+- **機能**: SCSSファイルのエントリーポイントとなる`common.scss`を自動生成する。
+- **memo**: 対象ディレクトリ内に`index.scss`がある場合: そのディレクトリの`index.scss`のみを`@use`する- **memo**:（拡張子なしで`@use './ディレクトリ名';`の形式）
+ディレクトリ内のすべてのSCSSファイル（`index.scss`と`_`で始まるパーシャルファイルを除く）を`@use`する
 
 ### JavaScript
-
-- **ソースディレクトリ**: `resources/htdocs/src/js/`
-- **出力ディレクトリ**: `resources/htdocs/dist/js/`
 - **機能**: JSのコンパイル、minify化、ESLint
-- **構成**:
-  - `constans/` - グローバル定数
-  - `modules/` - モジュール（クラス名固定化、`initXXXX`で初期化）
-  - `utils/` - ユーティリティ関数
-  - `pages/` - ページ毎の処理（エントリーポイント）
-  - `core/` - コア機能
 
 ### 画像変換
+- **機能**: 設定(build-config)に従って、格納したpngやjpg画像を、avif、webp変換、圧縮する
+- **memo**: _originディレクトリにpngまたはjpg画像を格納します(拡張子の大文字・小文字違いや、jpg・jpeg違いなどは許容してます)
+- **memo**: svgディレクトリは処理対象外です
+- **memo**: Rethina対応を行う場合、基本は表示サイズの2倍の画像を用意し、変換後の画像のみを使用します。
+- **memo**: `npm run meta:convert-images`でメタファイルを更新することが可能。(メタファイルを元に変換処理を行っています。メタファイルを更新すると、現時点の画像格納状態から監視を行います。)　※メタファイルにエラーが発生した場合にも本コマンドでmetaファイルを再生成することで解消可能
 
-- **元画像ディレクトリ**: `resources/htdocs/assets/images/_origin/`
-- **出力ディレクトリ**:
-  - `avif/` - AVIF画像
-  - `webp/` - WebP画像
-  - `compression/` - 圧縮画像（PNG/JPG）
-  - `svg/` - SVG画像（変換なし）
-
-**画像の出し分け順序**:
-1. AVIF
-2. WebP
-3. 圧縮画像（フォールバック）
-
-**Retina対応**: 元画像は表示サイズの2倍以上のサイズを推奨
-
-**変換防止**: `npm run meta:convert-images`でメタファイルを更新し、変換対象から除外可能
-
-**設定**
-- 各種画像の出力有無やクオリティに関しては、build-config.jsにて制御
-- .jpeg,.JPG等は.jpgに統一出力。.PNGは.pngに統一出力。
+### ブラウザシンク
+- **機能**: ブラウザシンクを起動します。基本的には本サーバーで開発を行います。
 
 ---
 
-## ブラウザシンク
+## プロジェクト毎の調整事項
 
-- **ポート**: `.env`の`FRONT_PORT`で設定（デフォルト: 3000）
-- **プロキシモード**: `resources/build-config.js`の`BROWSER_SYNC_PROXY`で設定（デフォルト: `php:80`）
-- **監視ディレクトリ**: `resources/htdocs/`
+- `build-config.js`の設定（プロジェクトの構造に合わせて調整が必要）
+- JSのコンパイル有無（`package.json`）
+- SCSSコンパイル方法（Live Sass Compiler / npm）
+- コンパイル後の出力先（`dist`にするかどうか）
+- 各種ディレクトリパス
 
----
 
 ## コードフォーマット
 
@@ -263,69 +123,3 @@ SCSSファイルのエントリーポイントとなる`common.scss`を自動生
 - CDNを利用する
 
 ---
-
-## 運用時の注意事項
-
-### 外部制作で使用する場合
-
-- 最低限のソースのみを提供
-- 環境周りやJSのモジュールなどは提供しない
-
-### プロジェクト毎の調整事項
-
-- `build-config.js`の設定（プロジェクトの構造に合わせて調整が必要）
-- JSのコンパイル有無（`package.json`）
-- SCSSコンパイル方法（Live Sass Compiler / npm）
-- コンパイル後の出力先（`dist`にするかどうか）
-- 各種ディレクトリパス
-
-### PHP/WPについて
-
-- フロント環境は本環境のコンテナを使用
-- PHPやWPは専用のコンテナで分離
-- フロント関連のソースは常にこちらが最新であること
-
----
-
-## トラブルシューティング
-
-### image-meta.jsonがバグった場合
-
-1. 現在の状況でメタファイルを生成: `make meta-convert-images`
-2. 現在のメタ状況で変換し直し: `make build-convert-images`
-
-### ビルド成果物のクリーンアップ
-
-```bash
-make clean
-```
-
-### Dockerの完全リセット
-
-```bash
-make clean-all
-```
-
----
-
-## その他
-
-### JSの構成について
-
-- 動的インポートはなし。各ページのファイルをエントリーにする（ない場合はcommon）
-- `_es/`配下に作業用JSファイルを格納
-- ESLintを使用
-- Babelはレガシーブラウザ版のみで使用想定
-
-### BasePageClass / BaseModuleClass
-
-- `BasePageClass`: クリーンアップ処理を考慮した構成（AbortControllerを使用）
-- `BaseModuleClass`: モジュール用のベースクラス（初期化とクリーンアップ）
-- 各ページファイルで`BasePageClass`をインスタンス化する場合、セレクタには画面名のidを指定
-- 各画面のルート要素には、画面名のidを付与すること
-
-### Utilsについて
-
-- 全てsignalを引数で受け取るようにする
-- 画面側でutilを呼ぶときはページ側のsignal、モジュールから呼ぶときはモジュールのsignalを渡す
-- 各utilsの処理では、イベント登録する場合は必ず受け取ったsignalを指定

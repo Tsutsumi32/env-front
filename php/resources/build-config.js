@@ -1,42 +1,76 @@
 /************************************************************
  * フロントエンドビルド設定定数
  * resources/配下のスクリプトで使用する設定を定義する
+ * DIR_SRC_PATH / DIR_DIST_PATH を基準にパスを連結して定義する
  ************************************************************/
+
+const DIR_SRC_PATH = 'htdocs/src/';
+const DIR_DIST_PATH = 'htdocs/dist/';
+
 /**
  * ビルド設定
  */
 export const BUILD_CONFIG = {
   // パス設定(npm実行階層からの相対)
-  // scss js の格納親ディレクトリ
-  DIR_SRC_PATH: 'htdocs/src/',
-  // css js の出力先ディレクトリ
-  DIR_DIST_PATH: 'htdocs/dist/',
+  DIR_SRC_PATH,
+  DIR_DIST_PATH,
   // 画像の格納親ディレクトリ
   DIR_IMAGE_TARGET_PATH: 'htdocs/assets/images/',
 
-  // SCSS/CSS関連設定
-  DIR_SCSS_NAME: 'scss',
-  DIR_CSS_NAME: 'css',
+  // SCSS/CSS関連（パスを連結して指定）
+  SCSS: {
+    DIR_SRC: DIR_SRC_PATH + 'scss/',
+    DIR_DIST: DIR_DIST_PATH + 'css/',
+  },
   // 出力の際にディレクトリ階層を維持するか
   PRESERVE_DIRECTORY_STRUCTURE: false,
 
-  // SCSSインデックス生成設定
-  // SCSSコンパイル時のファイル依存関係にも使用(common.scssで読み込んでいるファイルの場合は、common.scssだけコンパイル)
-  SCSS_INDEX: {
-    // 生成するエントリーファイルのパス（npm実行階層からの相対パス）
-    OUTPUT_FILE: 'htdocs/src/scss/common.scss',
-    // 対象ディレクトリの配列（上から順に@useされる）
-    // 各ディレクトリは npm実行階層からの相対パス
-    TARGET_DIRS: [
-      'htdocs/src/scss/global',
-      'htdocs/src/scss/modules/animations',
-      'htdocs/src/scss/modules/elements',
-      'htdocs/src/scss/modules/footer',
-      'htdocs/src/scss/modules/header',
-      'htdocs/src/scss/modules/helpers',
-      'htdocs/src/scss/modules/layouts',
+  // JS関連（パスを連結して指定）
+  JS: {
+    DIR_SRC: DIR_SRC_PATH + 'js/',
+    DIR_DIST: DIR_DIST_PATH + 'js/',
+    // 個別コンパイル対象のディレクトリ（ここに含まれる直下の .js は変更時にそのファイルのみビルド）
+    // それ以外（utils, modules, core 等）の変更時は全エントリをビルド
+    ENTRY_DIRS: [
+      DIR_SRC_PATH + 'js/pages',
     ],
   },
+
+  // SCSSインデックス生成設定（複数指定可能）
+  // 各エントリは「生成するファイル」と「そのファイルに読み込むターゲットパス」をセットで管理
+  SCSS_INDEX: [
+    {
+      // 生成するエントリーファイルのパス（npm実行階層からの相対パス）
+      OUTPUT_FILE: 'htdocs/src/scss/common.scss',
+      // 対象ディレクトリの配列（上から順に読み込まれる）
+      // 各ディレクトリは npm実行階層からの相対パス
+      OUTPUT_FILE: DIR_SRC_PATH + 'scss/common.scss',
+      TARGET_DIRS: [
+        DIR_SRC_PATH + 'scss/global',
+        DIR_SRC_PATH + 'scss/modules/animations',
+        DIR_SRC_PATH + 'scss/modules/elements',
+        DIR_SRC_PATH + 'scss/modules/footer',
+        DIR_SRC_PATH + 'scss/modules/header',
+        DIR_SRC_PATH + 'scss/modules/helpers',
+        DIR_SRC_PATH + 'scss/modules/layouts',
+      ],
+      // 読み込み方法: 'use' または 'forward'（省略時は 'use'）
+      IMPORT_TYPE: 'use',
+      // PARTIAL_CHANGE_COMPILE: パーシャル変更時 'entry'=属するエントリのみ / 'all'=全ファイル
+      PARTIAL_CHANGE_COMPILE: 'entry',
+    },
+    {
+      OUTPUT_FILE: DIR_SRC_PATH + 'scss/utils/index.scss',
+      TARGET_DIRS: [
+        DIR_SRC_PATH + 'scss/utils/functions',
+        DIR_SRC_PATH + 'scss/utils/mixins',
+        DIR_SRC_PATH + 'scss/utils/variables',
+        DIR_SRC_PATH + 'scss/utils/project',
+      ],
+      IMPORT_TYPE: 'forward',
+      PARTIAL_CHANGE_COMPILE: 'all',
+    },
+  ],
 
   // Browser Sync設定
   // プロキシモード: 例: 'php:80'、サーバーモード: null
@@ -74,4 +108,3 @@ export const BUILD_CONFIG = {
     COMPRESSION_JPEG_QUALITY: 90,
   },
 };
-

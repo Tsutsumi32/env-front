@@ -4,11 +4,16 @@ import { BUILD_CONFIG } from '../../build-config.js';
 import { generateScssIndexFile } from './logic-scss-index.js';
 
 const SCSS_INDEX = BUILD_CONFIG.SCSS_INDEX;
+const entries = Array.isArray(SCSS_INDEX) ? SCSS_INDEX : [SCSS_INDEX];
 
-const targetDirs = SCSS_INDEX.TARGET_DIRS;
-
-// 監視対象のディレクトリパスを作成
-const watchPaths = targetDirs;
+// 全エントリのTARGET_DIRSを重複排除して監視対象に
+const watchPaths = [...new Set(entries.flatMap((e) => e.TARGET_DIRS || []))];
+// 生成されるファイルパス（これらの変更では再生成しない）
+const generatedOutputSuffixes = entries.map((e) => e.OUTPUT_FILE?.replace(/\\/g, '/')).filter(Boolean);
+function isGeneratedOutput(filePath) {
+  const n = filePath.replace(/\\/g, '/');
+  return generatedOutputSuffixes.some((suffix) => n.endsWith(suffix));
+}
 
 let rebuildTimeout;
 let isRebuilding = false;
@@ -54,7 +59,7 @@ chokidar
     console.log('🟢 SCSSインデックス監視 スタート');
   })
   .on('add', (filePath) => {
-    if (filePath.endsWith('.scss') && !filePath.includes('common.scss')) {
+    if (filePath.endsWith('.scss') && !isGeneratedOutput(filePath)) {
       console.log(`📝 ファイル追加検知: ${filePath}`);
       rebuildScssIndex();
     }
@@ -63,7 +68,7 @@ chokidar
     // 監視時には変更は無視（追加と削除のみ対応）
   })
   .on('unlink', (filePath) => {
-    if (filePath.endsWith('.scss') && !filePath.includes('common.scss')) {
+    if (filePath.endsWith('.scss') && !isGeneratedOutput(filePath)) {
       console.log(`🗑️  ファイル削除検知: ${filePath}`);
       rebuildScssIndex();
     }

@@ -10,44 +10,40 @@ import { BUILD_CONFIG } from '../../build-config.js';
 import { join, dirname, relative, resolve, normalize } from 'path';
 import { mkdirSync } from 'fs';
 
-// 設定を定数から取得
-const DIR_SRC_PATH = BUILD_CONFIG.DIR_SRC_PATH;
-const DIR_DIST_PATH = BUILD_CONFIG.DIR_DIST_PATH;
-const DIR_SCSS_NAME = BUILD_CONFIG.DIR_SCSS_NAME;
-const DIR_CSS_NAME = BUILD_CONFIG.DIR_CSS_NAME;
+// 設定を定数から取得（build-config でパス連結済み）
+const SCSS_CONFIG = BUILD_CONFIG.SCSS;
+const scssDir = SCSS_CONFIG.DIR_SRC;
+const cssDir = SCSS_CONFIG.DIR_DIST;
 const PRESERVE_DIRECTORY_STRUCTURE = BUILD_CONFIG.PRESERVE_DIRECTORY_STRUCTURE;
 const SCSS_INDEX = BUILD_CONFIG.SCSS_INDEX;
+const SCSS_INDEX_ENTRIES = Array.isArray(SCSS_INDEX) ? SCSS_INDEX : [SCSS_INDEX];
 
 let postcssTimeout;
 let isPostcssRunning = false;
 let compileTimeout;
 let isCompileRunning = false;
 
-const scssDir = `${DIR_SRC_PATH}${DIR_SCSS_NAME}`;
-const cssDir = `${DIR_DIST_PATH}${DIR_CSS_NAME}`;
-
 /**
- * 指定されたファイルパスがTARGET_DIRS内のディレクトリに含まれているかチェック
+ * 指定されたファイルパスがいずれかのエントリのTARGET_DIRS内に含まれているかチェック
  */
 function isInTargetDirs(filePath) {
-  const targetDirs = SCSS_INDEX.TARGET_DIRS || [];
+  return getEntriesContainingFile(filePath).length > 0;
+}
 
-  if (targetDirs.length === 0) {
-    return false;
-  }
-
-  // ファイルパスを絶対パスに正規化
+/**
+ * 指定されたファイルパスが属するエントリ（そのファイルをTARGET_DIRSに含むエントリ）を返す
+ */
+function getEntriesContainingFile(filePath) {
   const normalizedFilePath = normalize(resolve(filePath)).replace(/\\/g, '/');
-
-  // 現在の作業ディレクトリ（npm実行階層）を取得
   const cwd = process.cwd().replace(/\\/g, '/');
 
-  return targetDirs.some((targetDir) => {
-    // 対象ディレクトリを絶対パスに変換
-    const absoluteTargetDir = normalize(resolve(cwd, targetDir)).replace(/\\/g, '/');
-    // ファイルパスが対象ディレクトリの配下にあるかチェック
-    return normalizedFilePath.startsWith(absoluteTargetDir + '/') ||
-           normalizedFilePath === absoluteTargetDir;
+  return SCSS_INDEX_ENTRIES.filter((entry) => {
+    const targetDirs = entry.TARGET_DIRS || [];
+    return targetDirs.some((targetDir) => {
+      const absoluteTargetDir = normalize(resolve(cwd, targetDir)).replace(/\\/g, '/');
+      return normalizedFilePath.startsWith(absoluteTargetDir + '/') ||
+             normalizedFilePath === absoluteTargetDir;
+    });
   });
 }
 
@@ -61,10 +57,17 @@ async function compileScssFile(scssPath) {
   if (fileName === 'index.scss' || fileName.startsWith('_')) {
     // パーシャルファイルが変更された場合の処理
     if (fileName.startsWith('_')) {
-      // TARGET_DIRS内のパーシャルファイルの場合、common.scssのみ再コンパイル
-      if (isInTargetDirs(scssPath)) {
-        console.log(`🔄 パーシャル変更: common.scssコンパイル`);
-        await compileCommonScss();
+      const entries = getEntriesContainingFile(scssPath);
+      if (entries.length > 0) {
+        // いずれかのエントリが 'all' なら全ファイル、そうでなければ属するエントリのみコンパイル
+        const useAll = entries.some((e) => (e.PARTIAL_CHANGE_COMPILE || 'entry') === 'all');
+        if (useAll) {
+          console.log(`🔄 パーシャル変更: 全ファイルコンパイル`);
+          await recompileAllScssFiles();
+        } else {
+          console.log(`🔄 パーシャル変更: 属するエントリをコンパイル`);
+          await compileEntryFiles(entries);
+        }
       } else {
         // TARGET_DIRSにないパーシャルファイルの場合、すべてのSCSSファイルを再コンパイル
         console.log(`🔄 パーシャル変更: 全ファイルコンパイル`);
@@ -110,41 +113,44 @@ async function compileScssFile(scssPath) {
   }, 500);
 }
 
-// common.scssをコンパイルする関数
-async function compileCommonScss() {
-  const outputFile = SCSS_INDEX.OUTPUT_FILE;
+/**
+ * 指定されたエントリのOUTPUT_FILEをコンパイルする
+ * パーシャル変更時に、変更ファイルが属するエントリだけをコンパイルするために使用
+ */
+async function compileEntryFiles(entries) {
+  const validEntries = entries.filter((e) => e.OUTPUT_FILE);
 
-  if (!outputFile) {
-    console.warn('⚠️  OUTPUT_FILEが設定されていません');
+  if (validEntries.length === 0) {
+    console.warn('⚠️  コンパイル対象のOUTPUT_FILEが設定されていません');
     return;
   }
 
-  let outputPath;
-  const relativePath = relative(scssDir, outputFile);
+  for (const entry of validEntries) {
+    const outputFile = entry.OUTPUT_FILE;
+    let outputPath;
+    const relativePath = relative(scssDir, outputFile);
 
-  if (PRESERVE_DIRECTORY_STRUCTURE) {
-    // ディレクトリ構造を維持
-    outputPath = join(cssDir, relativePath.replace('.scss', '.css'));
-  } else {
-    // 1階層に全て出力（ファイル名のみを使用）
-    const fileName = relativePath.split(/[/\\]/).pop().replace('.scss', '.css');
-    outputPath = join(cssDir, fileName);
+    if (PRESERVE_DIRECTORY_STRUCTURE) {
+      outputPath = join(cssDir, relativePath.replace('.scss', '.css'));
+    } else {
+      const fileName = relativePath.split(/[/\\]/).pop().replace('.scss', '.css');
+      outputPath = join(cssDir, fileName);
+    }
+
+    const outputDir = dirname(outputPath);
+    try {
+      mkdirSync(outputDir, { recursive: true });
+    } catch (error) {
+      // ディレクトリが既に存在する場合は無視
+    }
+
+    const displayPath = relativePath.replace(/\\/g, '/');
+    console.log(`📝 コンパイル: ${displayPath}`);
+    await runCommand(
+      `npx sass --source-map ${outputFile}:${outputPath}`,
+      displayPath
+    );
   }
-
-  // 出力先ディレクトリが存在しない場合は作成
-  const outputDir = dirname(outputPath);
-  try {
-    mkdirSync(outputDir, { recursive: true });
-  } catch (error) {
-    // ディレクトリが既に存在する場合は無視
-  }
-
-  const displayPath = relativePath.replace(/\\/g, '/');
-  console.log(`📝 コンパイル: ${displayPath}`);
-  await runCommand(
-    `npx sass --source-map ${outputFile}:${outputPath}`,
-    displayPath
-  );
 
   // PostCSSを実行
   if (postcssTimeout) clearTimeout(postcssTimeout);
@@ -154,6 +160,14 @@ async function compileCommonScss() {
     await runPostcss();
     isPostcssRunning = false;
   }, 500);
+}
+
+/**
+ * IMPORT_TYPE が 'use' のエントリをすべてコンパイルする（ビルド時などで使用）
+ */
+async function compileCommonScss() {
+  const compileEntries = SCSS_INDEX_ENTRIES.filter((e) => (e.IMPORT_TYPE || 'use') === 'use');
+  await compileEntryFiles(compileEntries);
 }
 
 // すべてのSCSSファイルを再コンパイルする関数
