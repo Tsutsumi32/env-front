@@ -5,13 +5,10 @@
  * このファイルでは、全ページ共通のレイアウト構造を定義します。
  * headタグ、header、メインコンテンツ、footerを含む基本構造を提供します。
  * ページIDに基づいて、自動的に該当するCSS/JSファイルを読み込みます。
+ * ※呼び出し元（各ページ）で init.php を読み込み、$pageId が設定されている前提です。
  *
- * @param string $pageId ページID（画面キーをそのままファイル名として使用します）
  * @param string $pageContents ページコンテンツ（ob_start/ob_get_cleanで取得した内容）
  */
-
-// 共通ファイルの読み込み
-require_once __DIR__ . '/../init.php';
 
 // ページコンテンツが指定されていない場合は空文字列
 $pageContents = $pageContents ?? '';

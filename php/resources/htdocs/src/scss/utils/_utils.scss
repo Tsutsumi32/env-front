@@ -1,0 +1,31 @@
+@use 'sass:map';
+@use 'sass:list';
+@use '../foundation' as *;
+@use '../foundation/functions/strip-unit' as *;
+
+/******************************************************************
+* utils
+*******************************************************************/
+/* margin / padding ユーティリティ（8の倍数、8〜240）
+----------------------------------------------------------------- */
+@for $i from 1 through 30 {
+  $v: $i * 8;
+
+  // margin
+  .ut_m_#{$v} { margin: s($v); }
+  .ut_mT_#{$v} { margin-top: s($v); }
+  .ut_mB_#{$v} { margin-bottom: s($v); }
+  .ut_mL_#{$v} { margin-left: s($v); }
+  .ut_mR_#{$v} { margin-right: s($v); }
+  .ut_mY_#{$v} { margin-block: s($v); }
+  .ut_mX_#{$v} { margin-inline: s($v); }
+
+   // padding
+  .ut_p_#{$v} { padding: s($v); }
+  .ut_pT_#{$v} { padding-top: s($v); }
+  .ut_pB_#{$v} { padding-bottom: s($v); }
+  .ut_pL_#{$v} { padding-left: s($v); }
+  .ut_pR_#{$v} { padding-right: s($v); }
+  .ut_pY_#{$v} { padding-block: s($v); }
+  .ut_pX_#{$v} { padding-inline: s($v); }
+}

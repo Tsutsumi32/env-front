@@ -580,15 +580,15 @@ $font-families: (
 // 実装の際は get-font-weight() を使用して値を取得
 //////////////////////////////////////////////
 $font-weights: (
-  'thin': 100,
-  'extralight': 200,
-  'light': 300,
+  // 'thin': 100,
+  // 'extralight': 200,
+  // 'light': 300,
   'normal': 400,
-  'medium': 500,
-  'semibold': 600,
+  // 'medium': 500,
+  // 'semibold': 600,
   'bold': 700,
-  'extrabold': 800,
-  'black': 900,
+  // 'extrabold': 800,
+  // 'black': 900,
 ) !default;
 
 // get-font-weight フォントウェイトの値を取得する

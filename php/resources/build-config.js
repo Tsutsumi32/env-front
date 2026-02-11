@@ -30,7 +30,7 @@ export const BUILD_CONFIG = {
     DIR_SRC: DIR_SRC_PATH + 'js/',
     DIR_DIST: DIR_DIST_PATH + 'js/',
     // 個別コンパイル対象のディレクトリ（ここに含まれる直下の .js は変更時にそのファイルのみビルド）
-    // それ以外（utils, modules, core 等）の変更時は全エントリをビルド
+    // それ以外（foundation, modules, core 等）の変更時は全エントリをビルド
     ENTRY_DIRS: [
       DIR_SRC_PATH + 'js/pages',
     ],
@@ -47,11 +47,12 @@ export const BUILD_CONFIG = {
       OUTPUT_FILE: DIR_SRC_PATH + 'scss/common.scss',
       TARGET_DIRS: [
         DIR_SRC_PATH + 'scss/global',
+        DIR_SRC_PATH + 'scss/helpers',
+        DIR_SRC_PATH + 'scss/utils',
         DIR_SRC_PATH + 'scss/modules/animations',
         DIR_SRC_PATH + 'scss/modules/elements',
         DIR_SRC_PATH + 'scss/modules/footer',
         DIR_SRC_PATH + 'scss/modules/header',
-        DIR_SRC_PATH + 'scss/modules/helpers',
         DIR_SRC_PATH + 'scss/modules/layouts',
       ],
       // 読み込み方法: 'use' または 'forward'（省略時は 'use'）
@@ -60,12 +61,12 @@ export const BUILD_CONFIG = {
       PARTIAL_CHANGE_COMPILE: 'entry',
     },
     {
-      OUTPUT_FILE: DIR_SRC_PATH + 'scss/utils/index.scss',
+      OUTPUT_FILE: DIR_SRC_PATH + 'scss/foundation/index.scss',
       TARGET_DIRS: [
-        DIR_SRC_PATH + 'scss/utils/functions',
-        DIR_SRC_PATH + 'scss/utils/mixins',
-        DIR_SRC_PATH + 'scss/utils/variables',
-        DIR_SRC_PATH + 'scss/utils/project',
+        DIR_SRC_PATH + 'scss/foundation/functions',
+        DIR_SRC_PATH + 'scss/foundation/mixins',
+        DIR_SRC_PATH + 'scss/foundation/variables',
+        DIR_SRC_PATH + 'scss/foundation/project',
       ],
       IMPORT_TYPE: 'forward',
       PARTIAL_CHANGE_COMPILE: 'all',

@@ -7,34 +7,25 @@
  */
 
 /**
- * ページID定数
- */
-class PAGE_ID
-{
-    const SAMPLE = 'sample';
-    const SAMPLE_ABOUT = 'sample-about';
-    const SAMPLE_WORKS = 'sample-works';
-}
-
-/**
  * ページ設定クラス
  */
 class PageConfig
 {
     /**
-     * ページ設定の配列
+     * ページ設定の配列（キーがページID）
      * @var array
      */
     private static $pages = [
-        PAGE_ID::SAMPLE => [
+        'sample' => [
             'title' => 'サンプルトップ',
             'description' => 'サンプルサイトのトップページです。',
             'breadcrumbs' => [
                 ['name' => 'ホーム', 'url' => '/']
             ],
             'url' => '/',
+            'noindex' => false,
         ],
-        PAGE_ID::SAMPLE_ABOUT => [
+        'sample-about' => [
             'title' => 'About - サンプルサイト',
             'description' => 'このサイトについてのページです。',
             'breadcrumbs' => [
@@ -42,8 +33,9 @@ class PageConfig
                 ['name' => 'About', 'url' => '/about.php']
             ],
             'url' => '/about.php',
+            'noindex' => false,
         ],
-        PAGE_ID::SAMPLE_WORKS => [
+        'sample-works' => [
             'title' => 'Works - サンプルサイト',
             'description' => '制作実績のページです。',
             'breadcrumbs' => [
@@ -51,8 +43,29 @@ class PageConfig
                 ['name' => 'Works', 'url' => '/works.php']
             ],
             'url' => '/works.php',
+            'noindex' => false,
         ],
     ];
+
+    /**
+     * 現在のリクエストURLからページIDを取得
+     *
+     * @return string|null ページID（該当なしの場合は null）
+     */
+    public static function getPageIdFromRequest()
+    {
+        $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
+        // トップ: '' / '/' / '/index.php' を同一扱い
+        if ($path === '' || $path === '/' || $path === '/index.php') {
+            $path = '/';
+        }
+        foreach (self::$pages as $pageId => $page) {
+            if (($page['url'] ?? '') === $path) {
+                return $pageId;
+            }
+        }
+        return null;
+    }
 
     /**
      * ページIDから設定を取得

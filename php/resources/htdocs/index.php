@@ -9,9 +9,6 @@
 // 共通ファイルの読み込み
 require_once __DIR__ . '/includes/init.php';
 
-// ページID
-$pageId = PAGE_ID::SAMPLE;
-
 // ページコンテンツを取得
 ob_start();
 ?>
