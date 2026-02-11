@@ -2,7 +2,7 @@
  * アコーディオン
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
-import { slideToggle, slideUp } from '../utils/slideAnimation.js';
+import { slideDown, slideUp } from '../utils/slideAnimation.js';
 
 /**
  * アコーディオン制御クラス
@@ -29,6 +29,12 @@ export class AccordionControl extends BaseModuleClass {
     // アコーディオン
     const accordionBtns = document.querySelectorAll(btnSelector);
     accordionBtns.forEach((btn) => {
+      // 初期状態：親が開いていればボタンにも is_active を付与
+      const parent = btn.closest(parentSelector);
+      if (parent?.classList.contains(activeClass)) {
+        btn.classList.add(activeClass);
+      }
+
       btn.addEventListener(
         'click',
         (event) => {
@@ -70,12 +76,19 @@ export class AccordionControl extends BaseModuleClass {
 
     const parent = button.closest(parentSelector);
     if (!parent) return;
-    const item = parent.querySelector(contentSelector);
+    const items = parent.querySelectorAll(contentSelector);
 
-    if (item) {
+    if (items.length) {
       const isOpening = !parent.classList.contains(activeClass);
-      slideToggle(item, animationDuration, 'ease-out', signal);
+      items.forEach((item) => {
+        if (isOpening) {
+          slideDown(item, animationDuration, 'ease-out', signal);
+        } else {
+          slideUp(item, animationDuration, 'ease-out', signal);
+        }
+      });
       parent.classList.toggle(activeClass);
+      button.classList.toggle(activeClass);
 
       // 展開時にボタンを非表示にする
       if (isOpening && hideButtonOnOpen) {
