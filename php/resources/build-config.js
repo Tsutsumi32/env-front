@@ -64,7 +64,7 @@ export const BUILD_CONFIG = {
     // 例: COMPRESSION_MODE: 'scale', COMPRESSION_SCALE: 0.5
     COMPRESSION_MODE: 'width', // 'width' または 'scale'
     // compression画像の横幅（ピクセル単位、COMPRESSION_MODEが'width'の場合に使用、アスペクト比は維持される）
-    COMPRESSION_WIDTH: 900,
+    COMPRESSION_WIDTH: 2200,
     // compression画像の圧縮率（0.0〜1.0、COMPRESSION_MODEが'scale'の場合に使用、アスペクト比は維持される）
     // 例: 0.5 = 50%のサイズ、0.8 = 80%のサイズ
     COMPRESSION_SCALE: 0.5,
