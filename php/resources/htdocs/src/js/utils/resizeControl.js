@@ -1,14 +1,15 @@
 /************************************************************
  * リサイズ判定 PC or SP か
+ * ブレイクポイントを跨いだ際に実行する処理を制御可能
  ************************************************************/
-import { BREAK_PC } from '@consts/breakPoint';
+import { BREAKPOINTS } from '@consts/global.js';
 
 /**
  * PCレイアウトかどうか判定
  * @returns {boolean} PCレイアウトの場合true、SPレイアウトの場合false
  */
 export const isPc = () => {
-  return window.innerWidth >= BREAK_PC ? true : false;
+  return window.innerWidth >= BREAKPOINTS.PC ? true : false;
 };
 
 /**

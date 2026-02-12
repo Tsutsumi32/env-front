@@ -1,0 +1,21 @@
+@use '../variables/variables' as *;
+/******************************************************************
+* body-scroll-rock
+* bodyのスクロール固定時にbodyにつくクラス。
+* 本mixinを使用することで、ロック時のスタイルを定義できる
+* bodyScrollControll.jsによるクラス付与
+* var(--scrolbar-width)で、スクロールバー分の幅をjsから受け取る
+*******************************************************************/
+@mixin body-scroll-rock {
+  .is-scroll-locked & {
+    @content;
+  }
+}
+
+// jsから渡される--scrollbar-widthのフォールバック
+@mixin scrollbar-width-set {
+  // スクロールバー幅（JSで実測値に更新。JS無効時は$width-scrollbarがフォールバック）
+  :root {
+    --scrollbar-width: #{$width-scrollbar}px;
+  }
+}

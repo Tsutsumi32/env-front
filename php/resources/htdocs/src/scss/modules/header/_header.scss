@@ -19,11 +19,16 @@
   background-color: get-color('bg', 'base');
   border-bottom: 1px solid get-color('border', 'tag');
   padding: s(20) 0;
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
   z-index: 100;
   backdrop-filter: blur(10px);
   background-color: rgba(get-color('bg', 'base'), 0.95);
+
+  @include body-scroll-rock {
+    width: calc(100% - var(--scrollbar-width));
+  }
 
   &_inner {
     display: flex;
@@ -42,7 +47,7 @@
     aspect-ratio: 169 / 50;
     width: s(169);
     height: auto;
-    @include mode($color_mode_dark) {
+    @include mode($color-mode-dark) {
       @include background-image('logo_ithingstudio_light', $_size: contain);
     }
   }

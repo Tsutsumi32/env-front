@@ -5,6 +5,6 @@
 * @param $letter-spacing 文字間
 * 例) 30文字の横幅 サイズ16px 文字間0.03em (30, 16px, 0.03em);
 *******************************************************************/
-@function width-string($_num, $_font_size, $_letter_spacing) {
-  @return calc(($_font_size + $_letter_spacing) * $_num - $_letter_spacing);
+@function width-string($_num, $_font-size, $_letter-spacing) {
+  @return calc(($_font-size + $_letter-spacing) * $_num - $_letter-spacing);
 }

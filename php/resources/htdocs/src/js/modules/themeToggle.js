@@ -1,96 +1,68 @@
-import { BaseModuleClass } from '../core/BaseModuleClass.js';
+/************************************************************
+ * テーマ切替
+ * - 切り替えボタンの機能のみを提供。システム設定からの初期化は themeSystemInit.js で行う。
+ * - data-module="themeToggle" がボタン（各ボタンがルート）。data-action="themeToggle.toggle" でトリガー、data-themeToggle-theme でモード指定
+ * - ボタンはどこにあっても document に delegate。適用中のテーマは documentElement の data-theme に設定
+ ************************************************************/
+
+import { DATA_ATTR } from '../constans/global.js';
 import { THEME_STORAGE_KEY } from '../utils/themeSystemInit.js';
+import { delegate } from '../utils/delegate.js';
 
 // ---------------------------------------------------------------------------
-// data 属性（参照するものは定数で一覧化）
+// data 属性（参照するものは定数で一覧化。DATA_ATTR は global.js）
 // ---------------------------------------------------------------------------
-const ATTR_THEME_TOGGLE = 'data-theme-toggle';
+const MODULE_THEME_TOGGLE = 'themeToggle';
+/** ボタンに設定するテーマ値（data-モジュール名-xxx） */
+const ATTR_THEME_TOGGLE_THEME = 'data-themeToggle-theme';
+/** 適用中のテーマを documentElement に付与する属性（グローバル） */
 const ATTR_THEME = 'data-theme';
 
-const SELECTOR_THEME_TOGGLE = `[${ATTR_THEME_TOGGLE}]`;
+const SELECTOR_THEME_TOGGLE = `[${DATA_ATTR.MODULE}="${MODULE_THEME_TOGGLE}"]`;
+
+/** ストレージキー（themeSystemInit.js と統一） */
+export const STORAGE_KEY = THEME_STORAGE_KEY;
 
 /**
- * テーマ切替制御クラス
- * 切り替えボタンの機能のみを提供します。
- * システム設定からの初期化は themeSystemInit.js で行います。
- *
- * @requires [data-theme-toggle] - テーマ切替ボタン（data-theme属性でモードを指定）
- * @example
- * <button data-theme-toggle data-theme="dark">ダークモード</button>
- * <button data-theme-toggle data-theme="default">ライトモード</button>
+ * テーマを設定
+ * @param {string} theme - テーマ名（'default' | 'dark' など）
+ * @param {boolean} saveToStorage - ストレージに保存するか
  */
-export class ThemeToggle extends BaseModuleClass {
-  /**
-   * ストレージキー（themeSystemInit.jsと統一）
-   */
-  static STORAGE_KEY = THEME_STORAGE_KEY;
-
-  /**
-   * 初期化処理
-   * @param {HTMLElement} element - 対象要素（このモジュールでは使用しない）
-   * @param {Object} resources - リソース
-   * @param {Object} resources.bag - disposeBag
-   * @param {AbortSignal} resources.signal - AbortSignal
-   */
-  init(element, { bag, signal }) {
-    const { toggleButtonSelector = SELECTOR_THEME_TOGGLE, storageEnabled = true } = this.options;
-
-    // テーマ切替ボタンの設定
-    const toggleButtons = document.querySelectorAll(toggleButtonSelector);
-    if (toggleButtons.length === 0) {
-      return;
+const setTheme = (theme, saveToStorage = true) => {
+  if (!theme) theme = 'default';
+  document.documentElement.setAttribute(ATTR_THEME, theme);
+  if (saveToStorage) {
+    try {
+      localStorage.setItem(STORAGE_KEY, theme);
+    } catch (e) {
+      console.warn('ローカルストレージへの保存に失敗しました。', e);
     }
-
-    toggleButtons.forEach((button) => {
-      button.addEventListener(
-        'click',
-        () => {
-          const theme = button.getAttribute(ATTR_THEME);
-          if (theme) {
-            this.setTheme(theme, storageEnabled);
-          } else {
-            console.warn(`${ATTR_THEME}属性が設定されていません。`, button);
-          }
-        },
-        { signal }
-      );
-    });
   }
+  document.dispatchEvent(
+    new CustomEvent('themechange', { detail: { theme } })
+  );
+};
 
-  /**
-   * テーマを設定
-   * @param {string} theme - テーマ名（'default' | 'dark' など）
-   * @param {boolean} saveToStorage - ストレージに保存するか
-   */
-  setTheme(theme, saveToStorage = true) {
-    if (!theme) {
-      theme = 'default';
-    }
+/**
+ * 現在のテーマを取得
+ * @returns {string}
+ */
+const getCurrentTheme = () => {
+  return document.documentElement.getAttribute(ATTR_THEME) || 'default';
+};
 
-    // html要素にdata-theme属性を設定
-    document.documentElement.setAttribute(ATTR_THEME, theme);
+/**
+ * 初期化（document に delegate。data-action="themeToggle.toggle" をトリガーに。ボタンは data-module="themeToggle"）
+ * @param {{ scope: { signal: AbortSignal } }} ctx
+ */
+const init = ({ scope }) => {
+  delegate(document, scope, {
+    'themeToggle.toggle': (e, el) => {
+      const theme = el.getAttribute(ATTR_THEME_TOGGLE_THEME);
+      if (theme) setTheme(theme, true);
+      else console.warn(`${ATTR_THEME_TOGGLE_THEME}属性が設定されていません。`, el);
+    },
+  });
+};
 
-    // ストレージに保存
-    if (saveToStorage) {
-      try {
-        localStorage.setItem(ThemeToggle.STORAGE_KEY, theme);
-      } catch (e) {
-        console.warn('ローカルストレージへの保存に失敗しました。', e);
-      }
-    }
-
-    // カスタムイベントを発火（他のスクリプトでテーマ変更を監視可能）
-    const event = new CustomEvent('themechange', {
-      detail: { theme },
-    });
-    document.dispatchEvent(event);
-  }
-
-  /**
-   * 現在のテーマを取得
-   * @returns {string} 現在のテーマ名
-   */
-  getCurrentTheme() {
-    return document.documentElement.getAttribute(ATTR_THEME) || 'default';
-  }
-}
+export const themeToggle = { init, setTheme, getCurrentTheme, STORAGE_KEY };

@@ -13,6 +13,7 @@
 /*  mixins
 ************************************************************/
 @forward './mixins/_background-image.scss';
+@forward './mixins/_body-scroll-rock.scss';
 @forward './mixins/_color-themes.scss';
 @forward './mixins/_container.scss';
 @forward './mixins/_dashed-underline.scss';
@@ -40,6 +41,5 @@
 /***********************************************************
 /*  animation
 ************************************************************/
-@forward './animation/_fade.scss';
 @forward './animation/_fade.scss';
 

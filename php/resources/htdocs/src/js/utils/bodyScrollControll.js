@@ -1,32 +1,48 @@
 /************************************************************
  * スクロール制御
+ * bodyのスクロールの制御を行う。レイアウトシフト対応済
  ************************************************************/
+
+/** スクロール固定時にbodyに付与するクラス名（CSSで固定要素の調整に利用可能） */
+export const SCROLL_LOCK_CLASS = 'is-scroll-locked';
+
 /**
- * スクロール制御ユーティリティ関数群
- * @fileoverview ページのスクロールを制御するための関数を提供するモジュール
- * @author
- * @version 1.0.0
+ * スクロールバー幅を計測し、:rootの--scrollbar-widthにセットする
+ * @description CSSのvar(--scrollbar-width)をJSの実測値で更新する。初期表示時やリサイズ後に呼ぶとSCSSのフォールバックを上書きする。
  */
+export const syncScrollbarWidth = () => {
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+};
 
 /**
  * スクロールを無効化し、レイアウトシフトを防ぐ
- * @param {boolean} [pl=true] - パディング調整を行うかどうか
+ * @param {boolean} [pl=true] - 幅調整を行うかどうか
  * @param {AbortSignal} [signal] - AbortSignal（クリーンアップ用）
  * @description スクロールバーの幅を計算し、bodyのoverflowをhiddenに設定してスクロールを無効化する。
- * スクロールバーが消えることによるレイアウトシフトを防ぐため、パディングを追加する。
+ * スクロールバーが消えることによるレイアウトシフトを防ぐため、bodyの幅を画面幅からスクロールバー分引いた値に設定する。
+ * plがtrueのとき--scrollbar-widthも実測値で更新する（fixed要素などで利用可能）。
+ * 固定中はbodyにSCROLL_LOCK_CLASSが付与される。
  */
 export const disableScroll = (pl = true, signal) => {
   const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-  pl && (document.body.style.paddingRight = `${scrollbarWidth}px`);
+  if (pl) {
+    document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+    document.body.style.width = `${document.documentElement.clientWidth}px`;
+  }
   document.body.style.overflow = 'hidden';
+  document.body.classList.add(SCROLL_LOCK_CLASS);
 
   // signalがabortされたら元に戻す
   if (signal) {
     signal.addEventListener(
       'abort',
       () => {
-        pl && (document.body.style.paddingRight = `0`);
+        if (pl) {
+          document.body.style.width = '';
+        }
         document.body.style.overflow = 'visible';
+        document.body.classList.remove(SCROLL_LOCK_CLASS);
       },
       { once: true }
     );
@@ -35,14 +51,17 @@ export const disableScroll = (pl = true, signal) => {
 
 /**
  * スクロールを有効化し、レイアウトを元に戻す
- * @param {boolean} [pl=true] - パディング調整を行うかどうか
+ * @param {boolean} [pl=true] - 幅調整を行うかどうか
  * @param {AbortSignal} [signal] - AbortSignal（クリーンアップ用、この関数では使用しないが互換性のため）
  * @description bodyのoverflowをvisibleに設定してスクロールを有効化し、
- * 追加されていたパディングを削除してレイアウトを元に戻す。
+ * 設定されていた幅を解除し、SCROLL_LOCK_CLASSを外してレイアウトを元に戻す。
  */
 export const enableScroll = (pl = true, signal) => {
-  pl && (document.body.style.paddingRight = `0`);
+  if (pl) {
+    document.body.style.width = '';
+  }
   document.body.style.overflow = 'visible';
+  document.body.classList.remove(SCROLL_LOCK_CLASS);
 };
 
 /**

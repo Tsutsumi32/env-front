@@ -4,15 +4,15 @@
 *******************************************************************/
 /* scrollbar
 * スクロールバーのスタイルを設定する（Firefox対応）
-* @param $_thumb-color スクロールバーのつまみの色（デフォルト: $color_scrollbar_thumb）
-* @param $_track-color スクロールバーのトラックの色（デフォルト: $color_scrollbar_track）
+* @param $_thumb-color スクロールバーのつまみの色（デフォルト: $color-scrollbar-thumb）
+* @param $_track-color スクロールバーのトラックの色（デフォルト: $color-scrollbar-track）
 * @param $_type スクロールバーの幅タイプ（auto/thin/none、デフォルト: auto）
 *  例) @include scrollbar();
 *  例) @include scrollbar(red, blue, thin);
 ----------------------------------------------------------------- */
 @mixin scrollbar(
-  $_thumb-color: $color_scrollbar_thumb,
-  $_track-color: $color_scrollbar_track,
+  $_thumb-color: $color-scrollbar-thumb,
+  $_track-color: $color-scrollbar-track,
   $_type: auto
 ) {
   scrollbar-width: $_type;
@@ -21,14 +21,14 @@
 
 /* origin-scrollbar
 * Webkit系ブラウザ向けのスクロールバーのスタイルを設定する（Chrome/Safari対応）
-* @param $_thumb-color スクロールバーのつまみの色（デフォルト: $color_scrollbar_thumb）
-* @param $_track-color スクロールバーのトラックの色（デフォルト: $color_scrollbar_track）
+* @param $_thumb-color スクロールバーのつまみの色（デフォルト: $color-scrollbar-thumb）
+* @param $_track-color スクロールバーのトラックの色（デフォルト: $color-scrollbar-track）
 *  例) @include origin-scrollbar();
 *  例) @include origin-scrollbar(#ff0000, #000000);
 ----------------------------------------------------------------- */
 @mixin origin-scrollbar(
-  $_thumb-color: $color_scrollbar_thumb,
-  $_track-color: $color_scrollbar_track
+  $_thumb-color: $color-scrollbar-thumb,
+  $_track-color: $color-scrollbar-track
 ) {
   &::-webkit-scrollbar {
     height: res(8);

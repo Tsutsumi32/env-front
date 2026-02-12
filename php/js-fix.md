@@ -59,17 +59,27 @@ src/
     drawer.js# （将来）ドロワーも同様
     ...
 
+  features/
+    wrapPunctuation.js# data-feature でどこからでも適用できる機能
+    ...
+
   utils/delegate.js# data-actionの委譲ヘルパ等
     dom.js
     ...
 ```
 
-> `modules/` は「UIモジュール」も「ページ内モジュール」も置いてOK。ただし **“そのモジュールに関する処理は1ファイルに集約”**。
+> **modules/** … 独立した UI を持つもの。1ファイルに集約。
+> **utils/** … 汎用的にどこからでも呼べる処理（DOM に依存しない or 汎用ヘルパ）。
+> **features/** … モジュールでも汎用 util でもなく、直接 DOM 操作するが、`data-feature="機能名"` で決まった data 属性を参照し、あらゆる場所で使える機能。
 > 
 
 ---
 
 # データ属性（更新）
+
+## データ属性の値の命名規則
+- **data 属性の値はキャメルケース**で記述する（例：`wrapPunctuation`、`modal`、`accordion`）。
+- 識別子・機能名・モジュール名など、属性値として使う文字列はキャメルケースに統一する。
 
 ## 採用セット
 
@@ -92,10 +102,16 @@ src/
 ### ⑤ `data-モジュール名-xxxx`：モジュール関連のデータ属性
 - モジュール専用のパラメータ・識別子（例：`data-modal-id`, `data-modal-type`）
 
-### ⑥ `data-xxxx`：その他（ページ側で参照する情報）
+### ⑥ `data-feature`：機能の適用対象（features/）
+- **features/** で提供する「独立 UI ではなく、決まった data 属性でどこからでも使える機能」の対象要素に付与する。
+- 値は **キャメルケースの機能名**（例：`data-feature="wrapPunctuation"`）。
+- その機能に関連する設定・参照用の属性は **`data-feature-機能名-xxxx`**（キャメルケースの機能名をそのまま繋げる。例：`data-feature-wrapPunctuation-processed`）。
+- モジュール（独立 UI）は `data-module`、汎用処理は utils、**DOM 操作するが特定の data 属性でどこでも使えるもの**は features とする。
+
+### ⑦ `data-xxxx`：その他（ページ側で参照する情報）
 - ページ固有の識別や値（例：`data-id`, `data-user-id`, `data-track`）
 
-### ⑦ 要素・値の取得に `js_` クラスは使わない
+### ⑧ 要素・値の取得に `js_` クラスは使わない
 - **JS で制御する要素や値を取得する際、`js_` プレフィックスのクラスは使用しない**
 - ルールに沿った **data 属性**で取得する
   - モジュールルート：`[data-module="モジュール名"]`
@@ -103,19 +119,26 @@ src/
   - 汎用の操作対象：`[data-theme-toggle]` など、役割が分かる data 属性を付与
 - クラス名はスタイル用途（BEM 等）に限定し、JS 用のフックには data 属性を用いる
 
-### ⑧ 状態変化に伴うクラスは `STATE_CLASSES`（global.js）から使用する
+### ⑨ 状態変化に伴うクラスは `STATE_CLASSES`（global.js）から使用する
 - **状態の変化（開閉・選択・表示/非表示・無効化 等）に付与するクラスは、`constans/global.js` の `STATE_CLASSES` オブジェクトから参照する**
 - JS・CSS 双方で同一のクラス名を使用するため、`STATE_CLASSES` に集約する
 - 使用例：`STATE_CLASSES.ACTIVE`（`is_active`）、`STATE_CLASSES.HIDDEN`（`is_hidden`）、`STATE_CLASSES.DISPLAY`（`is-display`）等
 - 状態クラスを直接文字列で書かず、必ず `STATE_CLASSES` から参照すること
 
-### ⑨ モジュール内で参照する data 属性はファイル先頭で定数定義する
+### ⑩ モジュール内で参照する data 属性はファイル先頭で定数定義する
 - **モジュールを実装するとき、参照する data 属性は、そのファイルの一番最初（import の直後）に定数として定義する**
-- 一覧化することで、そのモジュールがどの data 属性に依存しているか把握しやすくする
+- **決まった命名の data 属性**（`data-module` / `data-page` / `data-scope` / `data-action`）は **`constans/global.js`** の **`DATA_ATTR`** オブジェクトで定義し、各所で import して使う（`DATA_ATTR.MODULE`, `DATA_ATTR.PAGE`, `DATA_ATTR.SCOPE`, `DATA_ATTR.ACTION`）
+- その他のモジュール固有の data 属性は各モジュール先頭で定数定義する
 - 定数名の例：属性名をそのまま `ATTR_XXX`（例：`ATTR_MODAL_ID = 'data-modal-id'`）、セレクタ用に `SELECTOR_XXX`、モジュール名の値は `MODULE_XXX` など
 - コード内では文字列リテラルで `'data-xxx'` を書かず、必ず定数を参照する
 
 > **イベントトリガーは `data-action` のみ**。それ以外の `data-*` は「ただのデータ」なので自由に増やしてよい。**要素の取得も data 属性で行い、`js_` クラスは使わない。** 状態クラスは **`STATE_CLASSES`** から使用する。**モジュール内の data 属性は定数で一覧化する。**
+
+### モジュール実装の一貫ルール（まとめ）
+- **ルート**: そのモジュールのルート要素に **`data-module`** を付け、値に **モジュール名** を指定する。
+- **イベント対象**: そのモジュールに関連するイベントを発火させる要素には **`data-action`** を付け、値は **`モジュール名.xxxx`**（例：`accordion.toggle`、`modal.close`、`themeToggle.toggle`）。
+- **参照用属性**: その他、モジュール内の要素を参照するための属性は **`data-モジュール名-xxxx`**（例：`data-modal-id`、`data-accordion-trigger`）。
+- **イベント登録**: **必ず `delegate` を使用**し、**各モジュールのルート**にぶら下げる。トリガーがルート外にあり得る場合（例：モーダルを開くボタンがページ内のどこか）は **`document`** に delegate する。
 
 ---
 

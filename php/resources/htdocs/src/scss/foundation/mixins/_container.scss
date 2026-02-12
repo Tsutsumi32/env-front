@@ -7,7 +7,7 @@
 /******************************************************************
 * container　コンテナの余白と最大幅を設定する
 * @param $_type コンテナの種類（_variables.scssの$container-sizesで定義）
-* $media_query_strategy で 'sp-first' または 'pc-first' を切り替え可能
+* $media-query-strategy で 'sp-first' または 'pc-first' を切り替え可能
 *   - 'sp-first': SPをデフォルト、大きい画面で上書き
 *   - 'pc-first': PCをデフォルト、小さい画面で上書き
 *
@@ -34,7 +34,7 @@
   margin-inline: auto;
 
   // SPファーストの場合
-  @if $media_query_strategy == 'sp-first' {
+  @if $media-query-strategy == 'sp-first' {
     // デフォルト値を設定（メディアクエリなし）
     padding-inline: s($_default-padding);
     @if $_default-max-width != null {

@@ -1,180 +1,98 @@
-import { BaseModuleClass } from '../core/BaseModuleClass.js';
-import { STATE_CLASSES } from '../constans/global.js';
-import { disableScroll, enableScroll } from '../utils/scrollControll.js';
-import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
+/************************************************************
+ * ヘッダー（メニュー開閉）
+ * - [data-module="header"] がルート。開閉状態はルートにのみ is_active で制御（CSS で表示・アニメーション）
+ * - data-action="header.toggle" メニューボタン、data-action="header.close" 背景・リンク
+ * - [data-header-btn] [data-header-menu] [data-header-bg] は参照用
+ * - ESC で閉じる、開いている間はフォーカスをメニュー内にトラップ（a11y）
+ ************************************************************/
+
+import { DATA_ATTR, STATE_CLASSES } from '../constans/global.js';
+import { delegate } from '../utils/delegate.js';
+import { disableScroll, enableScroll } from '../utils/bodyScrollControll.js';
+import {
+  handleFocusTrapKeydown,
+  prepareAndFocusContainer,
+  returnFocus,
+} from '../utils/focusControl.js';
 
 // ---------------------------------------------------------------------------
-// data 属性（参照するものは定数で一覧化）
+// data 属性（参照するものは定数で一覧化。DATA_ATTR は global.js）
 // ---------------------------------------------------------------------------
-const ATTR_MODULE = 'data-module';
 const MODULE_HEADER = 'header';
 const ATTR_HEADER_BTN = 'data-header-btn';
 const ATTR_HEADER_MENU = 'data-header-menu';
 const ATTR_HEADER_BG = 'data-header-bg';
 
-const SELECTOR_HEADER = `[${ATTR_MODULE}="${MODULE_HEADER}"]`;
-const SELECTOR_HEADER_BTN = `[${ATTR_HEADER_BTN}]`;
-const SELECTOR_HEADER_MENU = `[${ATTR_HEADER_MENU}]`;
-const SELECTOR_HEADER_BG = `[${ATTR_HEADER_BG}]`;
+const SELECTOR_HEADER = `[${DATA_ATTR.MODULE}="${MODULE_HEADER}"]`;
+const SELECTOR_BTN = `[${ATTR_HEADER_BTN}]`;
+const SELECTOR_MENU = `[${ATTR_HEADER_MENU}]`;
+const SELECTOR_BG = `[${ATTR_HEADER_BG}]`;
+
+let lastFocusTrigger = null;
+
+const getHeader = () => document.querySelector(SELECTOR_HEADER);
+
+const isOpen = () => getHeader()?.classList.contains(STATE_CLASSES.ACTIVE) ?? false;
 
 /**
- * ヘッダー制御クラス
- * @requires [data-module="header"] - ヘッダー要素
- * @requires [data-header-btn] - メニューボタン
- * @requires [data-header-menu] - メニュー要素
- * @requires [data-header-bg] - 背景要素
+ * メニューを開く
  */
-export class HeaderControl extends BaseModuleClass {
-  /**
-   * 初期化処理
-   * @param {HTMLElement} element - 対象要素（このモジュールでは使用しない）
-   * @param {Object} resources - リソース
-   * @param {Object} resources.bag - disposeBag
-   * @param {AbortSignal} resources.signal - AbortSignal
-   */
-  init(element, { bag, signal }) {
-    const {
-      headerSelector = SELECTOR_HEADER,
-      menuBtnSelector = SELECTOR_HEADER_BTN,
-      menuSelector = SELECTOR_HEADER_MENU,
-      bgSelector = SELECTOR_HEADER_BG,
-      activeClass = STATE_CLASSES.ACTIVE,
-      displayClass = STATE_CLASSES.DISPLAY,
-      openDelay = 300,
-      closeDelay = 600,
-    } = this.options;
+const open = () => {
+  const header = getHeader();
+  if (!header) return;
 
-    const header = document.querySelector(headerSelector);
-    if (!header) {
-      console.warn('ヘッダー要素が見つかりません。');
-      return;
-    }
+  const menuBtn = header.querySelector(SELECTOR_BTN);
+  const menu = header.querySelector(SELECTOR_MENU);
+  const bg = header.querySelector(SELECTOR_BG);
+  if (!menuBtn || !menu || !bg) return;
 
-    const menuBtn = header.querySelector(menuBtnSelector);
-    const menu = header.querySelector(menuSelector);
-    const bg = header.querySelector(bgSelector);
+  lastFocusTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  header.classList.add(STATE_CLASSES.ACTIVE);
+  header.setAttribute('aria-expanded', 'true');
+  disableScroll(true, undefined);
+  prepareAndFocusContainer(header, { trigger: lastFocusTrigger, fallbackSelector: SELECTOR_MENU });
+};
 
-    if (!menu || !menuBtn || !bg) {
-      console.warn('ヘッダーの必要な要素が見つかりません。');
-      return;
-    }
+/**
+ * メニューを閉じる
+ */
+const close = () => {
+  const header = getHeader();
+  if (!header) return;
 
-    // イベントリスナー設定
-    menuBtn.addEventListener(
-      'click',
-      () => {
-        this.toggleHeaderMenu({
-          menuBtn,
-          menu,
-          bg,
-          activeClass,
-          displayClass,
-          openDelay,
-          closeDelay,
-          signal,
-          bag,
-        });
-      },
-      { signal }
-    );
+  header.classList.remove(STATE_CLASSES.ACTIVE);
+  header.setAttribute('aria-expanded', 'false');
+  enableScroll(true);
+  returnFocus(lastFocusTrigger);
+  lastFocusTrigger = null;
+};
 
-    // メニュー内のリンク押下でヘッダー閉じる
-    const links = menu.querySelectorAll('a');
-    links.forEach((link) => {
-      link.addEventListener(
-        'click',
-        () => {
-          const timeoutId = setTimeout(() => {
-            this.closeHeaderMenu({
-              menuBtn,
-              menu,
-              bg,
-              activeClass,
-              displayClass,
-              closeDelay,
-              signal,
-              bag,
-            });
-          }, openDelay);
-          // signalでタイムアウトをクリーンアップ
-          signal.addEventListener('abort', () => clearTimeout(timeoutId), { once: true });
-        },
-        { signal }
-      );
-    });
-  }
+/**
+ * 初期化（ルートに delegate。data-action="header.toggle" / "header.close" で開閉。ESC・Tab は document）
+ * @param {{ scope: { signal: AbortSignal } }} ctx
+ */
+const init = ({ scope }) => {
+  const header = getHeader();
+  if (!header) return;
 
-  /**
-   * ヘッダーメニュー開閉処理
-   * @param {Object} options - 設定オプション
-   * @param {AbortSignal} options.signal - AbortSignal
-   * @param {Object} options.bag - disposeBag
-   */
-  toggleHeaderMenu(options = {}) {
-    const {
-      menuBtn,
-      menu,
-      bg,
-      activeClass = STATE_CLASSES.ACTIVE,
-      displayClass = STATE_CLASSES.DISPLAY,
-      openDelay = 300,
-      closeDelay = 600,
-      signal,
-      bag,
-    } = options;
+  header.setAttribute('aria-expanded', 'false');
 
-    menuBtn.style.pointerEvents = 'none';
-    menuBtn.classList.toggle(activeClass);
-    bg.classList.toggle(activeClass);
+  delegate(header, scope, {
+    'header.toggle': () => {
+      if (isOpen()) close();
+      else open();
+    },
+    'header.close': close,
+  });
 
-    if (menuBtn.classList.contains(activeClass)) {
-      // 開いたときの処理
-      menu.classList.toggle(displayClass);
-      const timeoutId = setTimeout(() => {
-        menuBtn.style.pointerEvents = 'auto';
-        menu.classList.toggle(activeClass);
-      }, openDelay);
-      // signalでタイムアウトをクリーンアップ
-      signal.addEventListener('abort', () => clearTimeout(timeoutId), { once: true });
-    } else {
-      menu.classList.toggle(activeClass);
-      // 閉じたときの処理
-      const timeoutId = setTimeout(() => {
-        menuBtn.style.pointerEvents = 'auto';
-        menu.classList.toggle(displayClass);
-      }, closeDelay);
-      // signalでタイムアウトをクリーンアップ
-      signal.addEventListener('abort', () => clearTimeout(timeoutId), { once: true });
-    }
-  }
+  document.addEventListener(
+    'keydown',
+    (e) => {
+      if (e.key === 'Escape' && isOpen()) close();
+      if (e.key === 'Tab' && isOpen()) handleFocusTrapKeydown(header, e);
+    },
+    { signal: scope.signal }
+  );
+};
 
-  /**
-   * ヘッダーメニュー閉じる処理
-   * @param {Object} options - 設定オプション
-   * @param {AbortSignal} options.signal - AbortSignal
-   * @param {Object} options.bag - disposeBag
-   */
-  closeHeaderMenu(options = {}) {
-    const {
-      menuBtn,
-      menu,
-      bg,
-      activeClass = STATE_CLASSES.ACTIVE,
-      displayClass = STATE_CLASSES.DISPLAY,
-      closeDelay = 600,
-      signal,
-      bag,
-    } = options;
-
-    menuBtn.style.pointerEvents = 'none';
-    menuBtn.classList.remove(activeClass);
-    bg.classList.remove(activeClass);
-    menu.classList.remove(activeClass);
-    const timeoutId = setTimeout(() => {
-      menuBtn.style.pointerEvents = 'auto';
-      menu.classList.toggle(displayClass);
-    }, closeDelay);
-    // signalでタイムアウトをクリーンアップ
-    signal.addEventListener('abort', () => clearTimeout(timeoutId), { once: true });
-  }
-}
+export const header = { init, open, close };

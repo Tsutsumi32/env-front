@@ -6,7 +6,7 @@
  ************************************************************/
 
 /**
- * ストレージキー（ThemeToggleクラスと統一）
+ * ストレージキー（themeToggle モジュールと統一）
  */
 export const THEME_STORAGE_KEY = 'theme-mode';
 

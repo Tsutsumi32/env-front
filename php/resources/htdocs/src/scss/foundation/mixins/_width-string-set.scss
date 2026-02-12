@@ -2,9 +2,9 @@
 /******************************************************************
 * width-string-set　文字数による横幅を取得し、最大幅にセットする
 * @param $_num 文字数
-* @param $_font_size フォントサイズ (単位あり)
-* @param $_letter_spacing letter spacing
+* @param $_font-size フォントサイズ (単位あり)
+* @param $_letter-spacing letter spacing
 *******************************************************************/
-@mixin width-string-set($_num, $_font_size, $_letter_spacing) {
-  max-width: widthString($_num, $_font_size, $_letter_spacing);
+@mixin width-string-set($_num, $_font-size, $_letter-spacing) {
+  max-width: widthString($_num, $_font-size, $_letter-spacing);
 }

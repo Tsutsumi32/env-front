@@ -10,7 +10,7 @@
 *   - type="none" => 変更しない（前の値を継承）
 * @param $_number 数値
 *  例) padding: s(30);
-*  - SP: calc(30 * var(--liq-unit)) → レスポンシブ（res()の仕様: $min_layout_width以下ではvw、それ以上ではrem）
+*  - SP: calc(30 * var(--liq-unit)) → レスポンシブ（res()の仕様: $min-layout-width以下ではvw、それ以上ではrem）
 *  - TAB: calc(30 * var(--liq-unit)) → 固定値（前時点のリキッドでの固定化）
 *  - PC: calc(30 * var(--liq-unit)) → レスポンシブ（rem）
 * メディアクエリを書かなくても、自動的にブレイクポイントで計算が変更される

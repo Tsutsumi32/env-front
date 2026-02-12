@@ -1,79 +1,60 @@
-import { BaseModuleClass } from '../core/BaseModuleClass.js';
-import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
-import { setUpScrollTrigger } from '../utils/setUpScrollTrigger.js';
+/************************************************************
+ * ページトップボタン
+ * - data-module="pageTop" がボタン。data-action="pageTop.scroll" でクリック時トップへ
+ * - [data-pageTop-mv] を過ぎると表示（is_visible）
+ ************************************************************/
+
+import { DATA_ATTR, STATE_CLASSES } from '../constans/global.js';
+import { delegate } from '../utils/delegate.js';
 
 // ---------------------------------------------------------------------------
-// data 属性（参照するものは定数で一覧化）
+// data 属性（参照するものは定数で一覧化。DATA_ATTR は global.js）
 // ---------------------------------------------------------------------------
-const ATTR_PAGE_TOP = 'data-page-top';
-const ATTR_MV = 'data-mv';
+const MODULE_PAGE_TOP = 'pageTop';
+const ATTR_PAGE_TOP_MV = 'data-pageTop-mv';
 
-const SELECTOR_PAGE_TOP = `[${ATTR_PAGE_TOP}]`;
-const SELECTOR_MV = `[${ATTR_MV}]`;
+const SELECTOR_PAGE_TOP = `[${DATA_ATTR.MODULE}="${MODULE_PAGE_TOP}"]`;
+const SELECTOR_MV = `[${ATTR_PAGE_TOP_MV}]`;
 
 /**
- * ページトップボタン制御クラス
- * @requires [data-page-top] - ページトップボタン
- * @requires [data-mv] - メインビジュアル要素（表示開始の基準）
+ * 初期化（表示制御は [data-module="pageTop"] を参照。クリックは document に delegate、data-action="pageTop.scroll"）
+ * @param {{ scope: { signal: AbortSignal } }} ctx
+ * @param {{ startSelector?: string }} [options] - 表示開始の基準要素（省略時は data-pageTop-mv）
  */
-export class PageTopControl extends BaseModuleClass {
-  /**
-   * 初期化処理
-   * @param {HTMLElement} element - 対象要素（このモジュールでは使用しない）
-   * @param {Object} resources - リソース
-   * @param {Object} resources.bag - disposeBag
-   * @param {AbortSignal} resources.signal - AbortSignal
-   */
-  init(element, { bag, signal }) {
-    const {
-      pageTopSelector = SELECTOR_PAGE_TOP,
-      mvSelector = SELECTOR_MV,
-      startSelector = SELECTOR_MV,
-      mode = 'scroll',
-      anchor = { position: 'top', offset: 0 },
-      startAnchor = { position: 'bottom', offset: 0 },
-      rangeMode = 'after',
-      once = false,
-    } = this.options;
+const init = ({ scope }, options = {}) => {
+  const pageTop = document.querySelector(SELECTOR_PAGE_TOP);
+  const startEl = document.querySelector(options.startSelector || SELECTOR_MV);
 
-    const pageTop = document.querySelector(pageTopSelector);
+  if (!pageTop) return;
 
-    if (!pageTop) {
-      console.warn('ページトップボタン要素が見つかりません。');
-      return;
-    }
+  pageTop.setAttribute('aria-hidden', 'true');
+  pageTop.hidden = true;
 
-    setUpScrollTrigger(
-      [
-        {
-          startSelector: startSelector,
-          mode: mode,
-          anchor: anchor,
-          startAnchor: startAnchor,
-          rangeMode: rangeMode,
-          once: once,
-          onEnter: () => {
-            fadeIn(pageTop, 300, true, signal);
-          },
-          onOut: () => {
-            fadeOut(pageTop, 300, true, signal);
-          },
-        },
-      ],
-      signal
-    );
-
-    pageTop.addEventListener(
-      'click',
-      () => {
-        window.scrollTo({
-          top: 0,
-          // cssでsmooth設定済み
-          //behavior: "smooth"
-        });
-        return false;
+  if (startEl) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (!entry) return;
+        const show = !entry.isIntersecting;
+        if (show) {
+          pageTop.removeAttribute('aria-hidden');
+          pageTop.hidden = false;
+          pageTop.classList.add(STATE_CLASSES.VISIBLE);
+        } else {
+          pageTop.classList.remove(STATE_CLASSES.VISIBLE);
+          pageTop.setAttribute('aria-hidden', 'true');
+          pageTop.hidden = true;
+        }
       },
-      { signal }
+      { rootMargin: '0px', threshold: 0 }
     );
+    observer.observe(startEl);
+    scope.signal.addEventListener('abort', () => observer.disconnect(), { once: true });
   }
-}
+
+  delegate(document, scope, {
+    'pageTop.scroll': () => window.scrollTo({ top: 0 }),
+  });
+};
+
+export const pageTop = { init };

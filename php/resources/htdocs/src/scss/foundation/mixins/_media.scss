@@ -5,7 +5,7 @@
 
 /******************************************************************
 * メディアクエリ
-* $media_query_strategy で 'sp-first' または 'pc-first' を切り替え可能
+* $media-query-strategy で 'sp-first' または 'pc-first' を切り替え可能
 *******************************************************************/
 /* 連番ベースの汎用メディアクエリ
 * $key: ブレイクポイントのキー（文字列）または具体的な値（数値）
@@ -95,7 +95,7 @@
         }
       }
 
-      @if $media_query_strategy == 'sp-first' {
+      @if $media-query-strategy == 'sp-first' {
         // sp-first: media('default', 'tab') => tab未満
         @media screen and (width < strip-unit($_target-value, 1px)) {
           @content;
@@ -134,7 +134,7 @@
     }
   } @else {
     // 単一指定の場合
-    @if $media_query_strategy == 'sp-first' {
+    @if $media-query-strategy == 'sp-first' {
       // SPファースト: breakpoint-{key}以上
       @media screen and (strip-unit($_break-value, 1px) <= width) {
         @content;

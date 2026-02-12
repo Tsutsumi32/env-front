@@ -1,36 +1,37 @@
 /************************************************************
  * 全画面共通初期化処理
- * - 全ページで共通して実行される処理（ヘッダー・スムースアンカー・body クラス・img 保護・main 最小高さなど）
- * - モジュール（modal 等）の初期化は行わない。各ページの init で行う。
+ * - 全ページで共通して実行される処理
  ************************************************************/
-import { HeaderControl } from '../modules/header.js';
-import { smoothAnchorLink } from '../utils/smoothAnchorLink.js';
-// import { loadIncludes } from './loadNavigation.js';
 
-// ---------------------------------------------------------------------------
-// data 属性（参照するものは定数で一覧化）
-// ---------------------------------------------------------------------------
-const SELECTOR_HEADER = '[data-module="header"]';
+import { header } from '../modules/header.js';
+import { themeToggle } from '../modules/themeToggle.js';
+import { smoothAnchorLink } from '../utils/smoothAnchorLink.js';
+import { initializeThemeSystem, watchSystemThemeChange } from '../utils/themeSystemInit.js';
 
 /**
  * 全画面共通初期化処理
  * @param {Object} ctx - リソース（新旧両対応）
  * @param {Object} [ctx.scope] - 新: createPage から渡されるスコープ
- * @param {Object} [ctx.bag] - 旧: disposeBag
- * @param {AbortSignal} [ctx.signal] - 旧: AbortSignal
+ * @param {Object} [ctx.signal] - 旧: AbortSignal
  */
 export async function initCommon(ctx) {
-  const signal = ctx.scope?.signal ?? ctx.signal;
+  const scope = ctx.scope ?? { signal: ctx.signal };
+  const signal = scope.signal;
 
-  // header/footerの読み込み（最初に実行）
-  // await loadIncludes(signal);
+  // テーマ: 初期値の適用（localStorage or OS設定）
+  initializeThemeSystem();
+  // テーマ: 切替ボタン、OS変更の監視
+  themeToggle.init({ scope });
+  // テーマ: OS変更の監視
+  watchSystemThemeChange(signal);
 
-  // 全画面共通で実行される処理
-  new HeaderControl(SELECTOR_HEADER, {});
+  // アンカーリンク
   smoothAnchorLink(signal);
 
-  // JS 有効時用クラス削除（no-js / is_nojs）
-  document.body.classList.remove('no-js');
+  // ヘッダー（メニュー開閉・ESC・フォーカス管理）
+  header.init({ scope });
+
+  // JS 有効時用クラス削除
   document.body.classList.remove('is_nojs');
 
   // img保存策
@@ -46,20 +47,15 @@ export async function initCommon(ctx) {
 
   // main要素の最小高さを設定（画面の高さ - footerの高さ）
   const main = document.querySelector('main');
-  const footer = document.querySelector('.footer');
+  const footer = document.querySelector('footer');
 
   if (main && footer) {
     const setMainMinHeight = () => {
       const viewportHeight = window.innerHeight;
       const footerHeight = footer.offsetHeight;
-      const minHeight = viewportHeight - footerHeight;
-      main.style.minHeight = `${minHeight}px`;
+      main.style.minHeight = `${viewportHeight - footerHeight}px`;
     };
-
-    // 初期設定
     setMainMinHeight();
-
-    // リサイズ時にも再計算
     window.addEventListener('resize', setMainMinHeight, { signal });
   }
 }

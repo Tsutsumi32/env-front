@@ -1,213 +1,75 @@
 /************************************************************
- * タブ機能モジュール
+ * タブ
+ * - [data-module="tab"] がルート。data-action="tab.select" でトリガー、[data-tab] で対象コンテンツ指定
+ * - [data-tab-trigger] [data-tab-content] [data-tab] は参照用。アクティブは is_active（CSS で表示・フェード）
  ************************************************************/
-import { BaseModuleClass } from '../core/BaseModuleClass.js';
-import { STATE_CLASSES } from '../constans/global.js';
-import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
+
+import { DATA_ATTR, STATE_CLASSES } from '../constans/global.js';
+import { delegate } from '../utils/delegate.js';
 
 // ---------------------------------------------------------------------------
-// data 属性（参照するものは定数で一覧化）
+// data 属性（参照するものは定数で一覧化。DATA_ATTR は global.js）
 // ---------------------------------------------------------------------------
-const ATTR_MODULE = 'data-module';
 const MODULE_TAB = 'tab';
 const ATTR_TAB_TRIGGER = 'data-tab-trigger';
 const ATTR_TAB_CONTENT = 'data-tab-content';
 const ATTR_TAB = 'data-tab';
 
-const SELECTOR_TAB_TRIGGER = `[${ATTR_TAB_TRIGGER}]`;
-const SELECTOR_TAB_CONTENT = `[${ATTR_TAB_CONTENT}]`;
-const SELECTOR_TAB_PARENT = `[${ATTR_MODULE}="${MODULE_TAB}"]`;
+const SELECTOR_ROOT = `[${DATA_ATTR.MODULE}="${MODULE_TAB}"]`;
+const SELECTOR_TRIGGER = `[${ATTR_TAB_TRIGGER}]`;
+const SELECTOR_CONTENT = `[${ATTR_TAB_CONTENT}]`;
 
 /**
- * タブ制御クラス
- * @requires [data-module="tab"] - タブの親要素
- * @requires [data-tab-trigger] - タブボタン（data-tab で対象コンテンツを指定）
- * @requires [data-tab-content] - タブコンテンツ（data-tab で紐付け）
+ * 1 つのタブグループを初期化（ルートに delegate、data-action="tab.select"）
+ * @param {Element} root
+ * @param {{ signal: AbortSignal }} scope
  */
-export class TabControl extends BaseModuleClass {
-  /**
-   * 初期化処理
-   * @param {HTMLElement} element - 対象要素（このモジュールでは使用しない）
-   * @param {Object} resources - リソース
-   * @param {Object} resources.bag - disposeBag
-   * @param {AbortSignal} resources.signal - AbortSignal
-   */
-  init(element, { bag, signal }) {
-    const {
-      tabSelector = SELECTOR_TAB_TRIGGER,
-      contentSelector = SELECTOR_TAB_CONTENT,
-      parentSelector = SELECTOR_TAB_PARENT,
-      activeClass = STATE_CLASSES.ACTIVE,
-      enableFadeAnimation = true,
-      fadeDuration = 300,
-      fadeDisplay = true,
-    } = this.options;
+const initTabGroup = (root, scope) => {
+  const triggers = root.querySelectorAll(SELECTOR_TRIGGER);
+  const contents = root.querySelectorAll(SELECTOR_CONTENT);
+  if (!triggers.length || !contents.length) return;
 
-    // タブの親要素を取得
-    const tabParents = document.querySelectorAll(parentSelector);
+  delegate(root, scope, {
+    'tab.select': (e, el) => {
+      e.preventDefault();
+      const targetTab = el.getAttribute(ATTR_TAB);
+      if (!targetTab || el.classList.contains(STATE_CLASSES.ACTIVE)) return;
 
-    if (!tabParents.length) {
-      console.warn(`タブの親要素（[${ATTR_MODULE}="${MODULE_TAB}"]）が見つかりません`);
-      return;
-    }
+      const newContent = root.querySelector(
+        `${SELECTOR_CONTENT}[${ATTR_TAB}="${targetTab}"]`
+      );
+      if (!newContent) return;
 
-    // 各親要素ごとにタブ機能を初期化
-    tabParents.forEach((parent) => {
-      // 親要素内でのみタブとコンテンツを検索
-      const tabs = parent.querySelectorAll(tabSelector);
-      const contents = parent.querySelectorAll(contentSelector);
+      const currentContent = root.querySelector(
+        `${SELECTOR_CONTENT}.${STATE_CLASSES.ACTIVE}`
+      );
+      if (currentContent) currentContent.classList.remove(STATE_CLASSES.ACTIVE);
+      newContent.classList.add(STATE_CLASSES.ACTIVE);
 
-      if (!tabs.length || !contents.length) {
-        console.warn('タブまたはコンテンツが見つかりません', parent);
-        return;
-      }
+      triggers.forEach((t) => t.classList.remove(STATE_CLASSES.ACTIVE));
+      el.classList.add(STATE_CLASSES.ACTIVE);
+    },
+  });
 
-      // 各タブにクリックイベントを追加
-      tabs.forEach((tab) => {
-        tab.addEventListener(
-          'click',
-          (e) => {
-            e.preventDefault();
-            const targetTab = tab.getAttribute(ATTR_TAB);
-
-            if (!targetTab) {
-              console.warn(`${ATTR_TAB}属性が設定されていません`);
-              return;
-            }
-
-            // 既にアクティブなタブの場合は何もしない
-            if (tab.classList.contains(activeClass)) {
-              return;
-            }
-
-            // コンテンツの表示切替（フェードアニメーション付き）
-            if (enableFadeAnimation) {
-              // 現在表示中のコンテンツを取得（タブの切り替え前に取得、親要素内でのみ検索）
-              const currentContent = parent.querySelector(`${contentSelector}.${activeClass}`);
-
-              // 新しいコンテンツを取得（親要素内でのみ検索）
-              const newContent = parent.querySelector(
-                `${contentSelector}[${ATTR_TAB}="${targetTab}"]`
-              );
-
-              if (currentContent && newContent && currentContent !== newContent) {
-                // 親要素の高さを取得
-                const currentHeight = parent.offsetHeight;
-
-                // 親要素の高さを強制的に指定（レイアウト保持）
-                parent.style.minHeight = currentHeight + 'px';
-
-                // 高さが確実に適用されるまで待機してから切り替え処理を開始
-                requestAnimationFrame(() => {
-                  requestAnimationFrame(() => {
-                    // 現在のコンテンツをフェードアウト
-                    fadeOut(currentContent, fadeDuration, fadeDisplay, signal);
-
-                    // フェードアウト完了後にクラスを切り替え
-                    const timeoutId1 = setTimeout(() => {
-                      currentContent.classList.remove(activeClass);
-
-                      // 新しいコンテンツを準備
-                      newContent.classList.add(activeClass);
-                      if (fadeDisplay) {
-                        newContent.style.display = 'block';
-                        newContent.style.opacity = '0';
-                      }
-
-                      // 新しいコンテンツをフェードイン
-                      const timeoutId2 = setTimeout(() => {
-                        fadeIn(newContent, fadeDuration, fadeDisplay, signal);
-
-                        // フェードイン完了後に親要素の高さを解除
-                        const timeoutId3 = setTimeout(() => {
-                          parent.style.height = '';
-                        }, fadeDuration);
-                        // signalでタイムアウトをクリーンアップ
-                        if (signal) {
-                          signal.addEventListener('abort', () => clearTimeout(timeoutId3), {
-                            once: true,
-                          });
-                        }
-                      }, 50); // 少し遅延を入れてスムーズに
-                      // signalでタイムアウトをクリーンアップ
-                      if (signal) {
-                        signal.addEventListener('abort', () => clearTimeout(timeoutId2), {
-                          once: true,
-                        });
-                      }
-                    }, fadeDuration);
-                    // signalでタイムアウトをクリーンアップ
-                    if (signal) {
-                      signal.addEventListener('abort', () => clearTimeout(timeoutId1), {
-                        once: true,
-                      });
-                    }
-                  });
-                });
-              } else if (newContent) {
-                // 現在のコンテンツがない場合（初回表示など）
-                newContent.classList.add(activeClass);
-                if (fadeDisplay) {
-                  newContent.style.display = 'block';
-                  newContent.style.opacity = '0';
-                }
-                const timeoutId = setTimeout(() => {
-                  fadeIn(newContent, fadeDuration, fadeDisplay, signal);
-                }, 50);
-                // signalでタイムアウトをクリーンアップ
-                if (signal) {
-                  signal.addEventListener('abort', () => clearTimeout(timeoutId), { once: true });
-                }
-              }
-            } else {
-              // フェードアニメーション無効の場合は従来通り
-              contents.forEach((content) => {
-                const contentTab = content.getAttribute(ATTR_TAB);
-                if (contentTab === targetTab) {
-                  content.classList.add(activeClass);
-                } else {
-                  content.classList.remove(activeClass);
-                }
-              });
-            }
-
-            // アクティブタブの切り替え（コンテンツの処理後に実行、親要素内のタブのみ）
-            tabs.forEach((t) => t.classList.remove(activeClass));
-            tab.classList.add(activeClass);
-          },
-          { signal }
-        );
-      });
-
-      // 初期状態の設定（最初のタブをアクティブに）
-      const firstTab = tabs[0];
-      const firstTabTarget = firstTab.getAttribute(ATTR_TAB);
-
-      if (firstTabTarget) {
-        firstTab.classList.add(activeClass);
-        const firstContent = parent.querySelector(
-          `${contentSelector}[${ATTR_TAB}="${firstTabTarget}"]`
-        );
-        if (firstContent) {
-          firstContent.classList.add(activeClass);
-
-          // 初期表示時もフェードアニメーションを適用
-          if (enableFadeAnimation) {
-            if (fadeDisplay) {
-              firstContent.style.display = 'block';
-              firstContent.style.opacity = '0';
-            }
-            // 少し遅延してフェードイン
-            const timeoutId = setTimeout(() => {
-              fadeIn(firstContent, fadeDuration, fadeDisplay, signal);
-            }, 50);
-            // signalでタイムアウトをクリーンアップ
-            if (signal) {
-              signal.addEventListener('abort', () => clearTimeout(timeoutId), { once: true });
-            }
-          }
-        }
-      }
-    });
+  // 初期状態：最初のタブをアクティブに
+  const firstTab = triggers[0];
+  const firstTarget = firstTab.getAttribute(ATTR_TAB);
+  if (firstTarget) {
+    firstTab.classList.add(STATE_CLASSES.ACTIVE);
+    const firstContent = root.querySelector(
+      `${SELECTOR_CONTENT}[${ATTR_TAB}="${firstTarget}"]`
+    );
+    if (firstContent) firstContent.classList.add(STATE_CLASSES.ACTIVE);
   }
-}
+};
+
+/**
+ * 初期化
+ * @param {{ scope: { signal: AbortSignal }, root?: Element }} ctx
+ */
+const init = ({ scope, root = document }) => {
+  const roots = root.querySelectorAll(SELECTOR_ROOT);
+  roots.forEach((r) => initTabGroup(r, scope));
+};
+
+export const tab = { init };

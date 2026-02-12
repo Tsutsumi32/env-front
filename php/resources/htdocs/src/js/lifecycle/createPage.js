@@ -4,7 +4,7 @@
  ************************************************************/
 
 import { createScope } from './scope.js';
-// import { initCommon } from '../common/initCommon.js';
+import { initCommon } from '../common/initCommon.js';
 
 /**
  * ページ用の start 関数を返すファクトリ
@@ -19,7 +19,7 @@ export const createPage = ({ getRoot, init }) => {
     const scope = createScope();
 
     // 全ページ共通（必ず通す）
-    // initCommon({ ...ctx, root, scope });
+    initCommon({ ...ctx, root, scope });
 
     // ページ固有の初期化
     init?.({ ...ctx, root, scope });

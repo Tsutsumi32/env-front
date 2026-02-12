@@ -1,8 +1,12 @@
 /************************************************************
  * data-action 委譲ヘルパ
  * - ページ/モジュール内で data-action を scope root で一括リスン
+ * - data-action は「prefix.actionName」形式がルール（例: page.xxx, modal.xxx）。
+ *   形式に合わない値はコンソールにワーニングを出す。
  * - 委譲不可イベントは警告＋登録停止、委譲非推奨は警告のみ（js-fix-2 方針）
  ************************************************************/
+
+import { DATA_ATTR } from '../constans/global.js';
 
 const 委譲不可イベント = new Set([
   'focus',
@@ -53,6 +57,16 @@ const warn = (eventType, root, kind) => {
   );
 };
 
+/** data-action の値が「prefix.actionName」形式（例: page.xxx, modal.xxx）かどうか */
+const ACTION_KEY_PREFIX_PATTERN = /^[^.]+\.[^.]+$/;
+
+const warnActionKeyFormat = (key, root) => {
+  const r = ルート表示(root);
+  console.warn(
+    `[delegate警告] data-action は「prefix.actionName」形式で指定してください（例: page.xxx, modal.xxx）。\n  現在の値: "${key}" / root=${r}`
+  );
+};
+
 /**
  * data-action を委譲で処理する
  * @param {Document|Element} root - 委譲のルート（document または Element）
@@ -68,8 +82,8 @@ export const delegate = (root, scope, handlers, optionsOrEventType = {}) => {
 
   const {
     eventType = 'click',
-    selector = '[data-action]',
-    getKey = (el) => el.dataset.action,
+    selector = `[${DATA_ATTR.ACTION}]`,
+    getKey = (el) => el.getAttribute(DATA_ATTR.ACTION),
     suppressWarn = false,
     force = false,
   } = options;
@@ -94,6 +108,9 @@ export const delegate = (root, scope, handlers, optionsOrEventType = {}) => {
       if (!el) return;
       if (root instanceof Element && !root.contains(el)) return;
       const key = getKey(el);
+      if (key && !suppressWarn && !ACTION_KEY_PREFIX_PATTERN.test(key)) {
+        warnActionKeyFormat(key, root);
+      }
       const fn = handlers[key];
       if (fn) fn(e, el);
     },

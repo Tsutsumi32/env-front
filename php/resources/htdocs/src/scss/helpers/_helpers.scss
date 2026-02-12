@@ -43,7 +43,7 @@
 // デフォルト領域から指定ブレイクポイントまでの非表示クラスを生成
 @each $_breakpoint-key in map.keys($breakpoints) {
   .hp_hidden_default_#{$_breakpoint-key} {
-    @if $media_query_strategy == 'sp-first' {
+    @if $media-query-strategy == 'sp-first' {
       // SPファースト: デフォルト領域（最初のブレイクポイント未満）から指定ブレイクポイントまで非表示
       $_break-value: get-breakpoint($_breakpoint-key);
       @media screen and (width < strip-unit($_break-value, 1px)) {
@@ -62,7 +62,7 @@
 // 指定ブレイクポイント以降を非表示にするクラスを生成
 @each $_breakpoint-key in map.keys($breakpoints) {
   .hp_hidden_#{$_breakpoint-key}_ {
-    @if $media_query_strategy == 'sp-first' {
+    @if $media-query-strategy == 'sp-first' {
       // SPファースト: 指定ブレイクポイント以上を非表示
       $_break-value: get-breakpoint($_breakpoint-key);
       @media screen and (strip-unit($_break-value, 1px) <= width) {

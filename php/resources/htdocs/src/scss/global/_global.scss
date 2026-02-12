@@ -9,13 +9,14 @@
 @if $theme-change-mode-on == 'true' {
   @include generate-color-themes;
 }
+// スクロールバー幅（JSで実測値に更新。JS無効時は$width-scrollbarがフォールバック）
+@include scrollbar-width-set;
 
 html {
-  // スムーススクロールはjsで制御
-  // (・GSAPなどのアニメーションと相性が悪い・画面遷移時はスムーススクロールしたくない)
+  // スムーススクロールは基本的にjsで制御(Jsのライブラリと相性が悪い場合があるため)
+  // scroll-behavior: smooth;
   // 画面遷移を伴う場合の位置調整はscroll-padding-topで調整
   scroll-padding-top: calc(s(get-height('header-sp')) + 5.2rem);
-  scroll-behavior: smooth;
 }
 
 body {
@@ -25,8 +26,8 @@ body {
   word-break: break-word;
   line-break: strict;
   font-family: get-font-family(notosans);
-  background-color: $color_body_bg;
-  color: $color_base_text;
+  background-color: $color-body-bg;
+  color: $color-base-text;
   width: 100%;
 }
 
@@ -84,18 +85,18 @@ button {
 
 // テキスト選択時のスタイル
 ::selection {
-  color: $color_selection_text;
-  background-color: $color_selection_bg;
+  color: $color-selection-text;
+  background-color: $color-selection-bg;
 }
 
 ::-moz-selection {
-  color: $color_selection_text;
-  background-color: $color_selection_bg;
+  color: $color-selection-text;
+  background-color: $color-selection-bg;
 }
 
 // フォーカス時のoutlineスタイル
 :focus-visible {
-  outline: 1px solid $color_focus_outline;
+  outline: 1px solid $color-focus-outline;
 }
 
 // 補正入力選択時

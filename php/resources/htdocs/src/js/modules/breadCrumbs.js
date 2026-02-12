@@ -1,94 +1,65 @@
 /************************************************************
  * パンくずリスト
- * - 横幅を調整する(1行に納め、末尾のリストを末尾省略)
+ * - 横幅を調整する（1行に納め、末尾のリストを末尾省略）
+ * - data-module="breadCrumbs" がコンテナ、[data-breadCrumbs-item] が各アイテム、[data-breadCrumbs-itemText] が末尾省略対象のテキスト要素
  ************************************************************/
-import { BaseModuleClass } from '../core/BaseModuleClass.js';
+
+import { DATA_ATTR } from '../constans/global.js';
 
 // ---------------------------------------------------------------------------
-// data 属性（参照するものは定数で一覧化）
+// data 属性（参照するものは定数で一覧化。DATA_ATTR は global.js）
 // ---------------------------------------------------------------------------
-const ATTR_BREADCRUMBS = 'data-breadcrumbs';
-const ATTR_BREADCRUMBS_ITEM = 'data-breadcrumbs-item';
+const MODULE_BREAD_CRUMBS = 'breadCrumbs';
+const ATTR_BREADCRUMBS_ITEM = 'data-breadCrumbs-item';
+/** 各アイテム内で省略表示を適用するテキスト要素（data 属性で参照） */
+const ATTR_BREADCRUMBS_ITEM_TEXT = 'data-breadCrumbs-itemText';
 
-const SELECTOR_BREADCRUMBS = `[${ATTR_BREADCRUMBS}]`;
+const SELECTOR_BREADCRUMBS = `[${DATA_ATTR.MODULE}="${MODULE_BREAD_CRUMBS}"]`;
 const SELECTOR_BREADCRUMBS_ITEM = `[${ATTR_BREADCRUMBS_ITEM}]`;
+const SELECTOR_BREADCRUMBS_ITEM_TEXT = `[${ATTR_BREADCRUMBS_ITEM_TEXT}]`;
+
+const DEFAULT_MARGIN_OFFSET = 16;
 
 /**
- * パンくずリスト制御クラス
- * @requires [data-breadcrumbs] - パンくずリストのコンテナ
- * @requires [data-breadcrumbs-item] - パンくずの各アイテム
+ * 初期化
+ * @param {{ scope: { signal: AbortSignal } }} ctx
+ * @param {{ marginOffset?: number }} [options]
  */
-export class BreadCrumbsControl extends BaseModuleClass {
-  /**
-   * 初期化処理
-   * @param {HTMLElement} element - 対象要素（このモジュールでは使用しない）
-   * @param {Object} resources - リソース
-   * @param {Object} resources.bag - disposeBag
-   * @param {AbortSignal} resources.signal - AbortSignal
-   */
-  init(element, { bag, signal }) {
-    const {
-      containerSelector = SELECTOR_BREADCRUMBS,
-      itemSelector = SELECTOR_BREADCRUMBS_ITEM,
-      itemWrapperClass = '.c-breadcrumbs__item',
-      itemSpanClass = 'span',
-      marginOffset = 16,
-    } = this.options;
+const init = ({ scope }, options = {}) => {
+  const container = document.querySelector(SELECTOR_BREADCRUMBS);
+  if (!container) return;
 
-    const container = document.querySelector(containerSelector);
-    if (!container) {
-      console.warn('パンくずリスト要素が見つかりません。');
-      return;
-    }
+  const items = container.querySelectorAll(SELECTOR_BREADCRUMBS_ITEM);
+  if (!items.length) return;
 
-    const items = container.querySelectorAll(itemSelector);
+  const marginOffset = options.marginOffset ?? DEFAULT_MARGIN_OFFSET;
 
-    if (!items || items.length === 0) {
-      console.warn('パンくずリストのアイテムが見つかりません。');
-      return;
-    }
+  const adjustBreadWidth = () => {
+    const containerWidth = container.getBoundingClientRect().width;
+    let usedWidth = 0;
 
-    /**
-     * パンくずリストの横幅を調整
-     */
-    const adjustBreadWidth = () => {
-      const containerWidth = container.getBoundingClientRect().width;
-      let usedWidth = 0;
-
-      items.forEach((item, index) => {
-        if (index !== items.length - 1) {
-          const rect = item.getBoundingClientRect();
-          const style = window.getComputedStyle(item);
-          const marginLeft = parseFloat(style.marginLeft);
-          const marginRight = parseFloat(style.marginRight);
-          usedWidth += rect.width + marginLeft + marginRight;
-        }
-      });
-
-      const remainingWidth = containerWidth - usedWidth;
-
-      // 最後のアイテムのラッパーをターゲット
-      const lastItemWrapper = items[items.length - 1];
-      const lastItemSpan = lastItemWrapper.querySelector(`${itemWrapperClass} ${itemSpanClass}`);
-
-      if (lastItemSpan && remainingWidth > 0) {
-        lastItemSpan.style.maxWidth = remainingWidth - marginOffset + 'px';
-        lastItemSpan.style.overflow = 'hidden';
-        lastItemSpan.style.textOverflow = 'ellipsis';
-        lastItemSpan.style.whiteSpace = 'nowrap';
+    items.forEach((item, index) => {
+      if (index !== items.length - 1) {
+        const rect = item.getBoundingClientRect();
+        const style = window.getComputedStyle(item);
+        usedWidth += rect.width + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
       }
-    };
+    });
 
-    // 初期実行
-    adjustBreadWidth();
+    const remainingWidth = containerWidth - usedWidth;
+    const lastItemWrapper = items[items.length - 1];
+    const lastItemText = lastItemWrapper.querySelector(SELECTOR_BREADCRUMBS_ITEM_TEXT);
 
-    // リサイズ時にも再計算
-    window.addEventListener(
-      'resize',
-      () => {
-        adjustBreadWidth();
-      },
-      { signal }
-    );
-  }
-}
+    if (lastItemText && remainingWidth > 0) {
+      lastItemText.style.maxWidth = `${remainingWidth - marginOffset}px`;
+      lastItemText.style.overflow = 'hidden';
+      lastItemText.style.textOverflow = 'ellipsis';
+      lastItemText.style.whiteSpace = 'nowrap';
+    }
+  };
+
+  adjustBreadWidth();
+  window.addEventListener('resize', adjustBreadWidth, { signal: scope.signal });
+};
+
+export const breadCrumbs = { init };

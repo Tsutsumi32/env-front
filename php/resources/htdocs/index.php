@@ -24,7 +24,7 @@ ob_start();
             <div class="un_hero_actions">
                 <a href="/about.php" class="el_btn el_btn__primary">Aboutを見る</a>
                 <button type="button" class="el_btn el_btn__outline" data-action="modal.open" data-modal-id="sample">モーダルを開く</button>
-                <button type="button" class="el_btn el_btn__outline" data-action="sampleClick">サンプルボタン</button>
+                <button type="button" class="el_btn el_btn__outline" data-action="page.sampleClick">サンプルボタン</button>
             </div>
         </div>
 
@@ -64,7 +64,7 @@ ob_start();
             <h2 class="bl_accordionSection_title">FAQ</h2>
             <div class="bl_accordionSection_list">
                 <div class="bl_accordion has_accordion" data-module="accordion">
-                    <button type="button" class="bl_accordion_btn" data-accordion-trigger>
+                    <button type="button" class="bl_accordion_btn" data-accordion-trigger data-action="accordion.toggle">
                         <span class="bl_accordion_btnText">よくある質問1</span>
                         <span class="bl_accordion_btnIcon">+</span>
                     </button>
@@ -75,7 +75,7 @@ ob_start();
                     </div>
                 </div>
                 <div class="bl_accordion has_accordion" data-module="accordion">
-                    <button type="button" class="bl_accordion_btn" data-accordion-trigger>
+                    <button type="button" class="bl_accordion_btn" data-accordion-trigger data-action="accordion.toggle">
                         <span class="bl_accordion_btnText">よくある質問2</span>
                         <span class="bl_accordion_btnIcon">+</span>
                     </button>
@@ -86,7 +86,7 @@ ob_start();
                     </div>
                 </div>
                 <div class="bl_accordion has_accordion" data-module="accordion">
-                    <button type="button" class="bl_accordion_btn" data-accordion-trigger>
+                    <button type="button" class="bl_accordion_btn" data-accordion-trigger data-action="accordion.toggle">
                         <span class="bl_accordion_btnText">よくある質問3</span>
                         <span class="bl_accordion_btnIcon">+</span>
                     </button>
@@ -105,7 +105,7 @@ ob_start();
 // 共通モーダル（data-action="modal.open/close" で開閉。data-modal-id で複数識別可能）
 ?>
 <div class="bl_modal has_modal" data-module="modal" data-modal-id="sample" hidden aria-hidden="true">
-    <div class="bl_modal_overlay" data-modal-overlay aria-hidden="true"></div>
+    <div class="bl_modal_overlay" data-modal-overlay data-action="modal.close" aria-hidden="true"></div>
     <div class="bl_modal_dialog" data-modal-dialog role="dialog" aria-modal="true">
         <div class="bl_modal_content" data-modal-content data-modal-scroll>
             <p>サンプルモーダルです。</p>

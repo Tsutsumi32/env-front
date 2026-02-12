@@ -3,15 +3,15 @@
 /******************************************************************
 * ommision　行数による末尾「...」省略
 * @param $_line:行数
-* @param $_font_size:フォントサイズ 単位あり
-* @param $_line_height:行間 (例 1.5)
-* @param $_height_set:heightに高さを設定するかどうか(設定する場合true)
+* @param $_font-size:フォントサイズ 単位あり
+* @param $_line-height:行間 (例 1.5)
+* @param $_height-set:heightに高さを設定するかどうか(設定する場合true)
 *******************************************************************/
-@mixin omission($_line, $_font_size, $_line_height, $_height_set: 0) {
-  @if $_height_set != 'true' {
-    max-height: height-string($_line, $_font_size, $_line_height);
+@mixin omission($_line, $_font-size, $_line-height, $_height-set: 0) {
+  @if $_height-set != 'true' {
+    max-height: height-string($_line, $_font-size, $_line-height);
   } @else {
-    height: height-string($_line, $_font_size, $_line_height);
+    height: height-string($_line, $_font-size, $_line-height);
   }
   overflow: hidden;
   @if $_line == 1 {

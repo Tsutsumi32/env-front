@@ -10,39 +10,40 @@
 ----------------------------------------------------------------- */
 // ベースフォントサイズ(htmlサイズ)
 // vwやremの計算に使用する
-$font-s_base: 16px;
+$font-s-base: 16px;
 
 /* size
 ----------------------------------------------------------------- */
 // デザインサイズ
 //////////////////////////////////////////////
-$design_size_sp: 375;
-$design_size_pc: 1600;
+$design-size-sp: 375;
+$design-size-pc: 1600;
 
 // デザインのコンテナ
 //////////////////////////////////////////////
 // SPデザインのコンテナサイズ
-$design_container_sp: 343;
+$design-container-sp: 343;
 // PCデザインのコンテナサイズ
-$design_container_pc: 1131;
+$design-container-pc: 1131;
 
 // スクロールバー幅バッファ
+// JS無効時・未設定時のフォールバック。JS有効時は--scrollbar-widthが実測値で上書きされる
 //////////////////////////////////////////////
-$width_scrollbar: 20;
+$width-scrollbar: 20;
 
 // pc時の左右余白最低値
 //////////////////////////////////////////////
-$padding_container_pc: 20;
+$padding-container-pc: 20;
 
 // PC時に最低限確保する幅
 // pcデザインコンテナ(確保したい幅) + 確保したい左右余白 + スクロールバーバッファ)
 //////////////////////////////////////////////
-$minWidth_container_pc: calc($design_container_pc + $padding_container_pc + $width_scrollbar);
+$min-width-container-pc: calc($design-container-pc + $padding-container-pc + $width-scrollbar);
 
 // レスポンシブ(rem)対応時のSPの最小幅
 // これ以下はリキッドになるように_style-settings-varsで設定
 //////////////////////////////////////////////
-$min_layout_width: $design_size_sp;
+$min-layout-width: $design-size-sp;
 
 /* breakpoint
 ----------------------------------------------------------------- */
@@ -50,7 +51,7 @@ $min_layout_width: $design_size_sp;
 // 'sp-first': SPファースト（小さい画面から大きい画面へ上書き）
 // 'pc-first': PCファースト（大きい画面から小さい画面へ上書き）
 //////////////////////////////////////////////
-$media_query_strategy: 'sp-first' !default;
+$media-query-strategy: 'sp-first' !default;
 
 // ブレイクポイントのキー名一覧マップ（一元管理）
 // 構造: $breakpoint-keys: (key: value)
@@ -104,7 +105,7 @@ $breakpoints: (
   get-breakpoint-key('tab'): 580,
   get-breakpoint-key('tabL'): 768,
   get-breakpoint-key('pc'): 1080,
-  get-breakpoint-key('pcL'): $minWidth_container_pc,
+  get-breakpoint-key('pcL'): $min-width-container-pc,
   get-breakpoint-key('pcLL'): 1600,
 ) !default;
 
@@ -132,7 +133,7 @@ $breakpoints: (
 //
 // 'type': 'liquid' | 'responsive' | 'fixed' | 'none'
 //   - 'liquid': vwで計算（リキッド）
-//   - 'responsive': remで計算（レスポンシブ(rem値を使用、$min_layout_width以下はvw)）
+//   - 'responsive': remで計算（レスポンシブ(rem値を使用、$min-layout-width以下はvw)）
 //   - 'fixed': 前時点のリキッドの変化において、指定時点でのサイズに固定化（vw-to-pixelを使用）
 //   - 'none': 変更しない（前のブレイクポイントの値を継承）
 // 'base-size': 計算値の倍率を設定(基本は1 s(20) => 1:20px  2:40px)
@@ -145,13 +146,13 @@ $style-settings: (
   'default': (
     'type': 'liquid',
     'base-size': 1,
-    'viewport-base': $design_size_sp,
+    'viewport-base': $design-size-sp,
   ),
   // get-breakpoint-key('tab'): (
   //     'type': 'fixed',
   //     'base-size': 1,
   //     // SPのリキッド基準点
-  //     'viewport-base': $design_size_sp,
+  //     'viewport-base': $design-size-sp,
   //     // TABの時点で固定化
   //     'fixed-width': get-breakpoint('tab'),
   //   ),
@@ -409,7 +410,7 @@ $colors: (
 
 // モード選択用変数(mod()で使用する)
 //////////////////////////////////////////////
-$color_mode_dark: 'dark';
+$color-mode-dark: 'dark';
 
 // ※$colorsを使用する場合
 // get-color① CSS変数を返す function
@@ -449,17 +450,17 @@ $color_mode_dark: 'dark';
 
 // 役割が確定しているカラーはフラットで管理(主にglobalに設定する値)
 // デフォルトテキスト色
-$color_base_text: get-color('text', 'primary');
+$color-base-text: get-color('text', 'primary');
 // bodyの色
-$color_body_bg: get-color('base', 'white');
+$color-body-bg: get-color('base', 'white');
 // 選択色
-$color_selection_text: get-color('base', 'white');
-$color_selection_bg: get-color('base', 'black');
+$color-selection-text: get-color('base', 'white');
+$color-selection-bg: get-color('base', 'black');
 // focus
-$color_focus_outline: get-color('base', 'black');
+$color-focus-outline: get-color('base', 'black');
 // scrollbar
-$color_scrollbar_track: black;
-$color_scrollbar_thumb: white;
+$color-scrollbar-track: black;
+$color-scrollbar-thumb: white;
 
 /* font
 ----------------------------------------------------------------- */

@@ -5,23 +5,21 @@
  * - open/close、背景クリック・ESC、スクロール制御、フォーカス管理（トラップ・復帰）
  ************************************************************/
 
-import { STATE_CLASSES } from '../constans/global.js';
+import { DATA_ATTR, STATE_CLASSES } from '../constans/global.js';
 import { delegate } from '../utils/delegate.js';
 import {
   handleFocusTrapKeydown,
   prepareAndFocusContainer,
   returnFocus,
 } from '../utils/focusControl.js';
-import { disableScroll, enableScroll } from '../utils/scrollControll.js';
+import { disableScroll, enableScroll } from '../utils/bodyScrollControll.js';
 
 // ---------------------------------------------------------------------------
-// data 属性（参照するものは定数で一覧化）
+// data 属性（参照するものは定数で一覧化。DATA_ATTR は global.js）
 // ---------------------------------------------------------------------------
-const ATTR_MODULE = 'data-module';
 const MODULE_MODAL = 'modal';
 const ATTR_MODAL_ID = 'data-modal-id';
 const ATTR_MODAL_DIALOG = 'data-modal-dialog';
-const ATTR_MODAL_OVERLAY = 'data-modal-overlay';
 const ATTR_MODAL_SCROLL = 'data-modal-scroll';
 
 /** フェード時間（ms）。CSS の fade-initial の duration と揃える */
@@ -37,10 +35,10 @@ let lastTrigger = null;
  */
 const getModalRoot = (id) => {
   if (id) {
-    const el = document.querySelector(`[${ATTR_MODULE}="${MODULE_MODAL}"][${ATTR_MODAL_ID}="${id}"]`);
+    const el = document.querySelector(`[${DATA_ATTR.MODULE}="${MODULE_MODAL}"][${ATTR_MODAL_ID}="${id}"]`);
     if (el) return el;
   }
-  return document.querySelector(`[${ATTR_MODULE}="${MODULE_MODAL}"]`);
+  return document.querySelector(`[${DATA_ATTR.MODULE}="${MODULE_MODAL}"]`);
 };
 
 /**
@@ -48,7 +46,7 @@ const getModalRoot = (id) => {
  * @returns {HTMLElement | null}
  */
 const getOpenModal = () => {
-  return document.querySelector(`[${ATTR_MODULE}="${MODULE_MODAL}"].${STATE_CLASSES.ACTIVE}`);
+  return document.querySelector(`[${DATA_ATTR.MODULE}="${MODULE_MODAL}"].${STATE_CLASSES.ACTIVE}`);
 };
 
 let isInitialized = false;
@@ -68,12 +66,6 @@ const initOnce = () => {
     if (e.key !== 'Tab') return;
     const modal = getOpenModal();
     if (modal) handleFocusTrapKeydown(modal, e);
-  });
-
-  document.addEventListener('click', (e) => {
-    const modal = getOpenModal();
-    if (!modal) return;
-    if (e.target.hasAttribute(ATTR_MODAL_OVERLAY)) close();
   });
 };
 
