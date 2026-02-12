@@ -1,0 +1,116 @@
+@use '../../utils/' as *;
+
+/******************************************************************
+* header
+*******************************************************************/
+.ly_header {
+  background-color: get-color('bg', 'base');
+  border-bottom: 1px solid get-color('border', 'tag');
+  padding: s(20) 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  background-color: rgba(get-color('bg', 'base'), 0.95);
+
+  &_inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: s(20);
+  }
+
+  &_logo {
+    display: block;
+  }
+
+  &_logoLink {
+    @include background-image('logo_ithingstudio_black', $_size: contain);
+    display: block;
+    aspect-ratio: 169 / 50;
+    width: s(169);
+    height: auto;
+    @include mode($color_mode_dark) {
+      @include background-image('logo_ithingstudio_light', $_size: contain);
+    }
+  }
+
+  &_logoText {
+    font-size: s(20);
+    font-weight: 700;
+    color: get-color('text', 'primary');
+  }
+
+  &_nav {
+    display: none;
+  }
+
+  &_navList {
+    display: flex;
+    align-items: center;
+    gap: s(30);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &_navItem {
+    display: flex;
+    align-items: center;
+  }
+
+  &_navLink {
+    color: get-color('text', 'primary');
+    text-decoration: none;
+    font-size: s(16);
+    transition: color 0.3s ease;
+
+    @include hover {
+      color: get-color('ui', 'hover');
+    }
+  }
+
+  &_actions {
+    display: flex;
+    align-items: center;
+    gap: s(10);
+  }
+
+  &_themeToggle {
+    background: none;
+    border: 1px solid get-color('border', 'tag');
+    border-radius: s(8);
+    padding: s(8);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include hover {
+      background-color: get-color('bg', 'hover');
+      border-color: get-color('border', 'primary');
+    }
+
+    &Icon {
+      font-size: s(20);
+      line-height: 1;
+    }
+
+    &__dark {
+      display: flex;
+
+      [data-theme='dark'] & {
+        display: none;
+      }
+    }
+
+    &__light {
+      display: none;
+
+      [data-theme='dark'] & {
+        display: flex;
+      }
+    }
+  }
+}

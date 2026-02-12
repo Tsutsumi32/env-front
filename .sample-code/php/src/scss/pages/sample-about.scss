@@ -1,0 +1,97 @@
+@use './initpage' as *;
+/******************************************************************
+* page - sample-about
+*******************************************************************/
+/* use blocks
+----------------------------------------------------------------- */
+@use '../modules/blocks/breadcrumbs' as *;
+@use '../modules/blocks/card' as *;
+
+/* page-header
+----------------------------------------------------------------- */
+.un_pageHeader {
+  text-align: center;
+  padding: s(40) 0;
+  margin-bottom: s(60);
+
+  &_title {
+    font-size: s(32);
+    font-weight: 700;
+    color: get-color('text', 'primary');
+    margin-bottom: s(15);
+
+    @include media(get-breakpoint-key('tab')) {
+      font-size: s(40);
+    }
+  }
+
+  &_description {
+    font-size: s(18);
+    color: get-color('text', 'secondary');
+
+    @include media(get-breakpoint-key('tab')) {
+      font-size: s(20);
+    }
+  }
+}
+
+/* about-content
+----------------------------------------------------------------- */
+.un_aboutContent {
+  &_section {
+    margin-bottom: s(40);
+  }
+
+  &_title {
+    font-size: s(24);
+    font-weight: 600;
+    color: get-color('text', 'primary');
+    margin-bottom: s(20);
+  }
+
+  &_text {
+    font-size: s(16);
+    color: get-color('text', 'secondary');
+    line-height: 1.8;
+  }
+
+  &_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &_listItem {
+    font-size: s(16);
+    color: get-color('text', 'secondary');
+    padding: s(10) 0;
+    border-bottom: 1px solid get-color('border', 'tag');
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &_image {
+    margin-top: s(40);
+    border-radius: s(12);
+    overflow: hidden;
+  }
+
+  &_img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  &_techGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: s(20);
+    margin-top: s(20);
+  }
+}
+
+.un_aboutContent_section .el_btn {
+  margin-top: s(20);
+}

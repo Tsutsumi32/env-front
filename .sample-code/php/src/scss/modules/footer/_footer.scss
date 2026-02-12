@@ -1,0 +1,44 @@
+@use '../../utils/' as *;
+
+/******************************************************************
+* footer
+*******************************************************************/
+.ly_footer {
+  background-color: get-color('bg', 'base');
+  border-top: 1px solid get-color('border', 'tag');
+  padding: s(40) 0;
+  margin-top: s(60);
+
+  &_inner {
+    text-align: center;
+  }
+
+  &_info {
+    // フッター情報エリア
+  }
+
+  &_copyright {
+    font-size: s(14);
+    color: get-color('text', 'secondary');
+    margin-bottom: s(20);
+  }
+
+  &_address {
+    font-size: s(14);
+    color: get-color('text', 'secondary');
+    font-style: normal;
+  }
+
+  &_addressText {
+    margin-bottom: s(10);
+  }
+
+  &_addressLink {
+    color: get-color('text', 'link');
+    text-decoration: none;
+
+    @include hover {
+      text-decoration: underline;
+    }
+  }
+}

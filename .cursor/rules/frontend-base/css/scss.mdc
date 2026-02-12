@@ -1,0 +1,8 @@
+---
+alwaysApply: true
+---
+
+scssのmixinやfunction、ネストルール等々、
+scssで実装する際のルールを記載します。
+
+fontやs()、background-image等々具体的な使用方法も記載します。

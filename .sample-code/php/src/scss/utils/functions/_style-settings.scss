@@ -1,0 +1,20 @@
+@use '../variables/variables' as *;
+@use './strip-unit' as *;
+/******************************************************************
+* s　リキッド対応の値変換（res()の仕様も統合）
+* CSS変数(--liq-unit)を使用して、各ブレイクポイントで自動的に計算が変更される
+* $style-settingsの設定に基づいて、以下の4つのタイプに対応:
+*   - type="liquid" => リキッド（vw）
+*   - type="responsive" => レスポンシブ（rem、res()の仕様を統合）
+*   - type="fixed" => 前時点のリキッドでの固定化
+*   - type="none" => 変更しない（前の値を継承）
+* @param $_number 数値
+*  例) padding: s(30);
+*  - SP: calc(30 * var(--liq-unit)) → レスポンシブ（res()の仕様: $min_layout_width以下ではvw、それ以上ではrem）
+*  - TAB: calc(30 * var(--liq-unit)) → 固定値（前時点のリキッドでの固定化）
+*  - PC: calc(30 * var(--liq-unit)) → レスポンシブ（rem）
+* メディアクエリを書かなくても、自動的にブレイクポイントで計算が変更される
+*******************************************************************/
+@function s($_number) {
+	@return calc(strip-unit($_number) * var(--liq-unit));
+}

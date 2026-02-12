@@ -1,0 +1,146 @@
+@use '../utils/' as *;
+
+/******************************************************************
+* 共通設定
+*******************************************************************/
+// スタイル計算 s()の設定
+@include style-settings-vars;
+// テーマ切り替え用CSSの生成
+@if $theme-change-mode-on == 'true' {
+  @include generate-color-themes;
+}
+
+html {
+  // スムーススクロールはjsで制御
+  // (・GSAPなどのアニメーションと相性が悪い・画面遷移時はスムーススクロールしたくない)
+  // 画面遷移を伴う場合の位置調整はscroll-padding-topで調整
+  scroll-padding-top: calc(s(get-height('header-sp')) + 5.2rem);
+  scroll-behavior: smooth;
+}
+
+body {
+  @include scrollbar();
+  // デザインの改行方法によって変更する
+  // word-break: break-all;
+  word-break: break-word;
+  line-break: strict;
+  font-family: get-font-family(notosans);
+  background-color: $color_body_bg;
+  color: $color_base_text;
+  width: 100%;
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a {
+  // テキストの上下トリミング指定
+  //text-box: trim-both cap alphabetic;
+}
+
+// picutreはスタイル上無視
+picture {
+  display: contents;
+}
+
+img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+textarea,
+dt,
+dd,
+button {
+  line-height: inherit;
+}
+
+address {
+  font-style: normal;
+}
+
+textarea {
+  resize: vertical;
+  overflow-y: auto;
+}
+
+a,
+span {
+  display: inline-block;
+}
+
+button {
+  display: inline-block;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+// テキスト選択時のスタイル
+::selection {
+  color: $color_selection_text;
+  background-color: $color_selection_bg;
+}
+
+::-moz-selection {
+  color: $color_selection_text;
+  background-color: $color_selection_bg;
+}
+
+// フォーカス時のoutlineスタイル
+:focus-visible {
+  outline: 1px solid $color_focus_outline;
+}
+
+// 補正入力選択時
+input:-internal-autofill-selected,
+textarea:-internal-autofill-selected {
+  background-color: transparent !important;
+}
+
+// セレクトスタイル
+select {
+  appearance: base-select;
+
+  &::picker(select) {
+    appearance: base-select;
+    border: none;
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    box-shadow: 0 0 s(10) rgba(#000, 0.3);
+    /* アニメーションも設定できる */
+    // transition: scale 0.2s;
+
+    @include hover-only {
+      // scale: 1.02;
+    }
+  }
+
+  &::picker-icon {
+    display: none;
+  }
+
+  option {
+    padding-inline: 1rem;
+
+    &::checkmark {
+      display: none;
+    }
+
+    &:checked {
+      // background-color: get-color('background', 'brand', 'default');
+      // color: get-color('text', 'mono', 'white');
+      pointer-events: none;
+    }
+
+    &:hover {
+      // background-color: get-color('background', 'brand', 'secondary-hover');
+    }
+  }
+}

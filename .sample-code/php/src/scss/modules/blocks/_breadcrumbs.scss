@@ -1,0 +1,46 @@
+@use '../../utils/' as *;
+
+/******************************************************************
+* block - breadcrumbs
+*******************************************************************/
+.bl_breadcrumbs {
+  margin-bottom: s(30);
+
+  &_list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: s(10);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &_item {
+    display: flex;
+    align-items: center;
+  }
+
+  &_link {
+    color: get-color('text', 'secondary');
+    text-decoration: none;
+    font-size: s(14);
+    transition: color 0.3s ease;
+
+    @include hover {
+      color: get-color('text', 'primary');
+    }
+  }
+
+  &_text {
+    color: get-color('text', 'primary');
+    font-size: s(14);
+    font-weight: 500;
+  }
+
+  &_separator {
+    color: get-color('text', 'secondary');
+    margin: 0 s(5);
+    font-size: s(14);
+  }
+}
