@@ -2,16 +2,33 @@
  * モーダル（1ファイルに集約・js-fix 方針）
  * - data-action="modal.open" / "modal.close" で document に delegate（open トリガーが散らばるため）
  * - data-module="modal" がモーダルルート、data-modal-id で複数モーダルを識別
- * - open/close、背景クリック・ESC、スクロール制御・アコーディオン後片付けまでここで実施
+ * - open/close、背景クリック・ESC、スクロール制御、フォーカス管理（トラップ・復帰）
  ************************************************************/
 
 import { STATE_CLASSES } from '../constans/global.js';
 import { delegate } from '../utils/delegate.js';
-import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
+import {
+  handleFocusTrapKeydown,
+  prepareAndFocusContainer,
+  returnFocus,
+} from '../utils/focusControl.js';
 import { disableScroll, enableScroll } from '../utils/scrollControll.js';
-import { slideUp } from '../utils/slideAnimation.js';
 
-const ANIMATION_SPEED = 400;
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_MODULE = 'data-module';
+const MODULE_MODAL = 'modal';
+const ATTR_MODAL_ID = 'data-modal-id';
+const ATTR_MODAL_DIALOG = 'data-modal-dialog';
+const ATTR_MODAL_OVERLAY = 'data-modal-overlay';
+const ATTR_MODAL_SCROLL = 'data-modal-scroll';
+
+/** フェード時間（ms）。CSS の fade-initial の duration と揃える */
+const FADE_DURATION_MS = 400;
+
+/** 閉じたときにフォーカスを戻す要素（open を押したトリガー） */
+let lastTrigger = null;
 
 /**
  * モーダルルート要素を取得（id があれば data-modal-id で一致するものを取得）
@@ -20,10 +37,10 @@ const ANIMATION_SPEED = 400;
  */
 const getModalRoot = (id) => {
   if (id) {
-    const el = document.querySelector(`[data-module="modal"][data-modal-id="${id}"]`);
+    const el = document.querySelector(`[${ATTR_MODULE}="${MODULE_MODAL}"][${ATTR_MODAL_ID}="${id}"]`);
     if (el) return el;
   }
-  return document.querySelector('[data-module="modal"]');
+  return document.querySelector(`[${ATTR_MODULE}="${MODULE_MODAL}"]`);
 };
 
 /**
@@ -31,26 +48,32 @@ const getModalRoot = (id) => {
  * @returns {HTMLElement | null}
  */
 const getOpenModal = () => {
-  return document.querySelector(`[data-module="modal"].${STATE_CLASSES.ACTIVE}`);
+  return document.querySelector(`[${ATTR_MODULE}="${MODULE_MODAL}"].${STATE_CLASSES.ACTIVE}`);
 };
 
 let isInitialized = false;
 
 /**
- * ESC・背景クリックなど、1回だけ登録するリスナー
+ * ESC・背景クリック・Tab トラップなど、1回だけ登録するリスナー
  */
 const initOnce = () => {
   if (isInitialized) return;
   isInitialized = true;
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') close();
+    if (e.key === 'Escape') {
+      close();
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    const modal = getOpenModal();
+    if (modal) handleFocusTrapKeydown(modal, e);
   });
 
   document.addEventListener('click', (e) => {
     const modal = getOpenModal();
     if (!modal) return;
-    if (e.target.hasAttribute('data-modal-overlay')) close();
+    if (e.target.hasAttribute(ATTR_MODAL_OVERLAY)) close();
   });
 };
 
@@ -60,15 +83,24 @@ const initOnce = () => {
  */
 const open = (payload = {}) => {
   initOnce();
-  const id = payload.id ?? payload.trigger?.dataset?.modalId;
+  const id = payload.id ?? payload.trigger?.getAttribute(ATTR_MODAL_ID);
   const root = getModalRoot(id);
   if (!root) return;
 
-  root.classList.add(STATE_CLASSES.ACTIVE);
+  lastTrigger = payload.trigger instanceof HTMLElement ? payload.trigger : document.activeElement;
+
   root.hidden = false;
-  root.style.display = 'block';
-  root.style.opacity = '0';
-  fadeIn(root, ANIMATION_SPEED, true, undefined);
+  root.setAttribute('aria-hidden', 'false');
+  // 初期状態（opacity: 0）を 1 フレーム描画してから is_active を付与し、フェードインの transition を走らせる
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      root.classList.add(STATE_CLASSES.ACTIVE);
+      prepareAndFocusContainer(root, {
+        trigger: lastTrigger,
+        fallbackSelector: `[${ATTR_MODAL_DIALOG}]`,
+      });
+    });
+  });
   disableScroll(true, undefined);
 };
 
@@ -82,38 +114,30 @@ const close = () => {
     return;
   }
 
-  const scrollableElements = root.querySelectorAll('[data-modal-scroll]');
-
+  const scrollableElements = root.querySelectorAll(`[${ATTR_MODAL_SCROLL}]`);
   if (scrollableElements.length > 0) {
-    setTimeout(() => {
-      scrollableElements.forEach((el) => {
-        el.scrollTop = 0;
-      });
-    }, ANIMATION_SPEED);
+    scrollableElements.forEach((el) => {
+      el.scrollTop = 0;
+    });
   }
 
-  fadeOut(root, ANIMATION_SPEED, true, undefined);
   root.classList.remove(STATE_CLASSES.ACTIVE);
   enableScroll(true);
 
-  setTimeout(() => {
+  let done = false;
+  const triggerToReturn = lastTrigger;
+  const onTransitionEnd = () => {
+    if (done) return;
+    done = true;
+    root.removeEventListener('transitionend', onTransitionEnd);
     root.hidden = true;
-    root.style.display = '';
+    root.setAttribute('aria-hidden', 'true');
+    returnFocus(triggerToReturn);
+    lastTrigger = null;
+  };
 
-    const accordionParents = root.querySelectorAll(`[data-module="accordion"].${STATE_CLASSES.ACTIVE}`);
-    accordionParents.forEach((parent) => {
-      const contents = parent.querySelector('[data-accordion-contents]');
-      if (contents) {
-        slideUp(contents, 300, 'ease-out', undefined);
-        parent.classList.remove(STATE_CLASSES.ACTIVE);
-      }
-    });
-
-    const hiddenButtons = root.querySelectorAll('button[style*="display: none"]');
-    hiddenButtons.forEach((btn) => {
-      btn.style.display = '';
-    });
-  }, ANIMATION_SPEED);
+  root.addEventListener('transitionend', onTransitionEnd, { once: true });
+  setTimeout(() => onTransitionEnd(), FADE_DURATION_MS + 50);
 };
 
 /**
@@ -123,7 +147,7 @@ const close = () => {
 const init = ({ scope }) => {
   delegate(document, scope, {
     'modal.open': (e, el) => {
-      open({ trigger: el, id: el.dataset.modalId });
+      open({ trigger: el, id: el.getAttribute(ATTR_MODAL_ID) });
     },
     'modal.close': () => {
       close();

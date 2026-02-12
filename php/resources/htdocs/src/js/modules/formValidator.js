@@ -3,6 +3,23 @@
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_FORM = 'data-form';
+const FORM_CONTACT = 'contact';
+const ATTR_FORM_SUBMIT = 'data-form-submit';
+const ATTR_VALIDATE = 'data-validate';
+const ATTR_INPUT = 'data-input';
+const ATTR_LABEL = 'data-label';
+const ATTR_MAX = 'data-max';
+const ATTR_MAX_SIZE = 'data-maxSize';
+const ATTR_ERR = 'data-err';
+
+const SELECTOR_FORM_CONTACT = `[${ATTR_FORM}="${FORM_CONTACT}"]`;
+const SELECTOR_FORM_SUBMIT = `[${ATTR_FORM_SUBMIT}]`;
+const SELECTOR_VALIDATE = `[${ATTR_VALIDATE}]`;
+
 /**
  * フォーム送信処理
  * @param {Event} event - フォーム送信イベント
@@ -16,8 +33,8 @@ import { BaseModuleClass } from '../core/BaseModuleClass.js';
  */
 export const handleFormSubmit = async (event, options = {}) => {
   const {
-    formSelector = '[data-form="contact"]',
-    submitBtnSelector = '[data-form-submit]',
+    formSelector = SELECTOR_FORM_CONTACT,
+    submitBtnSelector = SELECTOR_FORM_SUBMIT,
     useRecaptcha = false,
     siteKey = "",
     action = ""
@@ -246,7 +263,7 @@ const validatePassword = (val) => {
  */
 const getInputValue = (item) => {
   let this_value = "";
-  if (item.getAttribute("data-validate") === "requireCheck") {
+  if (item.getAttribute(ATTR_VALIDATE) === "requireCheck") {
     const checkbox = item.querySelector(
       'input[type="checkbox"]'
     );
@@ -296,7 +313,7 @@ const getInputValue = (item) => {
  */
 const validation = (options = {}) => {
   const {
-    validateSelector = "[data-validate]",
+    validateSelector = SELECTOR_VALIDATE,
     errorClass = "is_error",
     headerSelector = "header",
     scrollOffset = 160
@@ -344,8 +361,8 @@ const validation = (options = {}) => {
 
   // data-validate、data-inputの値を取得し、配列に格納する
   validateItem.forEach((item) => {
-    const validateAttribute = item.getAttribute("data-validate");
-    const inputAttribute = item.getAttribute("data-input");
+    const validateAttribute = item.getAttribute(ATTR_VALIDATE);
+    const inputAttribute = item.getAttribute(ATTR_INPUT);
     if (validateAttribute && inputAttribute) {
       // data-validateに設定した種別を配列にする
       const validateArray = validateAttribute.split(" ");
@@ -362,7 +379,7 @@ const validation = (options = {}) => {
     let value = "";
     // data-inputの値(key)に該当する要素を取得
     const targetItemArray = Array.from(validateItem).filter(
-      (item) => item.getAttribute("data-input") === key
+      (item) => item.getAttribute(ATTR_INPUT) === key
     );
     const targetItem = targetItemArray[0];
     // inputのタイプによって、値を取得する
@@ -371,7 +388,7 @@ const validation = (options = {}) => {
     }
 
     // 該当の項目のラベル(data-label)
-    let targetItemLabel = targetItem?.getAttribute("data-label") || "";
+    let targetItemLabel = targetItem?.getAttribute(ATTR_LABEL) || "";
     // 該当要素の、data-validateの数分、バリデーション実施
     validateOptions[key].forEach((validate) => {
       // 本項目にエラーがあるか
@@ -417,7 +434,7 @@ const validation = (options = {}) => {
         }
       } else if (validate === maxLengthValidate) {
         // 最大文字数を取得する(data-max属性に最大文字数をセット)
-        const max = targetItem?.getAttribute("data-max");
+        const max = targetItem?.getAttribute(ATTR_MAX);
         result = validateMaxLength(
           value,
           max ? parseInt(max) : 80,
@@ -433,7 +450,7 @@ const validation = (options = {}) => {
           isError = true;
         }
       } else if (validate === fileValidate) {
-        const maxSizeMb = targetItem?.getAttribute("data-maxSize");
+        const maxSizeMb = targetItem?.getAttribute(ATTR_MAX_SIZE);
         result = validateFile(
           value,
           maxSizeMb ? parseInt(maxSizeMb) : 10
@@ -454,7 +471,7 @@ const validation = (options = {}) => {
 
     // 該当のエラー表示エリア
     const targetValidateArea = document.querySelector(
-      `[data-err = "${key}"]`
+      `[${ATTR_ERR} = "${key}"]`
     );
     if (targetValidateArea) {
       if (err.length > 0) {
@@ -531,8 +548,8 @@ export class FormValidatorControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      formSelector = '[data-form="contact"]',
-      submitBtnSelector = '[data-form-submit]',
+      formSelector = SELECTOR_FORM_CONTACT,
+      submitBtnSelector = SELECTOR_FORM_SUBMIT,
       useRecaptcha = false
     } = this.options;
 

@@ -3,6 +3,12 @@
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_SCROLL_HINT = 'data-scroll-hint';
+const SELECTOR_SCROLL_HINT = `[${ATTR_SCROLL_HINT}]`;
+
 /**
  * スクロールヒント制御クラス
  * @requires [data-scroll-hint] - スクロール可能な対象要素（または options.target で指定）
@@ -17,7 +23,7 @@ export class ScrollHintControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      target = '[data-scroll-hint]',
+      target = SELECTOR_SCROLL_HINT,
       i18n = { scrollable: 'scroll' },
       remainingTime = 5000,
       suggestiveShadow = true,

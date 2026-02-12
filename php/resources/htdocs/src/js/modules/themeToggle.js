@@ -1,6 +1,14 @@
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 import { THEME_STORAGE_KEY } from '../utils/themeSystemInit.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_THEME_TOGGLE = 'data-theme-toggle';
+const ATTR_THEME = 'data-theme';
+
+const SELECTOR_THEME_TOGGLE = `[${ATTR_THEME_TOGGLE}]`;
+
 /**
  * テーマ切替制御クラス
  * 切り替えボタンの機能のみを提供します。
@@ -25,7 +33,7 @@ export class ThemeToggle extends BaseModuleClass {
    * @param {AbortSignal} resources.signal - AbortSignal
    */
   init(element, { bag, signal }) {
-    const { toggleButtonSelector = '[data-theme-toggle]', storageEnabled = true } = this.options;
+    const { toggleButtonSelector = SELECTOR_THEME_TOGGLE, storageEnabled = true } = this.options;
 
     // テーマ切替ボタンの設定
     const toggleButtons = document.querySelectorAll(toggleButtonSelector);
@@ -37,11 +45,11 @@ export class ThemeToggle extends BaseModuleClass {
       button.addEventListener(
         'click',
         () => {
-          const theme = button.getAttribute('data-theme');
+          const theme = button.getAttribute(ATTR_THEME);
           if (theme) {
             this.setTheme(theme, storageEnabled);
           } else {
-            console.warn('data-theme属性が設定されていません。', button);
+            console.warn(`${ATTR_THEME}属性が設定されていません。`, button);
           }
         },
         { signal }
@@ -60,7 +68,7 @@ export class ThemeToggle extends BaseModuleClass {
     }
 
     // html要素にdata-theme属性を設定
-    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute(ATTR_THEME, theme);
 
     // ストレージに保存
     if (saveToStorage) {
@@ -83,6 +91,6 @@ export class ThemeToggle extends BaseModuleClass {
    * @returns {string} 現在のテーマ名
    */
   getCurrentTheme() {
-    return document.documentElement.getAttribute('data-theme') || 'default';
+    return document.documentElement.getAttribute(ATTR_THEME) || 'default';
   }
 }

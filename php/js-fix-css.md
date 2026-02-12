@@ -9,15 +9,15 @@
 | 見た目・アニメーション | CSS |
 | 状態付与・イベント処理 | JS |
 | JS対象取得 | data属性 |
-| 契約（JSと連動することの宣言） | `has-` クラス |
-| 状態 | `is-` クラス |
+| 契約（JSと連動することの宣言） | `has_` クラス |
+| 状態 | `is_` クラス |
 
-**※ CSS では data 属性をセレクタに使わない。そのための has- クラス。** JS の要素取得は data 属性で行う。
+**※ CSS では data 属性をセレクタに使わない。そのための has_ クラス。** JS の要素取得は data 属性で行う。
 
 ### 🔹 ブロック部品の大前提
 
 - **通常のスタイル**：`bl_` クラスを使用（ブロックの見た目・レイアウト）
-- **has- クラス**：JS 制御で必要な**初期状態**と、`is-xxxx` が付与された場合の**状態スタイル**のみに使用
+- **has_ クラス**：JS 制御で必要な**初期状態**と、`is_xxxx` が付与された場合の**状態スタイル**のみに使用
 - SCSS では `/* スタイル部分 */` と `/* 状態部分 */` でコメントを入れて切り分ける
 
 ---
@@ -50,7 +50,7 @@ scripts/
 ## 🧱 HTML例（Accordion）
 
 ```html
-<div class="bl_accordion has-accordion" data-module="accordion">
+<div class="bl_accordion has_accordion" data-module="accordion">
   <button class="bl_accordion_btn" data-accordion-trigger>Title</button>
   <div class="bl_accordion_panel" data-accordion-contents>Content</div>
 </div>
@@ -63,7 +63,7 @@ scripts/
 ```scss
 /* ==========================================================================
   Accordion
-  Contract: has-accordion, is_active（STATE_CLASSES.ACTIVE）
+  Contract: has_accordion, is_active（STATE_CLASSES.ACTIVE）
   JS Hooks: data-module="accordion", data-accordion-trigger, data-accordion-contents
 ========================================================================== */
 
@@ -84,9 +84,9 @@ scripts/
 }
 
 /* =========================
-   状態部分（has- は JS 初期状態 + is_xxx 時のスタイルのみ）
+   状態部分（has_ は JS 初期状態 + is_xxx 時のスタイルのみ）
 ========================= */
-.has-accordion.is_active {
+.has_accordion.is_active {
   .bl_accordion_btnIcon {
     transform: rotate(45deg);
   }
@@ -109,8 +109,8 @@ scripts/
   &_content { ... }
 }
 
-/* 状態部分（has- は is_active 付与時のスタイルのみ） */
-.has-modal.is_active {
+/* 状態部分（has_ は is_active 付与時のスタイルのみ） */
+.has_modal.is_active {
   pointer-events: auto;
 }
 ```
@@ -123,7 +123,7 @@ scripts/
 document.querySelectorAll('[data-acc]').forEach((root) => {const btn = root.querySelector('[data-acc-btn]');const panel = root.querySelector('[data-acc-panel]');
 
   btn.addEventListener('click',() => {
-    root.classList.toggle('is-open');
+    root.classList.toggle('is_open');
   });
 });
 ```
@@ -154,31 +154,31 @@ scripts/
 ## 🧱 HTML例
 
 ```html
-<h2class="has-scroll-in"data-scroll-in>Title</h2><sectionclass="has-scroll-in"data-scroll-in><h3class="section__title">Heading</h3><pclass="section__lead">Text</p></section>
+<h2class="has_scroll-in"data-scroll-in>Title</h2><sectionclass="has_scroll-in"data-scroll-in><h3class="section__title">Heading</h3><pclass="section__lead">Text</p></section>
 ```
 
 ---
 
 ## 🎨 SCSS例（js-contracts/_scroll-in.scss）
 
-Utils系は bl_ を持たず、has- のみ。`/* スタイル部分 */` = JS 初期状態、`/* 状態部分 */` = is-xxx 付与時。
+Utils系は bl_ を持たず、has_ のみ。`/* スタイル部分 */` = JS 初期状態、`/* 状態部分 */` = is_xxx 付与時。
 
 ```scss
 /* ==========================================================================
   Scroll In
-  Contract: has-scroll-in, is-inview
+  Contract: has_scroll-in, is_inview
   JS Hook: data-scroll-in
 ========================================================================== */
 
 /* スタイル部分（JS 制御で必要な初期状態） */
-.has-scroll-in {
+.has_scroll-in {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 600ms ease, transform 600ms ease;
 }
 
-/* 状態部分（is-inview 付与時） */
-.has-scroll-in.is-inview {
+/* 状態部分（is_inview 付与時） */
+.has_scroll-in.is_inview {
   opacity: 1;
   transform: translateY(0);
 }
@@ -191,7 +191,7 @@ Utils系は bl_ を持たず、has- のみ。`/* スタイル部分 */` = JS 初
 ```jsx
 const targets =document.querySelectorAll('[data-scroll-in]');const io =newIntersectionObserver((entries) => {
   entries.forEach((entry) => {if (entry.isIntersecting) {
-      entry.target.classList.add('is-inview');
+      entry.target.classList.add('is_inview');
       io.unobserve(entry.target);
     }
   });
@@ -229,8 +229,8 @@ styles/
 ## 使用例
 
 ```scss
-.has-scroll-in {@include slide-up(20px,600ms);opacity:0;
-}.has-scroll-in.is-inview {transform:translateY(0);opacity:1;
+.has_scroll-in {@include slide-up(20px,600ms);opacity:0;
+}.has_scroll-in.is_inview {transform:translateY(0);opacity:1;
 }
 ```
 
@@ -241,8 +241,8 @@ styles/
 ### 🔹 クラス命名
 
 - **bl_xxx**：ブロックの通常スタイル（見た目・レイアウト）
-- **has-xxx**：JS 制御で必要な初期状態＋`is-xxx` 付与時の状態スタイルのみ
-- **is-xxx**：状態クラス
+- **has_xxx**：JS 制御で必要な初期状態＋`is_xxx` 付与時の状態スタイルのみ
+- **is_xxx**：状態クラス
 - **data-***：JS の要素取得用。CSS では参照しない
 
 ---
@@ -262,7 +262,7 @@ styles/
 
 - 原則「親に1つだけ状態クラスを付ける」
 - 子の変化はCSSで制御
-- JSは基本 `is-` を付けるだけ
+- JSは基本 `is_` を付けるだけ
 
 ---
 

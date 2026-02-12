@@ -4,6 +4,15 @@
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 import { STATE_CLASSES } from '../constans/global.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_BUTTON_SELECT_INPUT = 'data-button-select-input';
+const ATTR_BUTTON_SELECT_PLACEHOLDER = 'data-button-select-placeholder';
+
+const SELECTOR_BUTTON_SELECT_INPUT = `[${ATTR_BUTTON_SELECT_INPUT}]`;
+const SELECTOR_BUTTON_SELECT_PLACEHOLDER = `[${ATTR_BUTTON_SELECT_PLACEHOLDER}]`;
+
 /**
  * ボタンセレクト制御クラス
  * プレースホルダー表示の制御を提供
@@ -20,8 +29,8 @@ export class ButtonSelectControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      inputSelector = '[data-button-select-input]',
-      placeholderSelector = '[data-button-select-placeholder]'
+      inputSelector = SELECTOR_BUTTON_SELECT_INPUT,
+      placeholderSelector = SELECTOR_BUTTON_SELECT_PLACEHOLDER
     } = this.options;
 
     // プレースホルダー表示制御

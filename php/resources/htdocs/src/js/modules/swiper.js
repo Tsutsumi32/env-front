@@ -4,6 +4,26 @@
 import { BREAKPOINTS } from '../constans/global.js';
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_MODULE = 'data-module';
+const MODULE_SWIPER = 'swiper';
+const ATTR_SWIPER_LINEAR = 'data-swiper-linear';
+const ATTR_SWIPER_PARENT = 'data-swiper-parent';
+const ATTR_SWIPER_NEXT = 'data-swiper-next';
+const ATTR_SWIPER_PREV = 'data-swiper-prev';
+const ATTR_SWIPER_PAGINATION = 'data-swiper-pagination';
+const ATTR_ORIGINAL = 'data-original';
+
+const SELECTOR_SWIPER_PARENT = `[${ATTR_SWIPER_PARENT}]`;
+const SELECTOR_SWIPER_NEXT = `[${ATTR_SWIPER_NEXT}]`;
+const SELECTOR_SWIPER_PREV = `[${ATTR_SWIPER_PREV}]`;
+const SELECTOR_SWIPER_PAGINATION = `[${ATTR_SWIPER_PAGINATION}]`;
+
+/** dataset.original のキー（data-original 属性） */
+const DATASET_KEY_ORIGINAL = 'original';
+
 /* npm *******************************************************
 import Swiper from 'swiper';
 import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
@@ -101,12 +121,12 @@ export class SwiperControl extends BaseModuleClass {
   initNormalSlider(element, { bag, signal }, options) {
     const {
       classNames = {
-        parent: '[data-swiper-parent]',
+        parent: SELECTOR_SWIPER_PARENT,
         slide: '.swiper-slide',
         wrapper: '.swiper-wrapper',
-        next: '[data-swiper-next]',
-        prev: '[data-swiper-prev]',
-        pagination: '[data-swiper-pagination]',
+        next: SELECTOR_SWIPER_NEXT,
+        prev: SELECTOR_SWIPER_PREV,
+        pagination: SELECTOR_SWIPER_PAGINATION,
       },
       breakpoints = {},
       ...swiperOptions
@@ -155,7 +175,7 @@ export class SwiperControl extends BaseModuleClass {
       }
 
       const originalSlides = Array.from(swiperEl.querySelectorAll(classSlide)).filter(
-        (slide) => slide.dataset.original === 'true'
+        (slide) => slide.dataset[DATASET_KEY_ORIGINAL] === 'true'
       );
 
       slidesWrapper.innerHTML = '';
@@ -220,7 +240,7 @@ export class SwiperControl extends BaseModuleClass {
         while (totalSlides < requiredSlides) {
           originalSlides.forEach((orig) => {
             const clone = orig.cloneNode(true);
-            clone.dataset.original = 'false';
+            clone.dataset[DATASET_KEY_ORIGINAL] = 'false';
             slidesWrapper.appendChild(clone);
             totalSlides++;
           });
@@ -259,8 +279,8 @@ export class SwiperControl extends BaseModuleClass {
 
     // スライドにdata-original属性を設定
     swiperEl.querySelectorAll(classSlide).forEach((slide) => {
-      if (!slide.dataset.original) {
-        slide.dataset.original = 'true';
+      if (!slide.dataset[DATASET_KEY_ORIGINAL]) {
+        slide.dataset[DATASET_KEY_ORIGINAL] = 'true';
       }
     });
 
@@ -335,11 +355,11 @@ export class SwiperControl extends BaseModuleClass {
 
       // スライドにdata-original属性を設定
       const originalSlides = Array.from(swiperEl.querySelectorAll('.swiper-slide')).filter(
-        (slide) => slide.dataset.original === 'true' || !slide.dataset.original
+        (slide) => slide.dataset[DATASET_KEY_ORIGINAL] === 'true' || !slide.dataset[DATASET_KEY_ORIGINAL]
       );
       originalSlides.forEach((slide) => {
-        if (!slide.dataset.original) {
-          slide.dataset.original = 'true';
+        if (!slide.dataset[DATASET_KEY_ORIGINAL]) {
+          slide.dataset[DATASET_KEY_ORIGINAL] = 'true';
         }
       });
 
@@ -358,7 +378,7 @@ export class SwiperControl extends BaseModuleClass {
         while (totalSlides < requiredSlides) {
           originalSlides.forEach((orig) => {
             const clone = orig.cloneNode(true);
-            clone.dataset.original = 'false';
+            clone.dataset[DATASET_KEY_ORIGINAL] = 'false';
             wrapper.appendChild(clone);
             totalSlides++;
           });

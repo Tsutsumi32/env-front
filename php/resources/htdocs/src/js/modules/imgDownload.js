@@ -3,6 +3,20 @@
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_IMG_DOWNLOAD = 'data-img-download';
+const ATTR_DOWNLOAD_IMG = 'data-download-img';
+const ATTR_DOWNLOAD_IMG_FOLDER = 'data-download-img-folder';
+const ATTR_DOWNLOAD_FOLDER = 'data-folder';
+const ATTR_DOWNLOAD_SRC = 'data-src';
+const ATTR_DOWNLOAD_NAME = 'data-name';
+
+const SELECTOR_IMG_DOWNLOAD = `[${ATTR_IMG_DOWNLOAD}]`;
+const SELECTOR_DOWNLOAD_IMG = `[${ATTR_DOWNLOAD_IMG}]`;
+const SELECTOR_DOWNLOAD_IMG_FOLDER = `[${ATTR_DOWNLOAD_IMG_FOLDER}]`;
+
 /**
  * URLから拡張子を取得する関数
  * @param {string} url - 画像URL
@@ -48,9 +62,9 @@ export class ImgDownloadControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      downloadBtnSelector = '[data-img-download]',
-      imageSelector = '[data-download-img]',
-      folderSelector = '[data-download-img-folder]'
+      downloadBtnSelector = SELECTOR_IMG_DOWNLOAD,
+      imageSelector = SELECTOR_DOWNLOAD_IMG,
+      folderSelector = SELECTOR_DOWNLOAD_IMG_FOLDER
     } = this.options;
 
     const downloadButton = document.querySelector(downloadBtnSelector);
@@ -73,8 +87,8 @@ export class ImgDownloadControl extends BaseModuleClass {
    */
   async downloadImagesAsZip(options = {}) {
     const {
-      imageSelector = '[data-download-img]',
-      folderSelector = '[data-download-img-folder]'
+      imageSelector = SELECTOR_DOWNLOAD_IMG,
+      folderSelector = SELECTOR_DOWNLOAD_IMG_FOLDER
     } = options;
 
     const images = document.querySelectorAll(imageSelector);
@@ -85,15 +99,15 @@ export class ImgDownloadControl extends BaseModuleClass {
       return;
     }
 
-    const folderName = folderEl.getAttribute('data-folder');
+    const folderName = folderEl.getAttribute(ATTR_DOWNLOAD_FOLDER);
     const zip = new JSZip();
     const folder = zip.folder(folderName); // ZIPの中にフォルダ作成
 
     // for...ofループで順次処理（awaitが正しく動作する）
     let i = 0;
     for (const img of images) {
-      const url = img.getAttribute('data-src');
-      const name = img.getAttribute('data-name');
+      const url = img.getAttribute(ATTR_DOWNLOAD_SRC);
+      const name = img.getAttribute(ATTR_DOWNLOAD_NAME);
       const extension = getExtensionFromUrl(url); // URLから拡張子を取得
       const filename = (name ? `${name}-${i + 1}` : `image-${i + 1}`) + `.${extension}`; // 拡張子を動的に設定
 

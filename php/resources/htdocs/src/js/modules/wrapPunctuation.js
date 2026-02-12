@@ -4,6 +4,12 @@
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_PALT = 'data-palt';
+const SELECTOR_PALT = `[${ATTR_PALT}]`;
+
 /**
  * 句読点制御クラス
  * @requires [data-palt] - 処理対象の要素
@@ -18,7 +24,7 @@ export class WrapPunctuationControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      targetSelector = '[data-palt]',
+      targetSelector = SELECTOR_PALT,
       processedDataAttribute = 'paltProcessed',
       spanClass = 'palt',
       punctuationRegex = /([、。（）])/g,

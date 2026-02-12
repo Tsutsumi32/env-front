@@ -4,6 +4,15 @@
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_BREADCRUMBS = 'data-breadcrumbs';
+const ATTR_BREADCRUMBS_ITEM = 'data-breadcrumbs-item';
+
+const SELECTOR_BREADCRUMBS = `[${ATTR_BREADCRUMBS}]`;
+const SELECTOR_BREADCRUMBS_ITEM = `[${ATTR_BREADCRUMBS_ITEM}]`;
+
 /**
  * パンくずリスト制御クラス
  * @requires [data-breadcrumbs] - パンくずリストのコンテナ
@@ -19,8 +28,8 @@ export class BreadCrumbsControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      containerSelector = '[data-breadcrumbs]',
-      itemSelector = '[data-breadcrumbs-item]',
+      containerSelector = SELECTOR_BREADCRUMBS,
+      itemSelector = SELECTOR_BREADCRUMBS_ITEM,
       itemWrapperClass = '.c-breadcrumbs__item',
       itemSpanClass = 'span',
       marginOffset = 16,

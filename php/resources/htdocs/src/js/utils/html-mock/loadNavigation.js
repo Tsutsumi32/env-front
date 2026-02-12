@@ -12,6 +12,10 @@
  * @param {AbortSignal} signal - AbortSignal
  */
 export async function loadIncludes(signal) {
+
+  /** 読み込みパス */
+  const path = "/include/";
+
   // headerの読み込み
   const headerElement = document.getElementById('include-header');
   if (headerElement) {
@@ -19,7 +23,7 @@ export async function loadIncludes(signal) {
       const dataType = headerElement.getAttribute('data-type');
       const dataClass = headerElement.getAttribute('data-class');
       const fileName = dataType ? `header-${dataType}.html` : 'header.html';
-      const response = await fetch(`/include/${fileName}`);
+      const response = await fetch(`${path}${fileName}`);
       if (!response.ok) {
         throw new Error(`Failed to load ${fileName}: ${response.status}`);
       }
@@ -50,7 +54,7 @@ export async function loadIncludes(signal) {
       const dataType = footerElement.getAttribute('data-type');
       const dataClass = footerElement.getAttribute('data-class');
       const fileName = dataType ? `footer-${dataType}.html` : 'footer.html';
-      const response = await fetch(`/include/${fileName}`);
+      const response = await fetch(`${path}${fileName}`);
       if (!response.ok) {
         throw new Error(`Failed to load ${fileName}: ${response.status}`);
       }

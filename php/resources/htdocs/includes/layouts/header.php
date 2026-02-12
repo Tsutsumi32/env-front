@@ -7,7 +7,7 @@
  */
 ?>
 
-<header class="ly_header has-header" data-module="header">
+<header class="ly_header has_header" data-module="header">
     <div class="ly_container __medium">
         <div class="ly_header_inner">
             <div class="ly_header_logo">

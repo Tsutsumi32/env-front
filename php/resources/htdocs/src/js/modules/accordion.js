@@ -5,6 +5,18 @@ import { BaseModuleClass } from '../core/BaseModuleClass.js';
 import { STATE_CLASSES } from '../constans/global.js';
 import { slideDown, slideUp } from '../utils/slideAnimation.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_MODULE = 'data-module';
+const MODULE_ACCORDION = 'accordion';
+const ATTR_ACCORDION_TRIGGER = 'data-accordion-trigger';
+const ATTR_ACCORDION_CONTENTS = 'data-accordion-contents';
+
+const SELECTOR_ACCORDION_BTN = `[${ATTR_ACCORDION_TRIGGER}]`;
+const SELECTOR_ACCORDION_PARENT = `[${ATTR_MODULE}="${MODULE_ACCORDION}"]`;
+const SELECTOR_ACCORDION_CONTENT = `[${ATTR_ACCORDION_CONTENTS}]`;
+
 /**
  * アコーディオン制御クラス
  */
@@ -18,9 +30,9 @@ export class AccordionControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      btnSelector = '[data-accordion-trigger]',
-      parentSelector = '[data-module="accordion"]',
-      contentSelector = '[data-accordion-contents]',
+      btnSelector = SELECTOR_ACCORDION_BTN,
+      parentSelector = SELECTOR_ACCORDION_PARENT,
+      contentSelector = SELECTOR_ACCORDION_CONTENT,
       activeClass = STATE_CLASSES.ACTIVE,
       animationDuration = 300,
       hideButtonOnOpen = false,
@@ -66,8 +78,8 @@ export class AccordionControl extends BaseModuleClass {
    */
   accordionToggle(button, options = {}) {
     const {
-      parentSelector = '[data-module="accordion"]',
-      contentSelector = '[data-accordion-contents]',
+      parentSelector = SELECTOR_ACCORDION_PARENT,
+      contentSelector = SELECTOR_ACCORDION_CONTENT,
       activeClass = STATE_CLASSES.ACTIVE,
       animationDuration = 300,
       hideButtonOnOpen = false,

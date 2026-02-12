@@ -2,6 +2,15 @@ import { BaseModuleClass } from '../core/BaseModuleClass.js';
 import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
 import { setUpScrollTrigger } from '../utils/setUpScrollTrigger.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_PAGE_TOP = 'data-page-top';
+const ATTR_MV = 'data-mv';
+
+const SELECTOR_PAGE_TOP = `[${ATTR_PAGE_TOP}]`;
+const SELECTOR_MV = `[${ATTR_MV}]`;
+
 /**
  * ページトップボタン制御クラス
  * @requires [data-page-top] - ページトップボタン
@@ -17,9 +26,9 @@ export class PageTopControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      pageTopSelector = '[data-page-top]',
-      mvSelector = '[data-mv]',
-      startSelector = '[data-mv]',
+      pageTopSelector = SELECTOR_PAGE_TOP,
+      mvSelector = SELECTOR_MV,
+      startSelector = SELECTOR_MV,
       mode = 'scroll',
       anchor = { position: 'top', offset: 0 },
       startAnchor = { position: 'bottom', offset: 0 },

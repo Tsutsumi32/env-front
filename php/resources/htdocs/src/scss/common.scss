@@ -14,17 +14,18 @@
 @use './utils/_utils.scss';
 
 /***********************************************************
-/*  js-contracts（横断的JS処理の契約）
+/*  js-contracts
 ************************************************************/
-@use './js-contracts/_scroll-in.scss';
 @use './js-contracts/_scroll-hint.scss';
+@use './js-contracts/_scroll-in.scss';
+
 /***********************************************************
 /*  elements
 ************************************************************/
 @use './modules/elements/_btn.scss';
 
 /***********************************************************
-/*  blocks-shared（ほぼ全画面で使用する block のみ）
+/*  blocks-shared
 ************************************************************/
 @use './modules/blocks-shared/_breadcrumbs.scss';
 

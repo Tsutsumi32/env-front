@@ -63,7 +63,7 @@ ob_start();
         <div class="bl_accordionSection">
             <h2 class="bl_accordionSection_title">FAQ</h2>
             <div class="bl_accordionSection_list">
-                <div class="bl_accordion has-accordion" data-module="accordion">
+                <div class="bl_accordion has_accordion" data-module="accordion">
                     <button type="button" class="bl_accordion_btn" data-accordion-trigger>
                         <span class="bl_accordion_btnText">よくある質問1</span>
                         <span class="bl_accordion_btnIcon">+</span>
@@ -74,7 +74,7 @@ ob_start();
                         </div>
                     </div>
                 </div>
-                <div class="bl_accordion has-accordion" data-module="accordion">
+                <div class="bl_accordion has_accordion" data-module="accordion">
                     <button type="button" class="bl_accordion_btn" data-accordion-trigger>
                         <span class="bl_accordion_btnText">よくある質問2</span>
                         <span class="bl_accordion_btnIcon">+</span>
@@ -85,7 +85,7 @@ ob_start();
                         </div>
                     </div>
                 </div>
-                <div class="bl_accordion has-accordion" data-module="accordion">
+                <div class="bl_accordion has_accordion" data-module="accordion">
                     <button type="button" class="bl_accordion_btn" data-accordion-trigger>
                         <span class="bl_accordion_btnText">よくある質問3</span>
                         <span class="bl_accordion_btnIcon">+</span>
@@ -104,7 +104,7 @@ ob_start();
 <?php
 // 共通モーダル（data-action="modal.open/close" で開閉。data-modal-id で複数識別可能）
 ?>
-<div class="bl_modal has-modal" data-module="modal" data-modal-id="sample" hidden aria-hidden="true">
+<div class="bl_modal has_modal" data-module="modal" data-modal-id="sample" hidden aria-hidden="true">
     <div class="bl_modal_overlay" data-modal-overlay aria-hidden="true"></div>
     <div class="bl_modal_dialog" data-modal-dialog role="dialog" aria-modal="true">
         <div class="bl_modal_content" data-modal-content data-modal-scroll>

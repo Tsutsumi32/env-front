@@ -1,6 +1,8 @@
 @use '../../foundation/' as *;
+
 /******************************************************************
 * block - modal
+* フェード: foundation/animation/_fade の mixin で適用（速さは引数で指定）
 *******************************************************************/
 .bl_modal {
   position: fixed;
@@ -37,6 +39,11 @@
 
 // State
 //////////////////////////////////////////////
-.has-modal.is_active {
+.has_modal {
+  @include anim-fade-initial(400ms, ease);
+}
+
+.has_modal.is_active {
+  @include anim-fade-visible();
   pointer-events: auto;
 }

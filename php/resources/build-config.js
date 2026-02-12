@@ -50,7 +50,7 @@ export const BUILD_CONFIG = {
     ],
 
     // ---- dynamic モード用（BUILD_MODE === 'dynamic' のとき使用）----
-    // 動的 import の単一エントリ（main.js 等）
+    // 動的 import の単一エントリ（entry/ の外。entry モードではコンパイル対象外）
     DYNAMIC_ENTRY: DIR_SRC_PATH + 'js/main.js',
     // 動的 import で読み込まれるディレクトリ（ここが変更されたら dynamic ビルドを実行＝チャンクが更新される）
     DYNAMIC_DEPENDS_DIRS: [

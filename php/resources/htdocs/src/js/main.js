@@ -1,80 +1,62 @@
-//////////////////////////////////////////////////////////////
-// 各画面をエントリーポイントにするなら不要！
-//////////////////////////////////////////////////////////////
-
 /************************************************************
- * main.js（動的 import なし／静的 import 版）
- * - JS が実行できた時点で .is_nojs を外す
- * - fetch は「常に静的 import」※ no-op なので実害なし（必要なら下の注釈B参照）
- * - ページ固有が無ければ pages/common.js にフォールバック
- ************************************************************/
+ * main.js（動的 import 版）
+ * - BUILD_MODE: 'dynamic' 時にのみビルド。entry/ の外に置くので entry モードではコンパイル対象外
+ * - ページキーに応じて pages/* を動的 import し、bootPage(start) で起動
+ ************************************************************ */
 
-// ❶ fetch ポリフィル（whatwg-fetch は自前で fetch がある環境では何もしない＝no-op）
 import 'whatwg-fetch';
+import { bootPage } from './lifecycle/bootPage.js';
 
-// ❷ ページモジュールを静的 import（必要な分だけ追加）
-import * as common from './pages/common.js';
-import * as top from './pages/top.js';
-import * as about from './pages/about.js';
-// import * as contactPage from './pages/contactPage.js';
-// …ほかのページもここに列挙
-
-// ❸ 例外ルーティング（ファイル名が規則外のものだけキー変換）
+// 例外ルーティング（ファイル名が規則外のものだけキー変換）
 const aliasMap = {
-  // 'contact-us': 'contactPage',
+  'index': 'sample',
+  'top': 'sample',
 };
 
-// ❹ ページキーを決定（/ → top, /about.html → about）
+// ページキーを決定（/ → sample, /about.php → about）
 function getPageKey() {
   const u = new URL(location.href);
   const pathname = u.pathname.endsWith('/') ? u.pathname.slice(0, -1) : u.pathname;
   let key = decodeURIComponent(pathname.substring(pathname.lastIndexOf('/') + 1))
     .replace(/(\.html|\.php)$/i, '')
     .trim();
-  if (!key || key === 'index') key = 'top';
-  return aliasMap[key] || key;
+  if (!key) key = 'sample';
+  return aliasMap[key] ?? key;
 }
 
-// ❺ 登録表（上の静的 import と同じキーで並べる）
-const PAGES = {
-  common,
-  top,
-  about,
-  // contactPage,
+// ページモジュールの動的 import（esbuild のコード分割用に明示列挙）
+const pageLoaders = {
+  sample: () => import('./pages/sample.js'),
 };
 
-// ❻ JS 実行できている＝no-JS モード解除
+// JS 実行できている＝no-JS モード解除
 document.body.classList.remove('is_nojs');
 
-// ❼ 該当モジュールの init() を呼ぶ（default.init / init 両対応）
-(function run() {
-  let pageKey = getPageKey();
-  let mod = PAGES[pageKey];
+(async function run() {
+  const pageKey = getPageKey();
+  const loader = pageLoaders[pageKey] ?? pageLoaders.sample;
 
-  if (!mod) {
-    console.warn(`"${pageKey}" が見つからず common にフォールバック`);
-    pageKey = 'common';
-    mod = PAGES.common;
+  if (!pageLoaders[pageKey]) {
+    console.warn(`"${pageKey}" が見つかりません。sample にフォールバック`);
   }
 
-  const init =
-    (mod?.default && typeof mod.default.init === 'function' && mod.default.init) ||
-    (typeof mod?.init === 'function' && mod.init) ||
-    null;
+  const mod = await loader();
+  const start = mod?.start;
 
-  if (!init) {
-    console.warn(`"${pageKey}" に init() が見つかりませんでした`);
+  if (!start || typeof start !== 'function') {
+    console.warn(`"${pageKey}" に start が見つかりません`);
     return;
   }
 
-  const start = () => {
+  const exec = () => {
     try {
-      init();
+      bootPage(start);
     } catch (e) {
-      console.error(`${pageKey}.init() エラー`, e);
+      console.error(`${pageKey} 起動エラー`, e);
     }
   };
+
   document.readyState === 'loading'
-    ? document.addEventListener('DOMContentLoaded', start, { once: true })
-    : start();
+    ? document.addEventListener('DOMContentLoaded', exec, { once: true })
+    : exec();
 })();

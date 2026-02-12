@@ -3,6 +3,20 @@ import { STATE_CLASSES } from '../constans/global.js';
 import { disableScroll, enableScroll } from '../utils/scrollControll.js';
 import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_MODULE = 'data-module';
+const MODULE_HEADER = 'header';
+const ATTR_HEADER_BTN = 'data-header-btn';
+const ATTR_HEADER_MENU = 'data-header-menu';
+const ATTR_HEADER_BG = 'data-header-bg';
+
+const SELECTOR_HEADER = `[${ATTR_MODULE}="${MODULE_HEADER}"]`;
+const SELECTOR_HEADER_BTN = `[${ATTR_HEADER_BTN}]`;
+const SELECTOR_HEADER_MENU = `[${ATTR_HEADER_MENU}]`;
+const SELECTOR_HEADER_BG = `[${ATTR_HEADER_BG}]`;
+
 /**
  * ヘッダー制御クラス
  * @requires [data-module="header"] - ヘッダー要素
@@ -20,10 +34,10 @@ export class HeaderControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      headerSelector = '[data-module="header"]',
-      menuBtnSelector = '[data-header-btn]',
-      menuSelector = '[data-header-menu]',
-      bgSelector = '[data-header-bg]',
+      headerSelector = SELECTOR_HEADER,
+      menuBtnSelector = SELECTOR_HEADER_BTN,
+      menuSelector = SELECTOR_HEADER_MENU,
+      bgSelector = SELECTOR_HEADER_BG,
       activeClass = STATE_CLASSES.ACTIVE,
       displayClass = STATE_CLASSES.DISPLAY,
       openDelay = 300,

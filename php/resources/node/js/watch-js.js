@@ -38,7 +38,7 @@ function isEntryFile(filePath) {
   return false;
 }
 
-/** 変更ファイルが dynamic エントリ（main.js）か */
+/** 変更ファイルが dynamic エントリ（js/main.js）か */
 function isDynamicEntryFile(filePath) {
   if (!DYNAMIC_ENTRY) return false;
   const normalized = path.normalize(path.resolve(filePath));

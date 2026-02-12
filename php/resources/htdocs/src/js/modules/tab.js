@@ -5,6 +5,19 @@ import { BaseModuleClass } from '../core/BaseModuleClass.js';
 import { STATE_CLASSES } from '../constans/global.js';
 import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const ATTR_MODULE = 'data-module';
+const MODULE_TAB = 'tab';
+const ATTR_TAB_TRIGGER = 'data-tab-trigger';
+const ATTR_TAB_CONTENT = 'data-tab-content';
+const ATTR_TAB = 'data-tab';
+
+const SELECTOR_TAB_TRIGGER = `[${ATTR_TAB_TRIGGER}]`;
+const SELECTOR_TAB_CONTENT = `[${ATTR_TAB_CONTENT}]`;
+const SELECTOR_TAB_PARENT = `[${ATTR_MODULE}="${MODULE_TAB}"]`;
+
 /**
  * タブ制御クラス
  * @requires [data-module="tab"] - タブの親要素
@@ -21,9 +34,9 @@ export class TabControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      tabSelector = '[data-tab-trigger]',
-      contentSelector = '[data-tab-content]',
-      parentSelector = '[data-module="tab"]',
+      tabSelector = SELECTOR_TAB_TRIGGER,
+      contentSelector = SELECTOR_TAB_CONTENT,
+      parentSelector = SELECTOR_TAB_PARENT,
       activeClass = STATE_CLASSES.ACTIVE,
       enableFadeAnimation = true,
       fadeDuration = 300,
@@ -34,7 +47,7 @@ export class TabControl extends BaseModuleClass {
     const tabParents = document.querySelectorAll(parentSelector);
 
     if (!tabParents.length) {
-      console.warn('タブの親要素（[data-module="tab"]）が見つかりません');
+      console.warn(`タブの親要素（[${ATTR_MODULE}="${MODULE_TAB}"]）が見つかりません`);
       return;
     }
 
@@ -55,10 +68,10 @@ export class TabControl extends BaseModuleClass {
           'click',
           (e) => {
             e.preventDefault();
-            const targetTab = tab.getAttribute('data-tab');
+            const targetTab = tab.getAttribute(ATTR_TAB);
 
             if (!targetTab) {
-              console.warn('data-tab属性が設定されていません');
+              console.warn(`${ATTR_TAB}属性が設定されていません`);
               return;
             }
 
@@ -74,7 +87,7 @@ export class TabControl extends BaseModuleClass {
 
               // 新しいコンテンツを取得（親要素内でのみ検索）
               const newContent = parent.querySelector(
-                `${contentSelector}[data-tab="${targetTab}"]`
+                `${contentSelector}[${ATTR_TAB}="${targetTab}"]`
               );
 
               if (currentContent && newContent && currentContent !== newContent) {
@@ -149,7 +162,7 @@ export class TabControl extends BaseModuleClass {
             } else {
               // フェードアニメーション無効の場合は従来通り
               contents.forEach((content) => {
-                const contentTab = content.getAttribute('data-tab');
+                const contentTab = content.getAttribute(ATTR_TAB);
                 if (contentTab === targetTab) {
                   content.classList.add(activeClass);
                 } else {
@@ -168,12 +181,12 @@ export class TabControl extends BaseModuleClass {
 
       // 初期状態の設定（最初のタブをアクティブに）
       const firstTab = tabs[0];
-      const firstTabTarget = firstTab.getAttribute('data-tab');
+      const firstTabTarget = firstTab.getAttribute(ATTR_TAB);
 
       if (firstTabTarget) {
         firstTab.classList.add(activeClass);
         const firstContent = parent.querySelector(
-          `${contentSelector}[data-tab="${firstTabTarget}"]`
+          `${contentSelector}[${ATTR_TAB}="${firstTabTarget}"]`
         );
         if (firstContent) {
           firstContent.classList.add(activeClass);

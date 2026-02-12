@@ -7,6 +7,11 @@ import { HeaderControl } from '../modules/header.js';
 import { smoothAnchorLink } from '../utils/smoothAnchorLink.js';
 // import { loadIncludes } from './loadNavigation.js';
 
+// ---------------------------------------------------------------------------
+// data 属性（参照するものは定数で一覧化）
+// ---------------------------------------------------------------------------
+const SELECTOR_HEADER = '[data-module="header"]';
+
 /**
  * 全画面共通初期化処理
  * @param {Object} ctx - リソース（新旧両対応）
@@ -21,7 +26,7 @@ export async function initCommon(ctx) {
   // await loadIncludes(signal);
 
   // 全画面共通で実行される処理
-  new HeaderControl('[data-module="header"]', {});
+  new HeaderControl(SELECTOR_HEADER, {});
   smoothAnchorLink(signal);
 
   // JS 有効時用クラス削除（no-js / is_nojs）
