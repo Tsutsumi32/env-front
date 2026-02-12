@@ -2,10 +2,14 @@
  * タブ機能モジュール
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
+import { STATE_CLASSES } from '../constans/global.js';
 import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
 
 /**
  * タブ制御クラス
+ * @requires [data-module="tab"] - タブの親要素
+ * @requires [data-tab-trigger] - タブボタン（data-tab で対象コンテンツを指定）
+ * @requires [data-tab-content] - タブコンテンツ（data-tab で紐付け）
  */
 export class TabControl extends BaseModuleClass {
   /**
@@ -17,10 +21,10 @@ export class TabControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      tabSelector = '.js_tab',
-      contentSelector = '.js_tabContent',
-      parentSelector = '.js_tabParent',
-      activeClass = 'is_active',
+      tabSelector = '[data-tab-trigger]',
+      contentSelector = '[data-tab-content]',
+      parentSelector = '[data-module="tab"]',
+      activeClass = STATE_CLASSES.ACTIVE,
       enableFadeAnimation = true,
       fadeDuration = 300,
       fadeDisplay = true,
@@ -30,7 +34,7 @@ export class TabControl extends BaseModuleClass {
     const tabParents = document.querySelectorAll(parentSelector);
 
     if (!tabParents.length) {
-      console.warn('タブの親要素（js_tabParent）が見つかりません');
+      console.warn('タブの親要素（[data-module="tab"]）が見つかりません');
       return;
     }
 
@@ -74,10 +78,10 @@ export class TabControl extends BaseModuleClass {
               );
 
               if (currentContent && newContent && currentContent !== newContent) {
-                // js_tabParentの高さを取得
+                // 親要素の高さを取得
                 const currentHeight = parent.offsetHeight;
 
-                // js_tabParentの高さを強制的に指定（レイアウト保持）
+                // 親要素の高さを強制的に指定（レイアウト保持）
                 parent.style.minHeight = currentHeight + 'px';
 
                 // 高さが確実に適用されるまで待機してから切り替え処理を開始
@@ -101,7 +105,7 @@ export class TabControl extends BaseModuleClass {
                       const timeoutId2 = setTimeout(() => {
                         fadeIn(newContent, fadeDuration, fadeDisplay, signal);
 
-                        // フェードイン完了後にjs_tabParentの高さを解除
+                        // フェードイン完了後に親要素の高さを解除
                         const timeoutId3 = setTimeout(() => {
                           parent.style.height = '';
                         }, fadeDuration);

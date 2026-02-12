@@ -1,0 +1,82 @@
+@use '../../foundation/' as *;
+/******************************************************************
+* block - accordion
+*******************************************************************/
+.bl_accordionSection {
+  margin-bottom: s(60);
+
+  &_title {
+    font-size: s(28);
+    font-weight: 700;
+    color: get-color('text', 'primary');
+    margin-bottom: s(30);
+  }
+
+  &_list {
+    display: flex;
+    flex-direction: column;
+    gap: s(15);
+  }
+}
+
+.bl_accordion {
+  background-color: get-color('bg', 'base');
+  border: 1px solid get-color('border', 'tag');
+  border-radius: s(8);
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &_contents {
+    display: none;
+    overflow: hidden;
+  }
+
+  &_inner {
+    padding: 0 s(20) s(20);
+  }
+
+  &_text {
+    font-size: s(16);
+    color: get-color('text', 'secondary');
+    line-height: 1.7;
+  }
+
+  &_btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: s(20);
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    @include hover {
+      background-color: get-color('bg', 'button');
+    }
+  }
+
+  &_btnText {
+    font-size: s(18);
+    font-weight: 600;
+    color: get-color('text', 'primary');
+  }
+
+  &_btnIcon {
+    font-size: s(24);
+    font-weight: 300;
+    color: get-color('text', 'secondary');
+    transition: transform 0.3s ease;
+    line-height: 1;
+  }
+}
+
+// State
+//////////////////////////////////////////////
+.has-accordion.is_active {
+  .bl_accordion_btnIcon {
+    transform: rotate(45deg);
+  }
+}

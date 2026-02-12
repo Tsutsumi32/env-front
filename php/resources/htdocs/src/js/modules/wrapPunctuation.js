@@ -1,12 +1,12 @@
 /************************************************************
  * 句読点をspanタグ（クラスpalt）で囲む処理
- * js_paltクラスがついた要素内の句読点（、と。）を処理対象とする
+ * [data-palt] がついた要素内の句読点（、と。）を処理対象とする
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
 /**
  * 句読点制御クラス
- * @requires .js_palt - 処理対象の要素
+ * @requires [data-palt] - 処理対象の要素
  */
 export class WrapPunctuationControl extends BaseModuleClass {
   /**
@@ -18,7 +18,7 @@ export class WrapPunctuationControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      targetSelector = '.js_palt',
+      targetSelector = '[data-palt]',
       processedDataAttribute = 'paltProcessed',
       spanClass = 'palt',
       punctuationRegex = /([、。（）])/g,

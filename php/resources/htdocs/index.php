@@ -1,4 +1,5 @@
 <?php
+
 /**
  * サンプルサイト - トップページ
  *
@@ -13,7 +14,7 @@ require_once __DIR__ . '/includes/init.php';
 ob_start();
 ?>
 
-<section id="top">
+<section id="top" data-scope="home">
     <div class="ly_container __medium">
         <?php include __DIR__ . '/includes/modules/breadcrumbs.php'; ?>
 
@@ -22,6 +23,8 @@ ob_start();
             <p class="un_hero_description">サンプルサイトへようこそ<br></p>
             <div class="un_hero_actions">
                 <a href="/about.php" class="el_btn el_btn__primary">Aboutを見る</a>
+                <button type="button" class="el_btn el_btn__outline" data-action="modal.open" data-modal-id="sample">モーダルを開く</button>
+                <button type="button" class="el_btn el_btn__outline" data-action="sampleClick">サンプルボタン</button>
             </div>
         </div>
 
@@ -57,39 +60,39 @@ ob_start();
             </div>
         </div>
 
-        <div class="un_accordionSection">
-            <h2 class="un_accordionSection_title">FAQ</h2>
-            <div class="un_accordionSection_list">
-                <div class="un_accordion js_accordionParent">
-                    <button type="button" class="un_accordion_btn js_accordionBtn">
-                        <span class="un_accordion_btnText">よくある質問1</span>
-                        <span class="un_accordion_btnIcon">+</span>
+        <div class="bl_accordionSection">
+            <h2 class="bl_accordionSection_title">FAQ</h2>
+            <div class="bl_accordionSection_list">
+                <div class="bl_accordion has-accordion" data-module="accordion">
+                    <button type="button" class="bl_accordion_btn" data-accordion-trigger>
+                        <span class="bl_accordion_btnText">よくある質問1</span>
+                        <span class="bl_accordion_btnIcon">+</span>
                     </button>
-                    <div class="un_accordion_contents js_accordionContents">
-                        <div class="un_accordion_inner">
-                            <p class="un_accordion_text">回答内容がここに入ります。回答内容がここに入ります。回答内容がここに入ります。</p>
+                    <div class="bl_accordion_contents" data-accordion-contents>
+                        <div class="bl_accordion_inner">
+                            <p class="bl_accordion_text">回答内容がここに入ります。回答内容がここに入ります。回答内容がここに入ります。</p>
                         </div>
                     </div>
                 </div>
-                <div class="un_accordion js_accordionParent">
-                    <button type="button" class="un_accordion_btn js_accordionBtn">
-                        <span class="un_accordion_btnText">よくある質問2</span>
-                        <span class="un_accordion_btnIcon">+</span>
+                <div class="bl_accordion has-accordion" data-module="accordion">
+                    <button type="button" class="bl_accordion_btn" data-accordion-trigger>
+                        <span class="bl_accordion_btnText">よくある質問2</span>
+                        <span class="bl_accordion_btnIcon">+</span>
                     </button>
-                    <div class="un_accordion_contents js_accordionContents">
-                        <div class="un_accordion_inner">
-                            <p class="un_accordion_text">回答内容がここに入ります。回答内容がここに入ります。回答内容がここに入ります。</p>
+                    <div class="bl_accordion_contents" data-accordion-contents>
+                        <div class="bl_accordion_inner">
+                            <p class="bl_accordion_text">回答内容がここに入ります。回答内容がここに入ります。回答内容がここに入ります。</p>
                         </div>
                     </div>
                 </div>
-                <div class="un_accordion js_accordionParent">
-                    <button type="button" class="un_accordion_btn js_accordionBtn">
-                        <span class="un_accordion_btnText">よくある質問3</span>
-                        <span class="un_accordion_btnIcon">+</span>
+                <div class="bl_accordion has-accordion" data-module="accordion">
+                    <button type="button" class="bl_accordion_btn" data-accordion-trigger>
+                        <span class="bl_accordion_btnText">よくある質問3</span>
+                        <span class="bl_accordion_btnIcon">+</span>
                     </button>
-                    <div class="un_accordion_contents js_accordionContents">
-                        <div class="un_accordion_inner">
-                            <p class="un_accordion_text">回答内容がここに入ります。回答内容がここに入ります。回答内容がここに入ります。</p>
+                    <div class="bl_accordion_contents" data-accordion-contents>
+                        <div class="bl_accordion_inner">
+                            <p class="bl_accordion_text">回答内容がここに入ります。回答内容がここに入ります。回答内容がここに入ります。</p>
                         </div>
                     </div>
                 </div>
@@ -99,10 +102,22 @@ ob_start();
 </section>
 
 <?php
+// 共通モーダル（data-action="modal.open/close" で開閉。data-modal-id で複数識別可能）
+?>
+<div class="bl_modal has-modal" data-module="modal" data-modal-id="sample" hidden aria-hidden="true">
+    <div class="bl_modal_overlay" data-modal-overlay aria-hidden="true"></div>
+    <div class="bl_modal_dialog" data-modal-dialog role="dialog" aria-modal="true">
+        <div class="bl_modal_content" data-modal-content data-modal-scroll>
+            <p>サンプルモーダルです。</p>
+        </div>
+        <button type="button" data-action="modal.close">閉じる</button>
+    </div>
+</div>
+
+<?php
 $pageContents = ob_get_clean();
 
 // ベースレイアウトを読み込み（init.phpとhead.phpも読み込まれる）
 // CSS/JSファイルはbase.phpでページIDから自動的に読み込まれます
 include __DIR__ . '/includes/layouts/base.php';
 ?>
-

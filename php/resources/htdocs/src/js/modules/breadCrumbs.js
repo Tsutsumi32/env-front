@@ -6,6 +6,8 @@ import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
 /**
  * パンくずリスト制御クラス
+ * @requires [data-breadcrumbs] - パンくずリストのコンテナ
+ * @requires [data-breadcrumbs-item] - パンくずの各アイテム
  */
 export class BreadCrumbsControl extends BaseModuleClass {
   /**
@@ -17,8 +19,8 @@ export class BreadCrumbsControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      containerSelector = '.js_bred',
-      itemSelector = '.js_bredItem',
+      containerSelector = '[data-breadcrumbs]',
+      itemSelector = '[data-breadcrumbs-item]',
       itemWrapperClass = '.c-breadcrumbs__item',
       itemSpanClass = 'span',
       marginOffset = 16,

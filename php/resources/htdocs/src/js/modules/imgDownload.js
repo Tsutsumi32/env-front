@@ -34,6 +34,9 @@ function getExtensionFromUrl(url) {
 
 /**
  * 画像ダウンロード制御クラス
+ * @requires [data-img-download] - ダウンロードボタン
+ * @requires [data-download-img] - 画像要素（data-src, data-name でURL・ファイル名を指定）
+ * @requires [data-download-img-folder] - フォルダ名要素（data-folder でZIP内フォルダ名を指定）
  */
 export class ImgDownloadControl extends BaseModuleClass {
   /**
@@ -45,9 +48,9 @@ export class ImgDownloadControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      downloadBtnSelector = '.js_imgDownload',
-      imageSelector = '.js_downloadImg',
-      folderSelector = '.js_downloadImgFolder'
+      downloadBtnSelector = '[data-img-download]',
+      imageSelector = '[data-download-img]',
+      folderSelector = '[data-download-img-folder]'
     } = this.options;
 
     const downloadButton = document.querySelector(downloadBtnSelector);
@@ -70,8 +73,8 @@ export class ImgDownloadControl extends BaseModuleClass {
    */
   async downloadImagesAsZip(options = {}) {
     const {
-      imageSelector = '.js_downloadImg',
-      folderSelector = '.js_downloadImgFolder'
+      imageSelector = '[data-download-img]',
+      folderSelector = '[data-download-img-folder]'
     } = options;
 
     const images = document.querySelectorAll(imageSelector);

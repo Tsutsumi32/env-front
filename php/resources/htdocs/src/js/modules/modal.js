@@ -1,129 +1,134 @@
 /************************************************************
- * モーダル処理
- * - オープンボタン　js_modalOpen　と　data-modal(モーダルのデータと紐づけ)
- * - クローズボタン　js_modalClose
- * - モーダルに js_modal　と　data-modal
+ * モーダル（1ファイルに集約・js-fix 方針）
+ * - data-action="modal.open" / "modal.close" で document に delegate（open トリガーが散らばるため）
+ * - data-module="modal" がモーダルルート、data-modal-id で複数モーダルを識別
+ * - open/close、背景クリック・ESC、スクロール制御・アコーディオン後片付けまでここで実施
  ************************************************************/
-import { BaseModuleClass } from '../core/BaseModuleClass.js';
+
+import { STATE_CLASSES } from '../constans/global.js';
+import { delegate } from '../utils/delegate.js';
 import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
 import { disableScroll, enableScroll } from '../utils/scrollControll.js';
 import { slideUp } from '../utils/slideAnimation.js';
 
+const ANIMATION_SPEED = 400;
+
 /**
- * モーダル制御クラス
+ * モーダルルート要素を取得（id があれば data-modal-id で一致するものを取得）
+ * @param {string} [id] - data-modal-id の値
+ * @returns {HTMLElement | null}
  */
-export class ModalControl extends BaseModuleClass {
-  /**
-   * 初期化処理
-   * @param {HTMLElement} element - 対象要素（このモジュールでは使用しない）
-   * @param {Object} resources - リソース
-   * @param {Object} resources.bag - disposeBag
-   * @param {AbortSignal} resources.signal - AbortSignal
-   */
-  init(element, { bag, signal }) {
-    const {
-      openBtnSelector = '.js_modalOpen',
-      closeBtnSelector = '.js_modalClose',
-      modalSelector = '.js_modal',
-      activeClass = 'is_active',
-      animationSpeed = 400,
-    } = this.options;
+const getModalRoot = (id) => {
+  if (id) {
+    const el = document.querySelector(`[data-module="modal"][data-modal-id="${id}"]`);
+    if (el) return el;
+  }
+  return document.querySelector('[data-module="modal"]');
+};
 
-    const MODAL_BTNS = document.querySelectorAll(openBtnSelector);
-    const MODAL_CLOSE_BTN = document.querySelectorAll(closeBtnSelector);
+/**
+ * 現在開いているモーダル要素を取得
+ * @returns {HTMLElement | null}
+ */
+const getOpenModal = () => {
+  return document.querySelector(`[data-module="modal"].${STATE_CLASSES.ACTIVE}`);
+};
 
-    MODAL_BTNS.forEach((btn) => {
-      btn.addEventListener(
-        'click',
-        (event) => {
-          this.modalOpen(btn, { modalSelector, activeClass, animationSpeed, signal });
-        },
-        { signal }
-      );
+let isInitialized = false;
+
+/**
+ * ESC・背景クリックなど、1回だけ登録するリスナー
+ */
+const initOnce = () => {
+  if (isInitialized) return;
+  isInitialized = true;
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
+
+  document.addEventListener('click', (e) => {
+    const modal = getOpenModal();
+    if (!modal) return;
+    if (e.target.hasAttribute('data-modal-overlay')) close();
+  });
+};
+
+/**
+ * モーダルを開く
+ * @param {{ trigger?: Element, id?: string }} [payload] - data-modal-id は trigger の data-modal-id から渡る
+ */
+const open = (payload = {}) => {
+  initOnce();
+  const id = payload.id ?? payload.trigger?.dataset?.modalId;
+  const root = getModalRoot(id);
+  if (!root) return;
+
+  root.classList.add(STATE_CLASSES.ACTIVE);
+  root.hidden = false;
+  root.style.display = 'block';
+  root.style.opacity = '0';
+  fadeIn(root, ANIMATION_SPEED, true, undefined);
+  disableScroll(true, undefined);
+};
+
+/**
+ * モーダルを閉じる
+ */
+const close = () => {
+  const root = getOpenModal();
+  if (!root) {
+    enableScroll(true);
+    return;
+  }
+
+  const scrollableElements = root.querySelectorAll('[data-modal-scroll]');
+
+  if (scrollableElements.length > 0) {
+    setTimeout(() => {
+      scrollableElements.forEach((el) => {
+        el.scrollTop = 0;
+      });
+    }, ANIMATION_SPEED);
+  }
+
+  fadeOut(root, ANIMATION_SPEED, true, undefined);
+  root.classList.remove(STATE_CLASSES.ACTIVE);
+  enableScroll(true);
+
+  setTimeout(() => {
+    root.hidden = true;
+    root.style.display = '';
+
+    const accordionParents = root.querySelectorAll(`[data-module="accordion"].${STATE_CLASSES.ACTIVE}`);
+    accordionParents.forEach((parent) => {
+      const contents = parent.querySelector('[data-accordion-contents]');
+      if (contents) {
+        slideUp(contents, 300, 'ease-out', undefined);
+        parent.classList.remove(STATE_CLASSES.ACTIVE);
+      }
     });
 
-    MODAL_CLOSE_BTN.forEach((btn) => {
-      btn.addEventListener(
-        'click',
-        (event) => {
-          this.modalClose({ modalSelector, activeClass, animationSpeed, signal });
-        },
-        { signal }
-      );
+    const hiddenButtons = root.querySelectorAll('button[style*="display: none"]');
+    hiddenButtons.forEach((btn) => {
+      btn.style.display = '';
     });
-  }
+  }, ANIMATION_SPEED);
+};
 
-  /**
-   * モーダルを開く
-   * @param {HTMLElement} btn - オープンボタン
-   * @param {Object} options - オプション
-   * @param {AbortSignal} options.signal - AbortSignal
-   */
-  modalOpen(btn, options = {}) {
-    const {
-      modalSelector = '.js_modal',
-      activeClass = 'is_active',
-      animationSpeed = 400,
-      signal,
-    } = options;
+/**
+ * モーダルを初期化する（document に delegate して modal.open / modal.close を拾う）
+ * @param {{ scope: { signal: AbortSignal } }} ctx - createPage の scope を渡す
+ */
+const init = ({ scope }) => {
+  delegate(document, scope, {
+    'modal.open': (e, el) => {
+      open({ trigger: el, id: el.dataset.modalId });
+    },
+    'modal.close': () => {
+      close();
+    },
+  });
+};
 
-    const TARGET = btn.getAttribute('data-modal');
-    const MODAL_TARGET = document.querySelector(`${modalSelector}[data-modal="${TARGET}"]`);
-    MODAL_TARGET.classList.add(activeClass);
-    fadeIn(MODAL_TARGET, animationSpeed, true, signal);
-    disableScroll(true, signal);
-  }
-
-  /**
-   * モーダルを閉じる
-   * @param {Object} options - オプション
-   * @param {AbortSignal} options.signal - AbortSignal
-   */
-  modalClose(options = {}) {
-    const {
-      modalSelector = '.js_modal',
-      activeClass = 'is_active',
-      animationSpeed = 400,
-      signal,
-    } = options;
-
-    const MODAL = document.querySelector(`${modalSelector}.${activeClass}`);
-
-    // js_modal_scrollAbleクラスがついた要素のスクロール位置を一番上に戻す
-    if (MODAL) {
-      const scrollableElements = MODAL.querySelectorAll('.js_modal_scrollAble');
-      setTimeout(() => {
-        scrollableElements.forEach((element) => {
-          element.scrollTop = 0;
-        });
-      }, animationSpeed);
-    }
-
-    // モーダルを閉じる
-    if (MODAL) {
-      fadeOut(MODAL, animationSpeed, true, signal);
-      MODAL.classList.remove(activeClass);
-      enableScroll(true, signal);
-
-      // モーダルを閉じた後に、モーダル内のすべてのアコーディオンを閉じる
-      setTimeout(() => {
-        const accordionParents = MODAL.querySelectorAll('.js_accordionParent.is_active');
-        accordionParents.forEach((parent) => {
-          const content = parent.querySelector('.js_accordionContents');
-          if (content) {
-            slideUp(content, 300, 'ease-out', signal);
-            parent.classList.remove('is_active');
-          }
-        });
-
-        // 非表示にされたボタンをすべて再度表示する
-        const hiddenButtons = MODAL.querySelectorAll('button[style*="display: none"]');
-        hiddenButtons.forEach((button) => {
-          button.style.display = '';
-        });
-      }, animationSpeed);
-    } else {
-      enableScroll(true, signal);
-    }
-  }
-}
+export const modal = { open, close, init };

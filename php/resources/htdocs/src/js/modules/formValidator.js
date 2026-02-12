@@ -16,8 +16,8 @@ import { BaseModuleClass } from '../core/BaseModuleClass.js';
  */
 export const handleFormSubmit = async (event, options = {}) => {
   const {
-    formSelector = ".js_contactForm",
-    submitBtnSelector = ".js_submit",
+    formSelector = '[data-form="contact"]',
+    submitBtnSelector = '[data-form-submit]',
     useRecaptcha = false,
     siteKey = "",
     action = ""
@@ -531,8 +531,8 @@ export class FormValidatorControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      formSelector = '.js_contactForm',
-      submitBtnSelector = '.js_submit',
+      formSelector = '[data-form="contact"]',
+      submitBtnSelector = '[data-form-submit]',
       useRecaptcha = false
     } = this.options;
 

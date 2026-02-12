@@ -6,10 +6,10 @@ import { THEME_STORAGE_KEY } from '../utils/themeSystemInit.js';
  * 切り替えボタンの機能のみを提供します。
  * システム設定からの初期化は themeSystemInit.js で行います。
  *
- * @requires .js_themeToggle - テーマ切替ボタン（data-theme属性でモードを指定）
+ * @requires [data-theme-toggle] - テーマ切替ボタン（data-theme属性でモードを指定）
  * @example
- * <button class="js_themeToggle" data-theme="dark">ダークモード</button>
- * <button class="js_themeToggle" data-theme="default">ライトモード</button>
+ * <button data-theme-toggle data-theme="dark">ダークモード</button>
+ * <button data-theme-toggle data-theme="default">ライトモード</button>
  */
 export class ThemeToggle extends BaseModuleClass {
   /**
@@ -25,7 +25,7 @@ export class ThemeToggle extends BaseModuleClass {
    * @param {AbortSignal} resources.signal - AbortSignal
    */
   init(element, { bag, signal }) {
-    const { toggleButtonSelector = '.js_themeToggle', storageEnabled = true } = this.options;
+    const { toggleButtonSelector = '[data-theme-toggle]', storageEnabled = true } = this.options;
 
     // テーマ切替ボタンの設定
     const toggleButtons = document.querySelectorAll(toggleButtonSelector);

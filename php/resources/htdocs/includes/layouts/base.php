@@ -51,7 +51,10 @@ $pageContents = $pageContents ?? '';
     ?>
 </head>
 
-<body class="is_nojs">
+<?php
+    // data-page属性の設定
+?>
+<body class="is_nojs"<?php echo !empty($pageId) ? ' data-page="' . htmlspecialchars($pageId, ENT_QUOTES, 'UTF-8') . '"' : ''; ?>>
     <?php include __DIR__ . '/header.php'; ?>
 
     <main class="ly_main">

@@ -29,10 +29,36 @@ export const BUILD_CONFIG = {
   JS: {
     DIR_SRC: DIR_SRC_PATH + 'js/',
     DIR_DIST: DIR_DIST_PATH + 'js/',
-    // 個別コンパイル対象のディレクトリ（ここに含まれる直下の .js は変更時にそのファイルのみビルド）
-    // それ以外（foundation, modules, core 等）の変更時は全エントリをビルド
-    ENTRY_DIRS: [
+
+    // ビルドモード
+    // - 'entry': ページごとエントリ（entry/*.js → dist/*.js）。entry 変更時はその1件のみ、依存変更時は全エントリをビルド。
+    // - 'dynamic': 単一エントリ（main.js）で動的 import。pages 等はチャンクで出力。依存変更時はその1ビルドを実行。
+    BUILD_MODE: 'entry',
+
+    // ---- entry モード用 ----
+    // エントリ配置ディレクトリ（直下の *.js を dist/*.js で出力。pages と同名の .js を置く）
+    ENTRY_DIRS: [DIR_SRC_PATH + 'js/entry'],
+    // 同名の entry のみビルドする依存ディレクトリ（例: pages/top.js 変更 → entry/top.js のみビルド。pages と entry は同名前提）
+    ENTRY_DEPENDS_NAMED_DIRS: [DIR_SRC_PATH + 'js/pages'],
+    // 上以外の依存ディレクトリ（ここが変更されたら全エントリを再ビルド）
+    ENTRY_DEPENDS_DIRS: [
+      DIR_SRC_PATH + 'js/lifecycle',
+      DIR_SRC_PATH + 'js/common',
+      DIR_SRC_PATH + 'js/core',
+      DIR_SRC_PATH + 'js/modules',
+      DIR_SRC_PATH + 'js/utils',
+    ],
+
+    // ---- dynamic モード用（BUILD_MODE === 'dynamic' のとき使用）----
+    // 動的 import の単一エントリ（main.js 等）
+    DYNAMIC_ENTRY: DIR_SRC_PATH + 'js/main.js',
+    // 動的 import で読み込まれるディレクトリ（ここが変更されたら dynamic ビルドを実行＝チャンクが更新される）
+    DYNAMIC_DEPENDS_DIRS: [
       DIR_SRC_PATH + 'js/pages',
+      DIR_SRC_PATH + 'js/lifecycle',
+      DIR_SRC_PATH + 'js/common',
+      DIR_SRC_PATH + 'js/core',
+      DIR_SRC_PATH + 'js/modules',
     ],
   },
 
@@ -49,8 +75,10 @@ export const BUILD_CONFIG = {
         DIR_SRC_PATH + 'scss/global',
         DIR_SRC_PATH + 'scss/helpers',
         DIR_SRC_PATH + 'scss/utils',
-        DIR_SRC_PATH + 'scss/modules/animations',
+        DIR_SRC_PATH + 'scss/js-contracts',
         DIR_SRC_PATH + 'scss/modules/elements',
+        // ほぼ全画面に使用するblock。それ以外は画面で手動import
+        DIR_SRC_PATH + 'scss/modules/blocks-shared',
         DIR_SRC_PATH + 'scss/modules/footer',
         DIR_SRC_PATH + 'scss/modules/header',
         DIR_SRC_PATH + 'scss/modules/layouts',
@@ -67,6 +95,7 @@ export const BUILD_CONFIG = {
         DIR_SRC_PATH + 'scss/foundation/mixins',
         DIR_SRC_PATH + 'scss/foundation/variables',
         DIR_SRC_PATH + 'scss/foundation/project',
+        DIR_SRC_PATH + 'scss/foundation/animation',
       ],
       IMPORT_TYPE: 'forward',
       PARTIAL_CHANGE_COMPILE: 'all',

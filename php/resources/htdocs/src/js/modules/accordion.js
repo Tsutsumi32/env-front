@@ -2,6 +2,7 @@
  * アコーディオン
  ************************************************************/
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
+import { STATE_CLASSES } from '../constans/global.js';
 import { slideDown, slideUp } from '../utils/slideAnimation.js';
 
 /**
@@ -17,10 +18,10 @@ export class AccordionControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      btnSelector = '.js_accordionBtn',
-      parentSelector = '.js_accordionParent',
-      contentSelector = '.js_accordionContents',
-      activeClass = 'is_active',
+      btnSelector = '[data-accordion-trigger]',
+      parentSelector = '[data-module="accordion"]',
+      contentSelector = '[data-accordion-contents]',
+      activeClass = STATE_CLASSES.ACTIVE,
       animationDuration = 300,
       hideButtonOnOpen = false,
       hideButtonSelector = null,
@@ -65,9 +66,9 @@ export class AccordionControl extends BaseModuleClass {
    */
   accordionToggle(button, options = {}) {
     const {
-      parentSelector = '.js_accordionParent',
-      contentSelector = '.js_accordionContents',
-      activeClass = 'is_active',
+      parentSelector = '[data-module="accordion"]',
+      contentSelector = '[data-accordion-contents]',
+      activeClass = STATE_CLASSES.ACTIVE,
       animationDuration = 300,
       hideButtonOnOpen = false,
       hideButtonSelector = null,

@@ -2,19 +2,20 @@
  * HTML要素の複製
  ************************************************************/
 /**
- * js_htmlCopy クラスの要素を同じ階層（兄弟として）複製するユーティリティ
+ * [data-html-copy] の要素を同じ階層（兄弟として）複製するユーティリティ
  * data-copy-length 属性で複製する数を指定（指定なしの場合は 1）
  *
  * @param {Object} [options] - オプション
  * @param {Document|Element} [options.root=document] - 検索のルート要素
+ * @param {string} [options.selector='[data-html-copy]'] - 対象要素のセレクタ
  *
  * @example
- * // HTML: <div class="parent"><span class="js_htmlCopy" data-copy-length="3">item</span></div>
+ * // HTML: <div class="parent"><span data-html-copy data-copy-length="3">item</span></div>
  * // 実行後: <div class="parent"><span>item</span><span>item</span><span>item</span><span>item</span></div>
  */
 export const initHtmlCopy = (options = {}) => {
-  const { root = document } = options;
-  const elements = root.querySelectorAll('.js_htmlCopy');
+  const { root = document, selector = '[data-html-copy]' } = options;
+  const elements = root.querySelectorAll(selector);
 
   elements.forEach((el) => {
     const copyLength = parseInt(el.dataset.copyLength, 10) || 1;

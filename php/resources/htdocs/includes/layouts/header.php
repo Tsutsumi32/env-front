@@ -7,7 +7,7 @@
  */
 ?>
 
-<header class="ly_header">
+<header class="ly_header has-header" data-module="header">
     <div class="ly_container __medium">
         <div class="ly_header_inner">
             <div class="ly_header_logo">
@@ -27,10 +27,10 @@
                 </ul>
             </nav>
             <div class="ly_header_actions">
-                <button type="button" class="ly_header_themeToggle js_themeToggle ly_header_themeToggle__dark" data-theme="dark" aria-label="ダークモードに切替">
+                <button type="button" class="ly_header_themeToggle ly_header_themeToggle__dark" data-theme-toggle data-theme="dark" aria-label="ダークモードに切替">
                     <span class="ly_header_themeToggleIcon">🌙</span>
                 </button>
-                <button type="button" class="ly_header_themeToggle js_themeToggle ly_header_themeToggle__light" data-theme="default" aria-label="ライトモードに切替">
+                <button type="button" class="ly_header_themeToggle ly_header_themeToggle__light" data-theme-toggle data-theme="default" aria-label="ライトモードに切替">
                     <span class="ly_header_themeToggleIcon">☀️</span>
                 </button>
             </div>

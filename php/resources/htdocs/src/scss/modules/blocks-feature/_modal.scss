@@ -1,0 +1,42 @@
+@use '../../foundation/' as *;
+/******************************************************************
+* block - modal
+*******************************************************************/
+.bl_modal {
+  position: fixed;
+  inset: 0;
+  z-index: get-z-index('modal');
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: s(20);
+
+  &_overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+
+  &_dialog {
+    position: relative;
+    z-index: 1;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
+    background-color: get-color('bg', 'base');
+    border-radius: s(8);
+    padding: s(30);
+    box-shadow: 0 s(20) s(40) rgba(get-color('base', 'black'), 0.2);
+  }
+
+  &_content {
+    margin-bottom: s(20);
+  }
+}
+
+// State
+//////////////////////////////////////////////
+.has-modal.is_active {
+  pointer-events: auto;
+}

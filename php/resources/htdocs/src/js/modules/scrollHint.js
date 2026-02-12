@@ -5,6 +5,7 @@ import { BaseModuleClass } from '../core/BaseModuleClass.js';
 
 /**
  * スクロールヒント制御クラス
+ * @requires [data-scroll-hint] - スクロール可能な対象要素（または options.target で指定）
  */
 export class ScrollHintControl extends BaseModuleClass {
   /**
@@ -16,7 +17,7 @@ export class ScrollHintControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      target = '.js_scrollable',
+      target = '[data-scroll-hint]',
       i18n = { scrollable: 'scroll' },
       remainingTime = 5000,
       suggestiveShadow = true,

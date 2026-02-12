@@ -1,13 +1,14 @@
 import { BaseModuleClass } from '../core/BaseModuleClass.js';
+import { STATE_CLASSES } from '../constans/global.js';
 import { disableScroll, enableScroll } from '../utils/scrollControll.js';
 import { fadeIn, fadeOut } from '../utils/fadeAnimation.js';
 
 /**
  * ヘッダー制御クラス
- * @requires .js_header - ヘッダー要素
- * @requires .js_headerBtn - メニューボタン
- * @requires .js_headerMenu - メニュー要素
- * @requires .js_headerBg - 背景要素
+ * @requires [data-module="header"] - ヘッダー要素
+ * @requires [data-header-btn] - メニューボタン
+ * @requires [data-header-menu] - メニュー要素
+ * @requires [data-header-bg] - 背景要素
  */
 export class HeaderControl extends BaseModuleClass {
   /**
@@ -19,12 +20,12 @@ export class HeaderControl extends BaseModuleClass {
    */
   init(element, { bag, signal }) {
     const {
-      headerSelector = '.js_header',
-      menuBtnSelector = '.js_headerBtn',
-      menuSelector = '.js_headerMenu',
-      bgSelector = '.js_headerBg',
-      activeClass = 'is_active',
-      displayClass = 'is-display',
+      headerSelector = '[data-module="header"]',
+      menuBtnSelector = '[data-header-btn]',
+      menuSelector = '[data-header-menu]',
+      bgSelector = '[data-header-bg]',
+      activeClass = STATE_CLASSES.ACTIVE,
+      displayClass = STATE_CLASSES.DISPLAY,
       openDelay = 300,
       closeDelay = 600,
     } = this.options;
@@ -100,8 +101,8 @@ export class HeaderControl extends BaseModuleClass {
       menuBtn,
       menu,
       bg,
-      activeClass = 'is_active',
-      displayClass = 'is-display',
+      activeClass = STATE_CLASSES.ACTIVE,
+      displayClass = STATE_CLASSES.DISPLAY,
       openDelay = 300,
       closeDelay = 600,
       signal,
@@ -144,8 +145,8 @@ export class HeaderControl extends BaseModuleClass {
       menuBtn,
       menu,
       bg,
-      activeClass = 'is_active',
-      displayClass = 'is-display',
+      activeClass = STATE_CLASSES.ACTIVE,
+      displayClass = STATE_CLASSES.DISPLAY,
       closeDelay = 600,
       signal,
       bag,

@@ -13,9 +13,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 /**
  * GSAPアニメーション制御クラス
+ * @requires [data-gsap] - アニメーション対象要素（options.mode でアニメーション種別を指定）
+ *
  * @example
  * // スクロールでフェードアップ（Y移動付き）
- * new GsapControl('.js_gsapScrollFadeUp', {
+ * new GsapControl('[data-gsap]', {
  *   mode: 'scrollFadeUp',
  *   fromY: 20,
  *   toY: 0,
@@ -23,20 +25,20 @@ gsap.registerPlugin(ScrollTrigger);
  * });
  *
  * // スクロールでフェードイン
- * new GsapControl('.js_gsapScrollFadeIn', {
+ * new GsapControl('[data-gsap]', {
  *   mode: 'scrollFadeIn',
  *   duration: 1,
  * });
  *
  * // スクロールでフェードアウト
- * new GsapControl('.js_gsapScrollFadeOut', {
+ * new GsapControl('[data-gsap]', {
  *   mode: 'scrollFadeOut',
  *   startPosition: 'bottom 30%',
  *   endPosition: 'bottom top',
  * });
  *
  * // フェードスケールイン（ScrollTriggerなし）
- * new GsapControl('.js_gsapFadeScaleIn', {
+ * new GsapControl('[data-gsap]', {
  *   mode: 'fadeScaleIn',
  *   fromScale: 0.93,
  *   toScale: 1,
