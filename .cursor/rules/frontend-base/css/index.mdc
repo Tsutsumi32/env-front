@@ -1,3 +1,5 @@
 ---
 alwaysApply: true
 ---
+
+css(scss)ルールを参照するインデックスファイルです。
