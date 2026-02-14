@@ -6,6 +6,7 @@
 		],
 		"description": "画像パス",
 	},
+	
 	"html-img-convert": {
 		"prefix": "html-img-convert",
 		"body": [
@@ -66,6 +67,20 @@
 		],
 		"description": "動画セット",
 	},
+	"html-comment-end": {
+		"prefix": "html-comment-end",
+		"body": [
+			"<!-- /.$1 -->"
+		],
+		"description": "HTML ブロック終了コメント",
+	},
+	"html-comment-todo": {
+		"prefix": "html-comment-todo",
+		"body": [
+			"<!-- TODO : $1 -->"
+		],
+		"description": "HTML TODOコメント",
+	},
 	"php-render-img": {
 		"prefix": "php-render-img",
 		"body": [
@@ -80,6 +95,34 @@
 		],
 		"description": "PHP render_img関数",
 	},
+	"scss-comment1": {
+		"prefix": "scss-comment1",
+		"body": [
+			"/******************************************************************",
+			"* 大 $1",
+			"* $2",
+			"*******************************************************************/"
+		],
+		"description": "scssコメント1",
+	},
+	"scss-comment2": {
+		"prefix": "scss-comment2",
+		"body": [
+			"/* 中 $1",
+			"/* $2",
+			"----------------------------------------------------------------- */"
+		],
+		"description": "scssコメント2",
+	},
+	"scss-comment3": {
+		"prefix": "scss-comment3",
+		"body": [
+			"// 小 $1",
+			"// $2",
+			"//////////////////////////////////////////////"
+		],
+		"description": "scssコメント3",
+	}
 	"scss-breakpoint-sp": {
 		"prefix": "break-sp",
 		"body": [
