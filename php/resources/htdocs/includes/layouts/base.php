@@ -45,7 +45,7 @@ $pageContents = $pageContents ?? '';
     <!-- css common -->
     <link rel="stylesheet" href="<?php echo htmlspecialchars("{$cssPath}common.css", ENT_QUOTES, 'UTF-8'); ?>">
     <!-- js -->
-    <script type="module" src="<?php echo htmlspecialchars($jsPagePath, ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+    <script type="module" src="<?php echo htmlspecialchars($jsPagePath, ENT_QUOTES, 'UTF-8'); ?>"></script>
     <?php
     }
     ?>

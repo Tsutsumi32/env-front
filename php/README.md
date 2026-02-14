@@ -8,7 +8,6 @@
 ※中身の内容についてはプロジェクト毎に指示があります。
 - **必要に応じて**、`docker-compose.override.sample`を複製し、`docker-compose.override`ファイルを作成してください。自身の環境に必要な設定がある場合、本ファイルを編集します。
 
-```
 
 ### 2. Dockerコンテナの起動
 
@@ -73,6 +72,36 @@ make start
 - コンパイル後の出力先（`dist`にするかどうか）
 - 各種ディレクトリパス
 
+---
+
+## Nu Html Checker（HTML検証）
+
+[The Nu Html Checker (vnu)](https://validator.github.io/validator/) を Docker 環境で利用できます。
+
+### Web UI
+
+`make up` でコンテナを起動すると、vnu サービスも起動します。ブラウザで次のURLを開くと、HTML/CSS/SVG の検証ができます。
+- **URL**: `http://localhost:8888`（ポートは `.env` の `VNU_PORT` で変更可能）
+- **ブックマークレット**：開発画面を開いている状態で、用意したブックマークレットを使用することで、画面内のDOMをvnuにPOSTして、そのまま検証が可能。(nu-html-checker-bookmarklet.md)
+
+### CLI での検証
+
+以下コマンドで、コンテナ内にて、CLIで一括の検証が可能
+※現在は素のhtmlのみ対応
+
+```bash
+make validate-html
+```
+
+エラーのみ表示したい場合:
+
+```bash
+make validate-html-errors-only
+```
+
+コンテナ内のシェル（`make shell`）では、`npm run validate:html` でも同じ検証ができます。
+
+---
 
 ## コードフォーマット
 
@@ -123,3 +152,6 @@ make start
 - CDNを利用する
 
 ---
+
+## コードスニペットにういて
+- _docs/ にスニペットファイルを配置しています。必要に応じて活用してください。

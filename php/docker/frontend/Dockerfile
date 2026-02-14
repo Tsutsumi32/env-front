@@ -8,13 +8,14 @@ ARG GID=1000
 # 環境変数の設定
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 必要なパッケージをインストール
+# 必要なパッケージをインストール（vnu-jar 用に OpenJDK を含む）
 RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
     git \
     build-essential \
     sudo \
+    openjdk-17-jre-headless \
     && rm -rf /var/lib/apt/lists/*
 
 # グループとユーザーを作成（rootで実行）

@@ -1,7 +1,105 @@
-<html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="address=no">
+  <title>一覧表</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body.index {
+      counter-reset: list-counter -1;
+    }
+
+    .list, .list--disabled {
+      counter-increment: list-counter;
+    }
+
+    .number::before {
+      content: counter(list-counter);
+      font-weight: 700;
+    }
+
+    .index {
+      margin-bottom: 80px;
+    }
+
+    .index .title {
+      margin-block: 30px 50px;
+      text-align: center;
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .index .list {
+      border: 2px solid gray;
+      display: flex;
+      width: 90%;
+      margin-inline: auto;
+      max-width: 1200px;
+    }
+
+    .index .list:nth-of-type(n + 2) {
+      border-top: 0;
+    }
+
+    .index .list * {
+      display: block;
+      width: 40%;
+      padding-block: 10px;
+      padding-inline: 10px;
+    }
+
+    .index .list *:first-child {
+      width: 50px;
+    }
+
+    .index .list *:nth-child(n + 2) {
+      border-left: 2px solid gray;
+    }
+
+    .index .list *:nth-child(2) {
+      width: 100px;
+    }
+
+    .index .list *:last-child {
+      flex-grow: 1;
+    }
+
+    .index .list--head * {
+      background-color: skyblue;
+      text-align: center;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .index .list--disabled {
+      background-color: rgb(99, 99, 99);
+    }
+
+    .index .list--disabled a {
+      pointer-events: none;
+      color: black;
+      text-decoration: none;
+    }
+
+    a {
+      transition: opacity .3s;
+    }
+
+    a:hover {
+      opacity: .5;
+    }
+  </style>
+</head>
 <body class="index">
-  <p class="title">モックアップURL一覧<p>
+  <p class="title">モックアップURL一覧</p>
   <div class="list list--head">
     <p>No</p>
     <p>ID</p>
@@ -227,95 +325,3 @@
 </body>
 
 </html>
-
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body.index {
-    counter-reset: list-counter -1;
-  }
-
-  .list, .list--disabled {
-    counter-increment: list-counter;
-  }
-
-  .number::before {
-    content: counter(list-counter);
-    font-weight: 700;
-  }
-
-  .index {
-    margin-bottom: 80px;
-  }
-
-  .index .title {
-    margin-block: 30px 50px;
-    text-align: center;
-    font-size: 30px;
-    font-weight: 700;
-  }
-
-  .index .list {
-    border: 2px solid gray;
-    display: flex;
-    width: 90%;
-    margin-inline: auto;
-    max-width: 1200px;
-  }
-
-  .index .list:nth-of-type(n + 2) {
-    border-top: 0;
-  }
-
-  .index .list * {
-    display: block;
-    width: 40%;
-    padding-block: 10px;
-    padding-inline: 10px;
-  }
-
-  .index .list *:first-child {
-    width: 50px;
-  }
-
-  .index .list *:nth-child(n + 2) {
-    border-left: 2px solid gray;
-  }
-
-  .index .list *:nth-child(2) {
-    width: 100px;
-  }
-
-  .index .list *:last-child {
-    flex-grow: 1;
-  }
-
-  .index .list--head * {
-    background-color: skyblue;
-    text-align: center;
-    font-weight: 700;
-    font-size: 20px;
-  }
-
-  .index .list--disabled {
-    background-color: rgb(99, 99, 99);
-  }
-
-  .index .list--disabled a {
-    pointer-events: none;
-    color: black;
-    text-decoration: none;
-  }
-
-  a {
-    transition: opacity .3s;
-  }
-
-  a:hover {
-    opacity: .5;
-  }
-</style>

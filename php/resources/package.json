@@ -16,7 +16,8 @@
     "serve": "node node/serve/browser-sync.js",
     "build": "run-s build:scss-index build:scss build:js build:convert-images",
     "watch": "concurrently \"npm run watch:scss-index\" \"npm run watch:scss\" \"npm run watch:js\" \"npm run watch:convert-images\"",
-    "start": "concurrently \"npm run watch\" \"npm run serve\""
+    "start": "concurrently \"npm run watch\" \"npm run serve\"",
+    "validate:html": "find htdocs -name '*.html' -exec npx vnu-jar --skip-non-html {} +"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
@@ -38,7 +39,8 @@
     "prettier": "^3.6.2",
     "sass": "^1.93.3",
     "sharp": "^0.34.4",
-    "terser": "^5.44.1"
+    "terser": "^5.44.1",
+    "vnu-jar": "^24.2.3"
   },
   "volta": {
     "node": "24.11.0",

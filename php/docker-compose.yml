@@ -85,6 +85,13 @@ services:
       - 1025:1025
     networks:
       - br0
+  vnu:
+    container_name: "${PROJECT_NAME}_vnu"
+    image: ghcr.io/validator/validator:latest
+    ports:
+      - "${VNU_PORT:-8888}:8888"
+    networks:
+      - br0
 volumes:
   node_modules:
 
