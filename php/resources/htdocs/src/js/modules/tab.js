@@ -7,9 +7,9 @@
 import { DATA_ATTR, STATE_CLASSES } from '../constans/global.js';
 import { delegate } from '../utils/delegate.js';
 
-// ---------------------------------------------------------------------------
+// -----------------------------------------------------------------
 // data 属性（参照するものは定数で一覧化。DATA_ATTR は global.js）
-// ---------------------------------------------------------------------------
+// -----------------------------------------------------------------
 const MODULE_TAB = 'tab';
 const ATTR_TAB_TRIGGER = 'data-tab-trigger';
 const ATTR_TAB_CONTENT = 'data-tab-content';
