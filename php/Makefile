@@ -137,7 +137,7 @@ validate-html: up ## HTMLをNu Html Checkerで検証（resources/htdocs を対�
 validate-html-errors-only: up ## HTMLを検証（エラーのみ表示）
 	@echo "コンテナ起動を待機中..."
 	@sleep 2
-	docker exec $(CONTAINER_NAME) bash -c "find htdocs -name '*.html' -exec npx vnu-jar --skip-non-html --format gnu {} + 2>&1 | grep 'error:' || true"
+	docker exec -it $(CONTAINER_NAME) bash -c "find htdocs -name '*.html' -exec npx vnu-jar --skip-non-html --format gnu {} + 2>&1 | grep 'error:' || true"
 
 ##@ その他
 

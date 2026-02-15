@@ -33,11 +33,8 @@ if [ -f "$COMPOSE_DIR/.env" ]; then
   set +a
 fi
 
-# Docker Composeサービス名（.envから読み込み、デフォルトはnuxt）
-FRONT_CONTAINER="${FRONT_CONTAINER:-nuxt}"
-
-# コンテナ名（.envから読み込み、デフォルトはnuxt-portfolio）
-CONTAINER_NAME="${CONTAINER_NAME:-nuxt-portfolio}"
+# Nuxt コンテナ名（.env の PROJECT_NAME。docker-compose のサービス名は nuxt）
+PROJECT_NAME="${PROJECT_NAME:-nuxt-portfolio}"
 
 # ============================================================================
 # Dockerコンテナの起動確認
@@ -46,9 +43,9 @@ CONTAINER_NAME="${CONTAINER_NAME:-nuxt-portfolio}"
 cd "$COMPOSE_DIR" || exit 1
 
 # コンテナが起動しているか確認
-if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${CONTAINER_NAME}$"; then
+if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${PROJECT_NAME}$"; then
   echo "⚠️  Dockerコンテナが起動していません。起動中..."
-  docker compose up -d "${FRONT_CONTAINER}" || exit 1
+  docker compose up -d nuxt || exit 1
   sleep 2
 fi
 
@@ -129,7 +126,7 @@ if [ -n "$ALL_FORMAT_FILES" ]; then
   echo "🔧 ファイルをPrettierで整形中..."
   for file in $ALL_FORMAT_FILES; do
     # コンテナ内でprettierを実行してファイルを整形
-    docker exec "${CONTAINER_NAME}" npx prettier --write "/app/${file}" 2>/dev/null || {
+    docker exec "${PROJECT_NAME}" npx prettier --write "/app/${file}" 2>/dev/null || {
       echo "⚠️  app/${file} の整形に失敗しました（無視して続行）"
     }
     
@@ -153,7 +150,7 @@ if [ -n "$ALL_LINT_FILES" ]; then
     fi
     
     # コンテナ内でeslint --fixを実行して自動修正
-    docker exec "${CONTAINER_NAME}" npx eslint --fix "/app/${file}" 2>/dev/null || {
+    docker exec "${PROJECT_NAME}" npx eslint --fix "/app/${file}" 2>/dev/null || {
       echo "⚠️  app/${file} のLintチェックでエラーが見つかりました。修正してからコミットしてください。"
       # エラーがあっても続行（自動修正できないエラーの場合）
     }

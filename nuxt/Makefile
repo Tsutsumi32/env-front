@@ -4,10 +4,9 @@
 -include .env
 export
 
-# デフォルト値の設定（.env の WORK_DIR で利用プロジェクトを切り替え）
+# デフォルト値（.env に未定義の場合のみ使用）
 WORK_DIR ?= app
-FRONT_CONTAINER ?= nuxt
-CONTAINER_NAME ?= nuxt-portfolio
+PROJECT_NAME ?= nuxt-portfolio
 HOST_PORT ?= 3000
 CONTAINER_PORT ?= 3000
 PREVIEW_HOST_PORT ?= 3001
@@ -72,13 +71,13 @@ restart: down up
 logs:
 	docker compose logs -f
 
-# コンテナ内のシェルにアクセス（working_dir は .env の WORK_DIR に対応）
+# コンテナ内のシェルにアクセス（.env の PROJECT_NAME でコンテナ名指定）
 shell:
-	docker compose exec $(FRONT_CONTAINER) bash
+	docker exec -it $(PROJECT_NAME) bash
 
-# 依存関係をインストール
+# 依存関係をインストール（コンテナが起動中ならコンテナ名で実行。docker exec では nodenv を明示的に読み込む）
 install:
-	docker compose run --rm $(FRONT_CONTAINER) npm install
+	docker exec $(PROJECT_NAME) bash -c 'eval "$$(nodenv init -)" && npm install'
 
 # 開発サーバーを起動（フォアグラウンド）
 dev:
@@ -86,14 +85,14 @@ dev:
 	@echo "📍 開発サーバー: http://localhost:$(HOST_PORT)"
 	docker compose up
 
-# 静的サイトを生成（SSG）（WORK_DIR のプロジェクトで実行）
+# 静的サイトを生成（SSG）（WORK_DIR のプロジェクトで実行。コンテナが起動中であること）
 generate:
 	@echo "🟡 静的サイト生成前に実行中のコンテナを一時停止します..."
-	@docker compose stop $(FRONT_CONTAINER) 2>/dev/null || true
+	@docker stop $(PROJECT_NAME) 2>/dev/null || true
 	@echo "🟢 ホスト側の$(WORK_DIR)/.outputディレクトリを削除します..."
 	@rm -rf $(WORK_DIR)/.output || true
 	@echo "🟢 静的サイトを生成中..."
-	docker compose run --rm --no-deps $(FRONT_CONTAINER) npm run generate
+	docker compose run --rm --no-deps nuxt npm run generate
 	@echo "✅ 静的サイトの生成が完了しました"
 
 # 生成された静的サイトをプレビュー（WORK_DIR の .output を参照）
@@ -106,30 +105,30 @@ preview:
 	@echo "🟢 プレビューサーバーを起動中..."
 	@echo "📍 開発サーバー: http://localhost:$(HOST_PORT)"
 	@echo "📍 プレビューサーバー: http://localhost:$(PREVIEW_HOST_PORT)"
-	docker compose run --rm -p $(PREVIEW_HOST_PORT):$(PREVIEW_CONTAINER_PORT) $(FRONT_CONTAINER) npm run preview
+	docker compose run --rm -p $(PREVIEW_HOST_PORT):$(PREVIEW_CONTAINER_PORT) nuxt npm run preview
 
-# ESLintでコードをチェック
+# ESLintでコードをチェック（コンテナ名で実行）
 lint:
-	docker compose exec $(FRONT_CONTAINER) npm run lint
+	docker exec $(PROJECT_NAME) bash -c 'eval "$$(nodenv init -)" && npm run lint'
 
 # ESLintでコードを自動修正
 lint-fix:
-	docker compose exec $(FRONT_CONTAINER) npm run lint:fix
+	docker exec $(PROJECT_NAME) bash -c 'eval "$$(nodenv init -)" && npm run lint:fix'
 
 # Prettierでコードを整形
 format:
-	docker compose exec $(FRONT_CONTAINER) npm run format
+	docker exec $(PROJECT_NAME) bash -c 'eval "$$(nodenv init -)" && npm run format'
 
 # Prettierでコードの整形状況をチェック
 format-check:
-	docker compose exec $(FRONT_CONTAINER) npm run format:check
+	docker exec $(PROJECT_NAME) bash -c 'eval "$$(nodenv init -)" && npm run format:check'
 
 # 生成ファイルとnode_modulesを削除（WORK_DIR のプロジェクト配下を対象）
 clean:
-	@echo "🟡 コンテナを停止します..."
-	@docker compose stop $(FRONT_CONTAINER) 2>/dev/null || true
 	@echo "🟢 コンテナ内で生成ファイルを削除します..."
-	@docker compose run --rm --no-deps $(FRONT_CONTAINER) bash -c "rm -rf .nuxt .output dist .nitro .data .cache" 2>/dev/null || true
+	@docker exec $(PROJECT_NAME) bash -c "rm -rf .nuxt .output dist .nitro .data .cache" 2>/dev/null || true
+	@echo "🟡 コンテナを停止します..."
+	@docker stop $(PROJECT_NAME) 2>/dev/null || true
 	@echo "🟢 ホスト側の生成ファイルを削除します..."
 	@rm -rf $(WORK_DIR)/node_modules $(WORK_DIR)/.nuxt $(WORK_DIR)/.output $(WORK_DIR)/dist $(WORK_DIR)/.nitro $(WORK_DIR)/.data $(WORK_DIR)/.cache || true
 	@echo "🟢 コンテナ・ボリューム・イメージを削除します..."

@@ -29,8 +29,7 @@ cp .env-example .env
 
 | 項目 | 説明 | デフォルト |
 |------|------|------------|
-| `PROJECT_NAME` | コンテナ名のプレフィックス（mailhog / vnu など） | `nuxt` |
-| `CONTAINER_NAME` | Nuxt コンテナ名 | `nuxt-portfolio` |
+| `PROJECT_NAME` | 全コンテナ名のベース（nuxt → この値、mailhog/vnu → この値_mail / この値_vnu） | `nuxt-portfolio` |
 | `WORK_DIR` | **利用する Nuxt プロジェクトのディレクトリ名**（複数プロジェクト時に切り替え） | `app` |
 | `UID` / `GID` | ホストのユーザーID・グループID | `1000` |
 | `HOST_PORT` / `CONTAINER_PORT` | 開発サーバーのポート | `3000` |
@@ -176,7 +175,7 @@ docker compose logs -f nuxt
 | **WORK_DIR** | 利用するプロジェクトのディレクトリ名（例: `app`, `app2`） |
 | **Node バージョン** | 各ディレクトリの `.node-version`（nodenv が自動で使用） |
 
-コンテナ名・ポートを変えたい場合は `.env` の `CONTAINER_NAME` / `HOST_PORT` などを変更してください。`WORK_DIR` 変更後は**必ずコンテナを再起動**してください。
+コンテナ名・ポートを変えたい場合は `.env` の `PROJECT_NAME` / `HOST_PORT` などを変更してください。`WORK_DIR` 変更後は**必ずコンテナを再起動**してください。
 
 ### よく使うコマンド（Docker を直接使う場合）
 

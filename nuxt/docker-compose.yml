@@ -1,6 +1,6 @@
 services:
   nuxt:
-    container_name: "${CONTAINER_NAME:-nuxt-portfolio}"
+    container_name: "${PROJECT_NAME}"
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -22,7 +22,7 @@ services:
       - br0
 
   mailhog:
-    container_name: "${PROJECT_NAME:-nuxt}_mail"
+    container_name: "${PROJECT_NAME}_mail"
     image: mailhog/mailhog
     ports:
       - "${MAILHOG_WEB_PORT:-8025}:8025"
@@ -31,7 +31,7 @@ services:
       - br0
 
   vnu:
-    container_name: "${PROJECT_NAME:-nuxt}_vnu"
+    container_name: "${PROJECT_NAME}_vnu"
     image: ghcr.io/validator/validator:latest
     ports:
       - "${VNU_PORT:-8888}:8888"
