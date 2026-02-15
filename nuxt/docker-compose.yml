@@ -1,0 +1,43 @@
+services:
+  nuxt:
+    container_name: "${CONTAINER_NAME:-nuxt-portfolio}"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /var/www/${WORK_DIR:-app}
+    volumes:
+      - .:/var/www
+    ports:
+      - "${HOST_PORT:-3000}:${CONTAINER_PORT:-3000}"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+    stdin_open: true
+    tty: true
+    command: ["bash", "-c", "npm run dev"]
+    networks:
+      - br0
+
+  mailhog:
+    container_name: "${PROJECT_NAME:-nuxt}_mail"
+    image: mailhog/mailhog
+    ports:
+      - "${MAILHOG_WEB_PORT:-8025}:8025"
+      - "${MAILHOG_SMTP_PORT:-1025}:1025"
+    networks:
+      - br0
+
+  vnu:
+    container_name: "${PROJECT_NAME:-nuxt}_vnu"
+    image: ghcr.io/validator/validator:latest
+    ports:
+      - "${VNU_PORT:-8888}:8888"
+    networks:
+      - br0
+
+networks:
+  br0:
+    driver: bridge
