@@ -6,7 +6,8 @@
 import { DATA_ATTR } from '../constans/global.js';
 import { createPage } from '../lifecycle/createPage.js';
 import { delegate } from '../utils/delegate.js';
-import { modal } from '../modules/modal.js';
+// プロジェクトでモーダルを拡張する場合は modules/extensions/modal を import
+import { modal } from '../modules/extensions/modal.js';
 import { accordion } from '../modules/accordion.js';
 
 /**

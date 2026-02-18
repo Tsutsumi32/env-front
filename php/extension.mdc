@@ -1,0 +1,36 @@
+---
+alwaysApply: true
+---
+
+# JSモジュールのプロジェクト拡張
+
+プロジェクトごとに既存モジュール（modules/）を編集せず、挙動を追加するためのルールです。
+
+## 方針
+
+- **modules/** のファイルは共通のまま編集しない。
+- **modules/extensions/** にプロジェクト用の拡張ファイルを置き、同じインターフェースでラップして差し替える。
+
+## ディレクトリ
+
+- `js/modules/` … 共通モジュール（変更しない）
+- `js/modules/extensions/` … モジュールのプロジェクト用拡張（必要時のみ追加）
+
+## 拡張の書き方
+
+1. 拡張するモジュールを import する（例: `import { modal as coreModal } from '../modal.js'`）。
+2. `init` など必要なメソッドをラップする。
+   - 先にコアの `init` を呼ぶ。
+   - 続けて `delegate` などで同じ `data-action` を追加登録すると、クリック時にコア→拡張の順で両方実行される。
+3. コアの `open` / `close` などはそのまま re-export してよい。
+4. ページでは `modules/xxx` の代わりに `modules/extensions/xxx` を import する。
+
+## 例（モーダルの「開いた後」の処理を追加）
+
+- `modules/extensions/modal.js` で `coreModal.init(ctx)` のあと、`delegate(document, scope, { 'modal.open': (e, el) => { onAfterOpen(el, id); } })` を登録。
+- 開くボタン押下時: コアの open → 拡張の onAfterOpen の順で実行される。
+
+## 注意
+
+- 拡張が不要なモジュールは、従来どおり `modules/` から import してよい。
+- 拡張ファイルはプロジェクトごとに用意し、必要なものだけ modules/extensions/ に置く。
