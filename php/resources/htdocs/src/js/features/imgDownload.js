@@ -71,12 +71,13 @@ async function downloadImagesAsZip() {
 
 /**
  * 初期化（document に delegate。data-action="imgDownload.download" をトリガーに）
- * @param {{ scope: { signal: AbortSignal } }} ctx
+ * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  */
-const init = ({ scope }) => {
-  delegate(document, scope, {
+const init = (ctx = {}) => {
+  const { scope } = ctx;
+  delegate(document, 'click', {
     'imgDownload.download': () => downloadImagesAsZip(),
-  });
+  }, scope);
 };
 
 export const imgDownload = { init };

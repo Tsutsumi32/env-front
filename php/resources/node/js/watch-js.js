@@ -1,5 +1,5 @@
 // watch-js.js
-// - entry モード: entry 変更 → その1件のみビルド / 依存（pages 等）変更 → 全エントリビルド
+// - entry モード: pages をエントリとして使用。pages 変更 → その1件のみビルド / 依存（lifecycle 等）変更 → 全エントリビルド
 // - dynamic モード: エントリまたは依存変更 → 1回の dynamic ビルド
 import chokidar from 'chokidar';
 import path from 'path';

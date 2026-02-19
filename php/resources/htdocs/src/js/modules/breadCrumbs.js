@@ -22,10 +22,11 @@ const DEFAULT_MARGIN_OFFSET = 16;
 
 /**
  * 初期化
- * @param {{ scope: { signal: AbortSignal } }} ctx
+ * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  * @param {{ marginOffset?: number }} [options]
  */
-const init = ({ scope }, options = {}) => {
+const init = (ctx = {}, options = {}) => {
+  const { scope } = ctx;
   const container = document.querySelector(SELECTOR_BREADCRUMBS);
   if (!container) return;
 
@@ -59,7 +60,8 @@ const init = ({ scope }, options = {}) => {
   };
 
   adjustBreadWidth();
-  window.addEventListener('resize', adjustBreadWidth, { signal: scope.signal });
+  const resizeOptions = scope?.signal ? { signal: scope.signal } : {};
+  window.addEventListener('resize', adjustBreadWidth, resizeOptions);
 };
 
 export const breadCrumbs = { init };

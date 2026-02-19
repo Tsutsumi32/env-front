@@ -35,11 +35,11 @@ export const BUILD_CONFIG = {
     // - 'dynamic': 単一エントリ（main.js）で動的 import。pages 等はチャンクで出力。依存変更時はその1ビルドを実行。
     BUILD_MODE: 'entry',
 
-    // ---- entry モード用 ----
-    // エントリ配置ディレクトリ（直下の *.js を dist/*.js で出力。pages と同名の .js を置く）
-    ENTRY_DIRS: [DIR_SRC_PATH + 'js/entry'],
-    // 同名の entry のみビルドする依存ディレクトリ（例: pages/top.js 変更 → entry/top.js のみビルド。pages と entry は同名前提）
-    ENTRY_DEPENDS_NAMED_DIRS: [DIR_SRC_PATH + 'js/pages'],
+    // ---- entry モード用（動的 import が使えないプロジェクト向け）----
+    // エントリ配置ディレクトリ（直下の *.js を dist/*.js で出力。pages 直下をエントリとして使用）
+    ENTRY_DIRS: [DIR_SRC_PATH + 'js/pages'],
+    // 同名の entry のみビルドする依存ディレクトリ（未使用時は []。pages をエントリにしているため空）
+    ENTRY_DEPENDS_NAMED_DIRS: [],
     // 上以外の依存ディレクトリ（ここが変更されたら全エントリを再ビルド）
     ENTRY_DEPENDS_DIRS: [
       DIR_SRC_PATH + 'js/lifecycle',

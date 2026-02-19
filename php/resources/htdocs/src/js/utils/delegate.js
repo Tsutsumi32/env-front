@@ -70,23 +70,31 @@ const warnActionKeyFormat = (key, root) => {
 /**
  * data-action を委譲で処理する
  * @param {Document|Element} root - 委譲のルート（document または Element）
- * @param {{ signal: AbortSignal }} scope - 解除用 signal
+ * @param {string|{ eventType: string, selector?: string, getKey?: (el: Element) => string, suppressWarn?: boolean, force?: boolean }} eventTypeOrOptions - イベントタイプ（必須）。文字列または { eventType } を含むオプション
  * @param {Record<string, (e: Event, el: Element) => void>} handlers - action 名 → ハンドラ
- * @param {string|{ eventType?: string, selector?: string, getKey?: (el: Element) => string, suppressWarn?: boolean, force?: boolean }} [optionsOrEventType] - オプション。文字列の場合は eventType として扱う（後方互換）
+ * @param {{ signal: AbortSignal } | null | undefined} [scope] - 解除用 signal（省略時は MPA 想定で登録のみ）
  */
-export const delegate = (root, scope, handlers, optionsOrEventType = {}) => {
+export const delegate = (root, eventTypeOrOptions, handlers, scope = undefined) => {
+  if (eventTypeOrOptions === undefined || eventTypeOrOptions === null) {
+    throw new Error('delegate: eventType は必須です。例: delegate(root, "click", handlers)');
+  }
+
   const options =
-    typeof optionsOrEventType === 'string'
-      ? { eventType: optionsOrEventType }
-      : optionsOrEventType;
+    typeof eventTypeOrOptions === 'string'
+      ? { eventType: eventTypeOrOptions }
+      : eventTypeOrOptions;
 
   const {
-    eventType = 'click',
+    eventType,
     selector = `[${DATA_ATTR.ACTION}]`,
     getKey = (el) => el.getAttribute(DATA_ATTR.ACTION),
     suppressWarn = false,
     force = false,
   } = options;
+
+  if (!eventType || typeof eventType !== 'string') {
+    throw new Error('delegate: eventType は必須です。例: delegate(root, "click", handlers)');
+  }
 
   if (!root) return;
 
@@ -99,6 +107,7 @@ export const delegate = (root, scope, handlers, optionsOrEventType = {}) => {
     }
   }
 
+  const listenerOptions = scope?.signal ? { signal: scope.signal } : {};
   root.addEventListener(
     eventType,
     (e) => {
@@ -114,6 +123,6 @@ export const delegate = (root, scope, handlers, optionsOrEventType = {}) => {
       const fn = handlers[key];
       if (fn) fn(e, el);
     },
-    { signal: scope.signal }
+    listenerOptions
   );
 };

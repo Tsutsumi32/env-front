@@ -53,16 +53,17 @@ const getCurrentTheme = () => {
 
 /**
  * 初期化（document に delegate。data-action="themeToggle.toggle" をトリガーに。ボタンは data-module="themeToggle"）
- * @param {{ scope: { signal: AbortSignal } }} ctx
+ * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  */
-const init = ({ scope }) => {
-  delegate(document, scope, {
+const init = (ctx = {}) => {
+  const { scope } = ctx;
+  delegate(document, 'click', {
     'themeToggle.toggle': (e, el) => {
       const theme = el.getAttribute(ATTR_THEME_TOGGLE_THEME);
       if (theme) setTheme(theme, true);
       else console.warn(`${ATTR_THEME_TOGGLE_THEME}属性が設定されていません。`, el);
     },
-  });
+  }, scope);
 };
 
 export const themeToggle = { init, setTheme, getCurrentTheme, STORAGE_KEY };

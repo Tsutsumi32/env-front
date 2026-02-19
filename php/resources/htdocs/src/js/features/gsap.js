@@ -33,7 +33,8 @@ function setupResizeRefresh(signal) {
     }, 200);
     signal?.addEventListener('abort', () => clearTimeout(resizeTimer), { once: true });
   };
-  window.addEventListener('resize', handleResize, { signal });
+  const opts = signal ? { signal } : {};
+  window.addEventListener('resize', handleResize, opts);
 }
 
 function initScrollFadeUp(element, killables, options = {}) {
@@ -128,17 +129,18 @@ function initFadeScaleIn(element, killables, options = {}) {
 
 /**
  * 初期化（全 [data-feature="gsap"] に data-feature-gsap-mode に応じたアニメーションを適用）
- * @param {{ scope: { signal: AbortSignal }, root?: Element }} ctx
+ * @param {{ scope?: { signal: AbortSignal }, root?: Element }} [ctx] - scope 省略時は MPA 想定
  * @param {{ enableResizeRefresh?: boolean, defaultMode?: string }} [options]
  */
-const init = ({ scope, root = document }, options = {}) => {
+const init = (ctx = {}, options = {}) => {
   if (!gsap || !ScrollTrigger) return;
 
+  const { scope, root = document } = ctx;
   const killables = [];
   const enableResizeRefresh = options.enableResizeRefresh !== false;
   const defaultMode = options.defaultMode ?? 'scrollFadeUp';
 
-  if (enableResizeRefresh) setupResizeRefresh(scope.signal);
+  if (enableResizeRefresh) setupResizeRefresh(scope?.signal);
 
   const elements = root.querySelectorAll(SELECTOR_GSAP);
   elements.forEach((el) => {
@@ -161,17 +163,19 @@ const init = ({ scope, root = document }, options = {}) => {
     }
   });
 
-  scope.signal.addEventListener(
-    'abort',
-    () => {
-      killables.forEach((k) => {
-        try {
-          if (k?.kill) k.kill();
-        } catch (_) {}
-      });
-    },
-    { once: true }
-  );
+  if (scope?.signal) {
+    scope.signal.addEventListener(
+      'abort',
+      () => {
+        killables.forEach((k) => {
+          try {
+            if (k?.kill) k.kill();
+          } catch (_) {}
+        });
+      },
+      { once: true }
+    );
+  }
 };
 
 export const gsapModule = { init };

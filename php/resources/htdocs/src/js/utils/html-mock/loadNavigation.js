@@ -9,7 +9,7 @@
 
 /**
  * header/footerを読み込んで埋め込む
- * @param {AbortSignal} signal - AbortSignal
+ * @param {AbortSignal} [signal] - AbortSignal（未使用・互換性のため残す）
  */
 export async function loadIncludes(signal) {
 

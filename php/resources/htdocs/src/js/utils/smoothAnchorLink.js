@@ -9,7 +9,7 @@
  * ページ内のアンカーリンククリック時にスムーススクロールを実行
  * ヘッダーの高さを考慮した位置調整を行う
  *
- * @param {AbortSignal} signal - AbortSignal（クリーンアップ用）
+ * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定で登録のみ・破棄しない）
  * @requires header - ヘッダー要素
  */
 export function smoothAnchorLink(signal) {
@@ -19,15 +19,16 @@ export function smoothAnchorLink(signal) {
     return;
   }
 
+  const listenerOptions = signal ? { signal } : {};
   anchorLinks.forEach((link) => {
-    link.addEventListener('click', (e) => handleAnchorClick(e, signal), { signal });
+    link.addEventListener('click', (e) => handleAnchorClick(e, signal), listenerOptions);
   });
 }
 
 /**
  * アンカーリンククリック時の処理
  * @param {Event} e - クリックイベント
- * @param {AbortSignal} signal - AbortSignal（クリーンアップ用）
+ * @param {AbortSignal} [signal] - AbortSignal（省略可）
  */
 function handleAnchorClick(e, signal) {
   const href = e.currentTarget.getAttribute('href');
@@ -59,7 +60,7 @@ function handleAnchorClick(e, signal) {
 /**
  * 指定要素までスムーススクロール
  * @param {HTMLElement} element - スクロール先の要素
- * @param {AbortSignal} signal - AbortSignal（クリーンアップ用）
+ * @param {AbortSignal} [signal] - AbortSignal（省略可）
  */
 function smoothScrollToElement(element, signal) {
   const SCROLL_SPEED = 500; // スクロール速度（ミリ秒）
@@ -87,7 +88,7 @@ function smoothScrollToElement(element, signal) {
  * 指定位置までスムーススクロール
  * @param {number} targetPosition - スクロール先の位置
  * @param {number} duration - スクロール時間（ミリ秒）
- * @param {AbortSignal} signal - AbortSignal（クリーンアップ用）
+ * @param {AbortSignal} [signal] - AbortSignal（省略可）
  */
 function smoothScrollTo(targetPosition, duration, signal) {
   const startPosition = window.scrollY;

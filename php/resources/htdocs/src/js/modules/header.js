@@ -69,29 +69,31 @@ const close = () => {
 
 /**
  * 初期化（ルートに delegate。data-action="header.toggle" / "header.close" で開閉。ESC・Tab は document）
- * @param {{ scope: { signal: AbortSignal } }} ctx
+ * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  */
-const init = ({ scope }) => {
+const init = (ctx = {}) => {
+  const { scope } = ctx;
   const header = getHeader();
   if (!header) return;
 
   header.setAttribute('aria-expanded', 'false');
 
-  delegate(header, scope, {
+  delegate(header, 'click', {
     'header.toggle': () => {
       if (isOpen()) close();
       else open();
     },
     'header.close': close,
-  });
+  }, scope);
 
+  const keydownOptions = scope?.signal ? { signal: scope.signal } : {};
   document.addEventListener(
     'keydown',
     (e) => {
       if (e.key === 'Escape' && isOpen()) close();
       if (e.key === 'Tab' && isOpen()) handleFocusTrapKeydown(header, e);
     },
-    { signal: scope.signal }
+    keydownOptions
   );
 };
 

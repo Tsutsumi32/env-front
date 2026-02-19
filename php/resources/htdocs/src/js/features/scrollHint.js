@@ -15,10 +15,11 @@ const SELECTOR_SCROLL_HINT = `[${DATA_ATTR.FEATURE}="${FEATURE_NAME}"]`;
 
 /**
  * 初期化（ScrollHint がグローバルに存在する場合のみ）
- * @param {{ scope: { signal: AbortSignal } }} ctx
+ * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  * @param {{ target?: string, i18n?: object, remainingTime?: number, suggestiveShadow?: boolean, scrollHintIconAppendClass?: string }} [options]
  */
-const init = ({ scope }, options = {}) => {
+const init = (ctx = {}, options = {}) => {
+  const { scope } = ctx;
   const ScrollHint = window.ScrollHint;
   if (!ScrollHint) return;
 
@@ -30,7 +31,7 @@ const init = ({ scope }, options = {}) => {
     scrollHintIconAppendClass: options.scrollHintIconAppendClass ?? 'scroll-hint-icon-white',
   });
 
-  if (typeof instance?.destroy === 'function') {
+  if (typeof instance?.destroy === 'function' && scope?.signal) {
     scope.signal.addEventListener('abort', () => instance.destroy(), { once: true });
   }
 };

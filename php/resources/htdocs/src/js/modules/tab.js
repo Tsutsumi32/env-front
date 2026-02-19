@@ -22,14 +22,14 @@ const SELECTOR_CONTENT = `[${ATTR_TAB_CONTENT}]`;
 /**
  * 1 つのタブグループを初期化（ルートに delegate、data-action="tab.select"）
  * @param {Element} root
- * @param {{ signal: AbortSignal }} scope
+ * @param {{ signal: AbortSignal } | undefined} [scope] - 省略時は MPA 想定
  */
 const initTabGroup = (root, scope) => {
   const triggers = root.querySelectorAll(SELECTOR_TRIGGER);
   const contents = root.querySelectorAll(SELECTOR_CONTENT);
   if (!triggers.length || !contents.length) return;
 
-  delegate(root, scope, {
+  delegate(root, 'click', {
     'tab.select': (e, el) => {
       e.preventDefault();
       const targetTab = el.getAttribute(ATTR_TAB);
@@ -49,7 +49,7 @@ const initTabGroup = (root, scope) => {
       triggers.forEach((t) => t.classList.remove(STATE_CLASSES.ACTIVE));
       el.classList.add(STATE_CLASSES.ACTIVE);
     },
-  });
+  }, scope);
 
   // 初期状態：最初のタブをアクティブに
   const firstTab = triggers[0];
@@ -65,9 +65,10 @@ const initTabGroup = (root, scope) => {
 
 /**
  * 初期化
- * @param {{ scope: { signal: AbortSignal }, root?: Element }} ctx
+ * @param {{ scope?: { signal: AbortSignal }, root?: Element }} [ctx] - scope 省略時は MPA 想定
  */
-const init = ({ scope, root = document }) => {
+const init = (ctx = {}) => {
+  const { scope, root = document } = ctx;
   const roots = root.querySelectorAll(SELECTOR_ROOT);
   roots.forEach((r) => initTabGroup(r, scope));
 };

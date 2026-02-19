@@ -543,10 +543,11 @@ const handleValidationError = () => {
 
 /**
  * 初期化（送信ボタンにクリックリスナーを登録）
- * @param {{ scope: { signal: AbortSignal } }} ctx
+ * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  * @param {{ formSelector?: string, submitBtnSelector?: string, useRecaptcha?: boolean }} [options]
  */
-const init = ({ scope }, options = {}) => {
+const init = (ctx = {}, options = {}) => {
+  const { scope } = ctx;
   const formSelector = options.formSelector ?? SELECTOR_FORM_CONTACT;
   const submitBtnSelector = options.submitBtnSelector ?? SELECTOR_FORM_SUBMIT;
   const useRecaptcha = options.useRecaptcha ?? false;
@@ -554,12 +555,12 @@ const init = ({ scope }, options = {}) => {
   const form = document.querySelector(formSelector);
   if (!form) return;
 
-  delegate(form, scope, {
+  delegate(form, 'click', {
     'formValidator.submit': (event) => {
       event.preventDefault();
       handleFormSubmit(event, { formSelector, submitBtnSelector, useRecaptcha });
     },
-  });
+  }, scope);
 };
 
 export const formValidator = { init };

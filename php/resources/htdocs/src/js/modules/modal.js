@@ -134,17 +134,18 @@ const close = () => {
 
 /**
  * モーダルを初期化する（document に delegate して modal.open / modal.close を拾う）
- * @param {{ scope: { signal: AbortSignal } }} ctx - createPage の scope を渡す
+ * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  */
-const init = ({ scope }) => {
-  delegate(document, scope, {
+const init = (ctx = {}) => {
+  const { scope } = ctx ?? {};
+  delegate(document, 'click', {
     'modal.open': (e, el) => {
       open({ trigger: el, id: el.getAttribute(ATTR_MODAL_ID) });
     },
     'modal.close': () => {
       close();
     },
-  });
+  }, scope);
 };
 
 export const modal = { open, close, init };

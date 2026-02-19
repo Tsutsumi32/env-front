@@ -18,10 +18,11 @@ const SELECTOR_MV = `[${ATTR_PAGE_TOP_MV}]`;
 
 /**
  * 初期化（表示制御は [data-module="pageTop"] を参照。クリックは document に delegate、data-action="pageTop.scroll"）
- * @param {{ scope: { signal: AbortSignal } }} ctx
+ * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  * @param {{ startSelector?: string }} [options] - 表示開始の基準要素（省略時は data-pageTop-mv）
  */
-const init = ({ scope }, options = {}) => {
+const init = (ctx = {}, options = {}) => {
+  const { scope } = ctx;
   const pageTop = document.querySelector(SELECTOR_PAGE_TOP);
   const startEl = document.querySelector(options.startSelector || SELECTOR_MV);
 
@@ -49,12 +50,14 @@ const init = ({ scope }, options = {}) => {
       { rootMargin: '0px', threshold: 0 }
     );
     observer.observe(startEl);
-    scope.signal.addEventListener('abort', () => observer.disconnect(), { once: true });
+    if (scope?.signal) {
+      scope.signal.addEventListener('abort', () => observer.disconnect(), { once: true });
+    }
   }
 
-  delegate(document, scope, {
+  delegate(document, 'click', {
     'pageTop.scroll': () => window.scrollTo({ top: 0 }),
-  });
+  }, scope);
 };
 
 export const pageTop = { init };

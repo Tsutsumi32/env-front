@@ -11,7 +11,7 @@
  * @param {HTMLElement} element - アニメーション対象の要素
  * @param {number} duration - アニメーション時間（ミリ秒）
  * @param {string} easing - イージング関数名
- * @param {AbortSignal} signal - AbortSignal（クリーンアップ用）
+ * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定）
  */
 export const slideDown = (element, duration = 300, easing = 'ease-out', signal) => {
   // 既に表示されている場合は何もしない
@@ -63,7 +63,7 @@ export const slideDown = (element, duration = 300, easing = 'ease-out', signal) 
  * @param {HTMLElement} element - アニメーション対象の要素
  * @param {number} duration - アニメーション時間（ミリ秒）
  * @param {string} easing - イージング関数名
- * @param {AbortSignal} signal - AbortSignal（クリーンアップ用）
+ * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定）
  */
 export const slideUp = (element, duration = 300, easing = 'ease-out', signal) => {
   // 既に非表示の場合は何もしない
@@ -115,7 +115,7 @@ export const slideUp = (element, duration = 300, easing = 'ease-out', signal) =>
  * @param {HTMLElement} element - アニメーション対象の要素
  * @param {number} duration - アニメーション時間（ミリ秒）
  * @param {string} easing - イージング関数名
- * @param {AbortSignal} signal - AbortSignal（クリーンアップ用）
+ * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定）
  */
 export const slideToggle = (element, duration = 300, easing = 'ease-out', signal) => {
   // 現在の表示状態を確認
@@ -133,7 +133,7 @@ export const slideToggle = (element, duration = 300, easing = 'ease-out', signal
  * @param {HTMLElement[]} elements - アニメーション対象の要素配列
  * @param {number} duration - アニメーション時間（ミリ秒）
  * @param {string} easing - イージング関数名
- * @param {AbortSignal} signal - AbortSignal（クリーンアップ用）
+ * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定）
  */
 export const slideDownMultiple = (elements, duration = 300, easing = 'ease-out', signal) => {
   return Promise.all(elements.map((element) => slideDown(element, duration, easing, signal)));
@@ -144,7 +144,7 @@ export const slideDownMultiple = (elements, duration = 300, easing = 'ease-out',
  * @param {HTMLElement[]} elements - アニメーション対象の要素配列
  * @param {number} duration - アニメーション時間（ミリ秒）
  * @param {string} easing - イージング関数名
- * @param {AbortSignal} signal - AbortSignal（クリーンアップ用）
+ * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定）
  */
 export const slideUpMultiple = (elements, duration = 300, easing = 'ease-out', signal) => {
   return Promise.all(elements.map((element) => slideUp(element, duration, easing, signal)));

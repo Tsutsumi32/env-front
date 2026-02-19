@@ -75,14 +75,15 @@ const preventScroll = (e) => {
 
 /**
  * スクロール防止イベントリスナーを追加する
- * @param {AbortSignal} signal - AbortSignal（クリーンアップ用）
+ * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定で登録のみ・破棄しない）
  * @description wheelとtouchmoveイベントにpreventScroll関数をバインドして、
  * マウスホイールやタッチスクロールを防止する。
  * passive: falseでイベントのデフォルト動作を阻止可能にする。
  */
 export const disableScrollPrevent = (signal) => {
-  document.addEventListener('wheel', preventScroll, { passive: false, signal });
-  document.addEventListener('touchmove', preventScroll, { passive: false, signal });
+  const opts = signal ? { passive: false, signal } : { passive: false };
+  document.addEventListener('wheel', preventScroll, opts);
+  document.addEventListener('touchmove', preventScroll, opts);
 };
 
 /**

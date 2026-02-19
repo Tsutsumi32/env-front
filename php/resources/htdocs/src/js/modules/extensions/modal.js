@@ -36,14 +36,14 @@ const onAfterClose = () => {
 
 /**
  * モーダル初期化（コア + プロジェクト固有）
- * @param {{ scope: { signal: AbortSignal } }} ctx
+ * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  */
-const init = (ctx) => {
+const init = (ctx = {}) => {
   const { scope } = ctx;
 
-  coreModal.init(ctx);
+  coreModal.init(ctx ?? {});
 
-  delegate(document, scope, {
+  delegate(document, 'click', {
     'modal.open': (e, el) => {
       const id = el?.getAttribute?.('data-modal-id') ?? undefined;
       onAfterOpen(el, id);
@@ -51,7 +51,7 @@ const init = (ctx) => {
     'modal.close': () => {
       onAfterClose();
     },
-  });
+  }, scope);
 };
 
 export const modal = {

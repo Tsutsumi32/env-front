@@ -22,12 +22,14 @@ export function initVideoHls(options) {
 
   let hlsInstance = null;
 
+  const onceOpts = signal ? { once: true, signal } : { once: true };
+
   // ネイティブHLS対応ブラウザ (Safari / iOS)
   if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
     videoElement.src = hlsUrl;
 
     if (onLoad) {
-      videoElement.addEventListener('loadeddata', onLoad, { once: true, signal });
+      videoElement.addEventListener('loadeddata', onLoad, onceOpts);
     }
 
     videoElement.addEventListener(
@@ -37,7 +39,7 @@ export function initVideoHls(options) {
         videoElement.src = mp4Url;
         if (onError) onError(e);
       },
-      { once: true, signal }
+      onceOpts
     );
   }
   // hls.js が使えるブラウザ (Chrome, Edge, Firefox, Android等)
@@ -97,7 +99,7 @@ export function initVideoHls(options) {
     videoElement.src = mp4Url;
 
     if (onLoad) {
-      videoElement.addEventListener('loadeddata', onLoad, { once: true, signal });
+      videoElement.addEventListener('loadeddata', onLoad, onceOpts);
     }
   }
 }
