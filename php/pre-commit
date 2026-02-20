@@ -1,8 +1,8 @@
 #!/bin/sh
 #
 # Git pre-commit hook
-# コミット前にステージングされたJS/SCSSファイルに対して
-# prettierとeslintを実行してコードを自動整形・修正します
+# コミット前にステージングされたJS/SCSS/HTML/PHPファイルに対して
+# prettier（およびJSはeslint）を実行してコードを自動整形・修正します
 # （Dockerコンテナ内で実行）
 #
 
@@ -72,9 +72,11 @@ if [ -z "$STAGED_FILES" ]; then
   exit 0
 fi
 
-# JSファイルとSCSSファイルを分類
+# JS / SCSS / HTML / PHP ファイルを分類
 JS_FILES=""
 SCSS_FILES=""
+HTML_FILES=""
+PHP_FILES=""
 
 for file in $STAGED_FILES; do
   # dev-front/プレフィックスを削除して相対パスを取得
@@ -95,6 +97,16 @@ for file in $STAGED_FILES; do
   # SCSSファイル（resources/htdocs/src/scss/配下）を抽出
   if echo "$relative_file" | grep -q "^resources/htdocs/src/scss/.*\.scss$"; then
     SCSS_FILES="$SCSS_FILES $file"
+  fi
+  
+  # HTMLファイル（resources/配下）を抽出
+  if echo "$relative_file" | grep -q "^resources/.*\.html$"; then
+    HTML_FILES="$HTML_FILES $file"
+  fi
+  
+  # PHPファイル（resources/配下）を抽出
+  if echo "$relative_file" | grep -q "^resources/.*\.php$"; then
+    PHP_FILES="$PHP_FILES $file"
   fi
 done
 
@@ -119,6 +131,46 @@ if [ -n "$SCSS_FILES" ]; then
     docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
     
     # 整形後のファイルをステージングに追加
+    git add "$file"
+  done
+fi
+
+# ============================================================================
+# HTMLファイルの整形処理
+# ============================================================================
+
+if [ -n "$HTML_FILES" ]; then
+  echo "🔧 HTMLファイルを整形中..."
+  for file in $HTML_FILES; do
+    case "$file" in
+      dev-front/*)
+        relative_file="${file#dev-front/resources/}"
+        ;;
+      *)
+        relative_file="${file#resources/}"
+        ;;
+    esac
+    docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
+    git add "$file"
+  done
+fi
+
+# ============================================================================
+# PHPファイルの整形処理
+# ============================================================================
+
+if [ -n "$PHP_FILES" ]; then
+  echo "🔧 PHPファイルを整形中..."
+  for file in $PHP_FILES; do
+    case "$file" in
+      dev-front/*)
+        relative_file="${file#dev-front/resources/}"
+        ;;
+      *)
+        relative_file="${file#resources/}"
+        ;;
+    esac
+    docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
     git add "$file"
   done
 fi

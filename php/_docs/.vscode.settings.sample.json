@@ -1,7 +1,6 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": false,
-  "prettier.configPath": "${workspaceFolder}/resources/.prettierrc",
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -31,8 +30,7 @@
     {
       "format": "compressed",
       "extensionName": ".css",
-      "savePath": "/wp-dir/wp-content/themes/midorikawa-hp/assets/css",
-      // "savePath": "~/../css",
+      "savePath": "~/../css",
       "savePathReplacementPairs": null
     }
   ],
@@ -40,6 +38,7 @@
       "**/wp-admin/**",
       "**/wp-content/plugins/**",
       "**/.sample-code/**",
-      "**/node_modules/**",
+      "**/node_modules/**"
   ],
+  "svg.preview.background": "dark-transparent"
 }

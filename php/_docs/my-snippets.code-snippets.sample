@@ -148,7 +148,7 @@
 			"//////////////////////////////////////////////"
 		],
 		"description": "scssコメント3",
-	}
+	},
 	"scss-breakpoint-sp": {
 		"prefix": "break-sp",
 		"body": [
