@@ -17,7 +17,7 @@ import { accordion } from '../modules/accordion.js';
  */
 const start = createPage({
   getRoot: () =>
-    document.querySelector(`[${DATA_ATTR.SCOPE}="home"]`) || document.querySelector('#top'),
+    document.querySelector(`[${DATA_ATTR.SCOPE}="home"]`),
   init: ({ root }) => {
     modal.init({});
     accordion.init({ root });

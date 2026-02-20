@@ -86,14 +86,14 @@ src/
 ### ① `data-page`：ページルート
 - ページ種別の識別（原則 `body` に付与）
 
-### ① `data-{page名}-xxXxXx`：ページない関連データ属性
+### ① `data-{page名}-xxxxxx`：ページない関連データ属性
 - ページ種別の識別（原則 `body` に付与）
 
 ### ② `data-scope`：ページ内スコープ
 - ページ内で委譲 root を分けたいときのブロック単位
 - 主にレイアウト単位(section単位くらい)まで
 
-### ② `data-{scope名}-xxXxXx`：ページスコープ内関連データ属性
+### ② `data-{scope名}-xxxxxx`：ページスコープ内関連データ属性
 - ページ内で委譲 root を分けたいときのブロック単位
 - 主にレイアウト単位(section単位くらい)まで
 
@@ -106,7 +106,7 @@ src/
   - 例：`page.save` / `modal.open` / `accordion.toggle`
 - ルール：`<責務>.<動詞>`（責務例：`page`, `modal`, `accordion`, `toast`, `drawer`）
 
-### ⑤ `data-{module名}-xxXxXx`：モジュール関連のデータ属性
+### ⑤ `data-{module名}-xxxxxx`：モジュール関連のデータ属性
 - モジュール専用のパラメータ・識別子（例：`data-modal-id`, `data-modal-type`）
 
 ### ⑥ `data-feature`：機能の適用対象（features/）
@@ -115,7 +115,7 @@ src/
 - その機能に関連する設定・参照用の属性は **`data-feature-機能名-xxxx`**（キャメルケースの機能名をそのまま繋げる。例：`data-feature-wrapPunctuation-processed`）。
 - モジュール（独立 UI）は `data-module`、汎用処理は utils、**DOM 操作するが特定の data 属性でどこでも使えるもの**は features とする。
 
-### ⑥ `data-{feature名}-xxXxXx`：機能の関連のデータ属性（features/）
+### ⑥ `data-{feature名}-xxxxxx`：機能の関連のデータ属性（features/）
 
 ### ⑧ 要素・値の取得に `js_` クラスは使わない
 - **JS で制御する要素や値を取得する際、`js_` プレフィックスのクラスは使用しない**
@@ -128,7 +128,7 @@ src/
 ### ⑨ 状態変化に伴うクラスは `STATE_CLASSES`（global.js）から使用する
 - **状態の変化（開閉・選択・表示/非表示・無効化 等）に付与するクラスは、`constans/global.js` の `STATE_CLASSES` オブジェクトから参照する**
 - JS・CSS 双方で同一のクラス名を使用するため、`STATE_CLASSES` に集約する
-- 使用例：`STATE_CLASSES.ACTIVE`（`is_active`）、`STATE_CLASSES.HIDDEN`（`is_hidden`）、`STATE_CLASSES.DISPLAY`（`is-display`）等
+- 使用例：`STATE_CLASSES.ACTIVE`（`is_active`）、`STATE_CLASSES.HIDDEN`（`is_hidden`）、）等
 - 状態クラスを直接文字列で書かず、必ず `STATE_CLASSES` から参照すること
 
 ### ⑩ モジュール内で参照する data 属性はファイル先頭で定数定義する

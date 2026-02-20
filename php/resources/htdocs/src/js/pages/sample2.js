@@ -17,7 +17,7 @@ import { accordion } from '../modules/accordion.js';
 const start = createPage({
    // ページルート設定
   getRoot: () =>
-    document.querySelector(`[${DATA_ATTR.SCOPE}="home"]`) || document.querySelector('#top'),
+    document.querySelector(`[${DATA_ATTR.SCOPE}="home"]`),
    // 画面内の処理を実装
   init: ({ root, scope }) => {
     // モジュールの初期化（このページで使うもの）
