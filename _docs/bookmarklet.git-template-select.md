@@ -1,0 +1,1 @@
+javascript:(function(){const t=['frontend.md','',''];const c=prompt('どのテンプレートを適用しますか？\n'+t.join('\n'),t[0]);if(c&&window.location.pathname.includes('/compare/')){const u=new URL(window.location.href);u.searchParams.set('template',c);window.location.href=u.toString();}else if(c){alert('GitHubのプルリクエスト作成画面で実行してください。');}})();
