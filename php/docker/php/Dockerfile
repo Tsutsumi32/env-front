@@ -1,8 +1,8 @@
 FROM php:8.1-apache
 
 # ビルド引数（デフォルト値は1000）
-ARG UID=1000
-ARG GID=1000
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
 # 必要なツールをインストール
 RUN apt-get update && apt-get install -y wget curl gnupg git sudo \
@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y wget curl gnupg git sudo \
     && rm -rf /var/lib/apt/lists/*
 
 # グループとユーザーを作成（rootで実行）
-RUN groupadd -g ${GID} appuser && \
-    useradd -u ${UID} -g ${GID} -m -s /bin/bash appuser && \
+RUN groupadd -g ${HOST_GID} appuser && \
+    useradd -u ${HOST_UID} -g ${HOST_GID} -m -s /bin/bash appuser && \
     echo "appuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Apacheモジュール（mod_rewrite, mod_headers）を有効化

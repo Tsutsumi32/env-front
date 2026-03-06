@@ -1591,7 +1591,7 @@ zend.assertions = 1
 ;assert.quiet_eval = 0
 
 [COM]
-; path to a file containing GUIDs, IIDs or filenames of files with TypeLibs
+; path to a file containing GHOST_UIDs, IIDs or filenames of files with TypeLibs
 ; http://php.net/com.typelib-file
 ;com.typelib_file =
 

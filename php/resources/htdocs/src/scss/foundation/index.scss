@@ -16,7 +16,7 @@
 @forward './mixins/_body-scroll-rock.scss';
 @forward './mixins/_color-themes.scss';
 @forward './mixins/_container.scss';
-@forward './mixins/_dashed-underline.scss';
+@forward './mixins/_dashed-line.scss';
 @forward './mixins/_flex-size.scss';
 @forward './mixins/_font.scss';
 @forward './mixins/_hover.scss';
@@ -39,7 +39,5 @@
 @forward './project/_project-utils.scss';
 
 /***********************************************************
-/*  animations
+/*  animation
 ************************************************************/
-@forward './animations/_fade.scss';
-

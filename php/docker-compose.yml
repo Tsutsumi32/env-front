@@ -4,15 +4,15 @@ services:
     build:
       context: ./docker/php
       args:
-        UID: ${UID:-1000}
-        GID: ${GID:-1000}
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
     ports:
       - "${PHP_PORT:-8000}:80"
     depends_on:
       - db
     environment:
-      - UID=${UID:-1000}
-      - GID=${GID:-1000}
+      - HOST_UID=${HOST_UID:-1000}
+      - HOST_GID=${HOST_GID:-1000}
     volumes:
       - .:/var/www
       - ./docker/php/php.ini-development:/usr/local/etc/php/php.ini:cached
@@ -24,10 +24,10 @@ services:
       context: .
       dockerfile: docker/frontend/Dockerfile
       args:
-        UID: ${UID:-1000}
-        GID: ${GID:-1000}
-    # ホスト側のユーザーID/グループIDをマッピング
-    user: "${UID:-1000}:${GID:-1000}"
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
+    # ホスト側のユーザーID/グループIDをマッピング(Dockerfile側で追加済)
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     volumes:
       # プロジェクトのファイルをマウント（ホストの変更がコンテナに反映される）
       - .:/var/www
@@ -37,9 +37,6 @@ services:
     # ポートマッピング（.envファイルから読み込み）
     ports:
       - "${FRONT_PORT}:${FRONT_PORT}"
-    # 環境変数（.envファイルから読み込み）
-    environment:
-      - NODE_ENV=${PROJECT_ENV}
     # ネットワークを揃えてプロキシする
     networks:
       - br0

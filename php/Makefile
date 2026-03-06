@@ -1,7 +1,10 @@
-.PHONY: help up down restart build rebuild logs shell start watch build-scss build-js build-convert-images build-scss-index meta-convert-images watch-scss watch-js watch-convert-images watch-scss-index serve clean clean-all clean-docker install
+.PHONY: help up down restart build build-docker rebuild logs shell start watch build-scss build-js build-convert-images build-scss-index meta-convert-images watch-scss watch-js watch-convert-images watch-scss-index serve clean clean-all clean-docker install
 
 # デフォルトターゲット
 .DEFAULT_GOAL := help
+
+# $(COMPOSE) コマンド（明示的に.env を渡す）
+COMPOSE := docker compose --env-file .env
 
 # .envファイルから環境変数を読み込む
 ifneq (,$(wildcard .env))
@@ -9,7 +12,7 @@ ifneq (,$(wildcard .env))
     export
 endif
 
-# Docker Composeサービス名（環境変数から取得、未設定の場合はfrontendをデフォルト値として使用）
+# $(COMPOSE)サービス名（環境変数から取得、未設定の場合はfrontendをデフォルト値として使用）
 FRONT_CONTAINER := $(or $(FRONT_CONTAINER),frontend)
 
 # プロジェクト名（環境変数から取得、未設定の場合はsample_hpをデフォルト値として使用）
@@ -29,30 +32,38 @@ help: ## このヘルプメッセージを表示
 
 ##@ Docker
 
-init: ## 初回セットアップ（docker compose up -d ＆ pre-commitフック設置）
-	@echo "🟢 docker compose up -d を実行します..."
-	docker compose up -d
+init: ## 初回セットアップ（.env 作成・HOST_UID/HOST_GID 反映・ビルド・起動・pre-commit フック設置）
+	@if [ ! -f .env ] && [ -f .env.example ]; then \
+		echo "🟡 .env が見つかりません。.env.example からコピーします..."; \
+	fi
+	@sh scripts/update-env-uid-gid.sh 2>/dev/null || true
+	@echo "🟢 Docker イメージをビルドします..."
+	$(COMPOSE) build
+	@echo "🟢 コンテナを起動します..."
+	$(COMPOSE) up -d
 	@echo "🟢 pre-commit フックを .git/hooks にコピーします..."
 	@if [ ! -d .git/hooks ]; then \
-		echo "❌ .git/hooks ディレクトリがありません。git 管理下で実行してください。"; \
+		echo "❌ .git/hooks がありません。git 管理下で実行してください。"; \
 		exit 1; \
 	fi
 	@cp -f pre-commit .git/hooks/pre-commit
 	@chmod +x .git/hooks/pre-commit
 	@echo "✅ 初期セットアップ完了: pre-commit フック設置済み"
 
+build-docker: ## Docker イメージをビルド
+	$(COMPOSE) build
 
 up: ## Dockerコンテナを起動
-	docker compose up -d
+	$(COMPOSE) up -d
 
 down: ## Dockerコンテナを停止
-	docker compose down
+	$(COMPOSE) down
 
 restart: ## Dockerコンテナを再起動
-	docker compose restart
+	$(COMPOSE) restart
 
 rebuild: ## Dockerイメージを再ビルド
-	docker compose build --no-cache
+	$(COMPOSE) build --no-cache
 
 logs: ## Dockerコンテナのログを表示
 	docker logs -f $(CONTAINER_NAME)
@@ -153,7 +164,7 @@ clean: ## ビルド成果物を削除
 
 clean-docker: ## Dockerコンテナ、イメージ、ボリュームを完全削除
 	@echo "⚠️  Dockerコンテナ、イメージ、ボリュームを完全に削除します..."
-	docker compose down --rmi all --volumes --remove-orphans
+	$(COMPOSE) down --rmi all --volumes --remove-orphans
 	@echo "✅ Dockerの完全削除が完了しました"
 
 clean-all: clean-docker clean ## コンテナ、イメージ、ボリューム、ビルド成果物をすべて削除

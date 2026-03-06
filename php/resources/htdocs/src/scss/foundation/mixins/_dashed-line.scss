@@ -1,0 +1,72 @@
+/******************************************************************
+* dashed-line　破線の線を設定する（4方向対応）
+* @param $_width 線の太さ（デフォルト: 1px）
+* @param $_dash-length 線の長さ（デフォルト: 8px）
+* @param $_gap 間隔（デフォルト: 4px）
+* @param $_color 線の色（デフォルト: currentColor）
+* @param $_direction 線の方向（デフォルト: bottom）top / right / bottom / left / all（4辺すべて）
+*   ※要素の border-radius を出力し、破線の角部分を丸くクリップする
+*  例) @include dashed-underline(2px, 8px, 4px, #000);
+*  例) @include dashed-underline(1px, 8px, 4px, #000, all);
+*******************************************************************/
+@mixin dashed-line(
+	$_width: 1px,
+	$_dash-length: 8px,
+	$_gap: 4px,
+	$_color: currentColor,
+	$_direction: bottom,
+) {
+	$total-length: $_dash-length + $_gap;
+
+	$_gradient-h: repeating-linear-gradient(
+		to right,
+		$_color 0,
+		$_color #{$_dash-length},
+		transparent #{$_dash-length},
+		transparent #{$total-length}
+	);
+	$_gradient-v: repeating-linear-gradient(
+		to bottom,
+		$_color 0,
+		$_color #{$_dash-length},
+		transparent #{$_dash-length},
+		transparent #{$total-length}
+	);
+
+	@if $_direction == all {
+		// 4辺すべて：各辺を repeating-linear-gradient で描画（伸びずに要素いっぱいに表示）
+		background-image: $_gradient-h, $_gradient-v, $_gradient-h, $_gradient-v;
+		background-size: #{$total-length} $_width, $_width #{$total-length}, #{$total-length} $_width, $_width #{$total-length};
+		background-position: left top, right top, left bottom, left top;
+		background-repeat: repeat-x, repeat-y, repeat-x, repeat-y;
+		padding: $_width;
+	} @else if $_direction == bottom or $_direction == top {
+		background-image: $_gradient-h;
+		background-size: #{$total-length} $_width;
+		background-repeat: repeat-x;
+		@if $_direction == bottom {
+			background-position: left bottom;
+		} @else {
+			background-position: left top;
+		}
+	} @else {
+		background-image: $_gradient-v;
+		background-size: $_width #{$total-length};
+		background-repeat: repeat-y;
+		@if $_direction == left {
+			background-position: left top;
+		} @else {
+			background-position: right top;
+		}
+	}
+
+	@if $_direction == bottom {
+		padding-bottom: $_width;
+	} @else if $_direction == top {
+		padding-top: $_width;
+	} @else if $_direction == left {
+		padding-left: $_width;
+	} @else if $_direction == right {
+		padding-right: $_width;
+	}
+}

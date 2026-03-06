@@ -1,50 +1,32 @@
-# Voltaを使用するDocker環境
-FROM ubuntu:22.04
+# Node 24 ベースのフロントエンドビルド環境
+FROM node:24-bookworm
 
 # ビルド引数（デフォルト値は1000）
-ARG UID=1000
-ARG GID=1000
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
 # 環境変数の設定
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 必要なパッケージをインストール（vnu-jar 用に OpenJDK を含む）
+# 必要なパッケージをインストール（vnu-jar 用に OpenJDK、ネイティブモジュール用に build-essential）
 RUN apt-get update && apt-get install -y \
-    curl \
-    ca-certificates \
     git \
     build-essential \
     sudo \
     openjdk-17-jre-headless \
     && rm -rf /var/lib/apt/lists/*
 
-# グループとユーザーを作成（rootで実行）
-RUN groupadd -g ${GID} appuser && \
-    useradd -u ${UID} -g ${GID} -m -s /bin/bash appuser && \
-    echo "appuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# UID/GID が既存の場合は流用、なければ appuser を作成（node イメージの 1000 と衝突しない）
+COPY docker/frontend/docker-setup-user.sh /tmp/setup-user.sh
+RUN chmod +x /tmp/setup-user.sh && \
+    HOST_UID=${HOST_UID} HOST_GID=${HOST_GID} /tmp/setup-user.sh
 
-# ユーザーを切り替えてVoltaをインストール
-USER appuser
-ENV VOLTA_HOME=/home/appuser/.volta
-ENV PATH=$VOLTA_HOME/bin:$PATH
-
-# Voltaをインストール
-RUN curl https://get.volta.sh | bash
-
-# 作業ディレクトリを設定
 WORKDIR /var/www
 
-# package.jsonとpackage-lock.jsonを先にコピー
-# （voltaがpackage.jsonのvolta設定を自動的に読み取るため）
-COPY --chown=appuser:appuser resources/package*.json ./resources/
-
-# Voltaを使用してNode.jsとnpmをインストール
-# package.jsonのvolta設定から自動的にバージョンを読み取る
-RUN volta install node && \
-    volta install npm
+# package.jsonとpackage-lock.jsonを先にコピー（レイヤーキャッシュのため）
+COPY resources/package*.json ./resources/
 
 # 依存関係をインストール（resourcesディレクトリで実行）
-# 開発環境のためnpm installを使用
 WORKDIR /var/www/resources
 RUN npm install
 
@@ -52,4 +34,7 @@ RUN npm install
 WORKDIR /var/www
 
 # プロジェクトのファイルをコピー
-COPY --chown=appuser:appuser . .
+COPY . .
+
+# アプリケーションを実行ユーザーで所有（compose の user: と合わせる）
+RUN chown -R $(cat /tmp/appuser):$(cat /tmp/appgroup) /var/www
