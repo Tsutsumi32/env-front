@@ -3,6 +3,9 @@
 # デフォルトターゲット
 .DEFAULT_GOAL := help
 
+# ビルド成果物（削除対象）
+DIST_DIR := resources/htdocs/dist
+
 # $(COMPOSE) コマンド（明示的に.env を渡す）
 COMPOSE := docker compose --env-file .env
 
@@ -147,7 +150,7 @@ install: up ## 依存関係をインストール
 
 clean: ## ビルド成果物を削除
 	@echo "ビルド成果物を削除中..."
-	@rm -rf resources/htdocs/dist
+	@rm -rf $(DIST_DIR)
 	@echo "✅ クリーンアップ完了"
 
 clean-docker: ## Dockerコンテナ、イメージ、ボリュームを完全削除

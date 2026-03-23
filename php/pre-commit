@@ -10,15 +10,45 @@
 # 初期設定
 # ============================================================================
 
+# ============================================================================
+# パス・ファイル名の定数
+# ============================================================================
+
+DEV_FRONT_DIR="dev-front"
+COMPOSE_FILE_NAME="docker-compose.yml"
+ENV_FILE_NAME=".env"
+
+RESOURCES_DIR="resources"
+HTDOCS_DIR="htdocs"
+
+# コンテナ内の resources 基点（prettier/eslint の実行パス）
+CONTAINER_RESOURCES_BASE="/var/www/resources"
+
+# プレフィックス（dev-front 配下 or 通常の resources 配下）
+DEV_FRONT_PREFIX_ONLY="${DEV_FRONT_DIR}/"
+DEV_FRONT_RESOURCES_PREFIX="${DEV_FRONT_DIR}/${RESOURCES_DIR}/"
+RESOURCES_PREFIX="${RESOURCES_DIR}/"
+
+# ファイル種別の抽出パス（grep 用）
+JS_DIR_PATH="resources/htdocs/src/js"
+SCSS_DIR_PATH="resources/htdocs/src/scss"
+RESOURCES_ROOT_PATH="resources"
+
+# grep 用正規表現（末尾の $ はシェル展開を避けるために \$ を使用）
+JS_FILE_REGEX="^${JS_DIR_PATH}/.*\\.js\$"
+SCSS_FILE_REGEX="^${SCSS_DIR_PATH}/.*\\.scss\$"
+HTML_FILE_REGEX="^${RESOURCES_ROOT_PATH}/.*\\.html\$"
+PHP_FILE_REGEX="^${RESOURCES_ROOT_PATH}/.*\\.php\$"
+
 # プロジェクトルートディレクトリを取得
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 cd "$ROOT_DIR" || exit 1
 
 # docker-compose.ymlがあるディレクトリを特定
-# dev-front/配下にある場合と、ルートにある場合の両方に対応
-if [ -f "dev-front/docker-compose.yml" ]; then
-  COMPOSE_DIR="$ROOT_DIR/dev-front"
-elif [ -f "docker-compose.yml" ]; then
+# ${DEV_FRONT_DIR}/配下にある場合と、ルートにある場合の両方に対応
+if [ -f "${DEV_FRONT_DIR}/${COMPOSE_FILE_NAME}" ]; then
+  COMPOSE_DIR="$ROOT_DIR/${DEV_FRONT_DIR}"
+elif [ -f "${COMPOSE_FILE_NAME}" ]; then
   COMPOSE_DIR="$ROOT_DIR"
 else
   echo "❌ docker-compose.ymlが見つかりません"
@@ -30,9 +60,9 @@ fi
 # ============================================================================
 
 # .envファイルから環境変数を読み込む
-if [ -f "$COMPOSE_DIR/.env" ]; then
+if [ -f "$COMPOSE_DIR/$ENV_FILE_NAME" ]; then
   set -a
-  . "$COMPOSE_DIR/.env"
+  . "$COMPOSE_DIR/$ENV_FILE_NAME"
   set +a
 fi
 
@@ -79,33 +109,33 @@ HTML_FILES=""
 PHP_FILES=""
 
 for file in $STAGED_FILES; do
-  # dev-front/プレフィックスを削除して相対パスを取得
+  # ${DEV_FRONT_DIR}/プレフィックスを削除して相対パスを取得
   case "$file" in
-    dev-front/*)
-      relative_file="${file#dev-front/}"
+    ${DEV_FRONT_DIR}/*)
+      relative_file="${file#${DEV_FRONT_PREFIX_ONLY}}"
       ;;
     *)
       relative_file="$file"
       ;;
   esac
   
-  # JSファイル（resources/htdocs/src/js/配下）を抽出
-  if echo "$relative_file" | grep -q "^resources/htdocs/src/js/.*\.js$"; then
+  # JSファイル（${JS_DIR_PATH}/配下）を抽出
+  if echo "$relative_file" | grep -q "$JS_FILE_REGEX"; then
     JS_FILES="$JS_FILES $file"
   fi
   
-  # SCSSファイル（resources/htdocs/src/scss/配下）を抽出
-  if echo "$relative_file" | grep -q "^resources/htdocs/src/scss/.*\.scss$"; then
+  # SCSSファイル（${SCSS_DIR_PATH}/配下）を抽出
+  if echo "$relative_file" | grep -q "$SCSS_FILE_REGEX"; then
     SCSS_FILES="$SCSS_FILES $file"
   fi
   
   # HTMLファイル（resources/配下）を抽出
-  if echo "$relative_file" | grep -q "^resources/.*\.html$"; then
+  if echo "$relative_file" | grep -q "$HTML_FILE_REGEX"; then
     HTML_FILES="$HTML_FILES $file"
   fi
   
   # PHPファイル（resources/配下）を抽出
-  if echo "$relative_file" | grep -q "^resources/.*\.php$"; then
+  if echo "$relative_file" | grep -q "$PHP_FILE_REGEX"; then
     PHP_FILES="$PHP_FILES $file"
   fi
 done
@@ -117,18 +147,18 @@ done
 if [ -n "$SCSS_FILES" ]; then
   echo "🔧 SCSSファイルを整形中..."
   for file in $SCSS_FILES; do
-    # コンテナ内のパスに変換（dev-front/プレフィックスを削除）
+    # コンテナ内のパスに変換（${DEV_FRONT_DIR}/プレフィックスを削除）
     case "$file" in
-      dev-front/*)
-        relative_file="${file#dev-front/resources/}"
+      ${DEV_FRONT_DIR}/*)
+        relative_file="${file#${DEV_FRONT_RESOURCES_PREFIX}}"
         ;;
       *)
-        relative_file="${file#resources/}"
+        relative_file="${file#${RESOURCES_PREFIX}}"
         ;;
     esac
     
     # コンテナ内でprettierを実行してファイルを整形
-    docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
+    docker exec "${CONTAINER_NAME}" npx prettier --write "$CONTAINER_RESOURCES_BASE/${relative_file}" || exit 1
     
     # 整形後のファイルをステージングに追加
     git add "$file"
@@ -143,14 +173,14 @@ if [ -n "$HTML_FILES" ]; then
   echo "🔧 HTMLファイルを整形中..."
   for file in $HTML_FILES; do
     case "$file" in
-      dev-front/*)
-        relative_file="${file#dev-front/resources/}"
+      ${DEV_FRONT_DIR}/*)
+        relative_file="${file#${DEV_FRONT_RESOURCES_PREFIX}}"
         ;;
       *)
-        relative_file="${file#resources/}"
+        relative_file="${file#${RESOURCES_PREFIX}}"
         ;;
     esac
-    docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
+    docker exec "${CONTAINER_NAME}" npx prettier --write "$CONTAINER_RESOURCES_BASE/${relative_file}" || exit 1
     git add "$file"
   done
 fi
@@ -163,14 +193,14 @@ if [ -n "$PHP_FILES" ]; then
   echo "🔧 PHPファイルを整形中..."
   for file in $PHP_FILES; do
     case "$file" in
-      dev-front/*)
-        relative_file="${file#dev-front/resources/}"
+      ${DEV_FRONT_DIR}/*)
+        relative_file="${file#${DEV_FRONT_RESOURCES_PREFIX}}"
         ;;
       *)
-        relative_file="${file#resources/}"
+        relative_file="${file#${RESOURCES_PREFIX}}"
         ;;
     esac
-    docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
+    docker exec "${CONTAINER_NAME}" npx prettier --write "$CONTAINER_RESOURCES_BASE/${relative_file}" || exit 1
     git add "$file"
   done
 fi
@@ -183,18 +213,18 @@ if [ -n "$JS_FILES" ]; then
   # prettierでJSファイルを整形
   echo "🔧 JSファイルを整形中..."
   for file in $JS_FILES; do
-    # コンテナ内のパスに変換（dev-front/プレフィックスを削除）
+    # コンテナ内のパスに変換（${DEV_FRONT_DIR}/プレフィックスを削除）
     case "$file" in
-      dev-front/*)
-        relative_file="${file#dev-front/resources/}"
+      ${DEV_FRONT_DIR}/*)
+        relative_file="${file#${DEV_FRONT_RESOURCES_PREFIX}}"
         ;;
       *)
-        relative_file="${file#resources/}"
+        relative_file="${file#${RESOURCES_PREFIX}}"
         ;;
     esac
     
     # コンテナ内でprettierを実行してファイルを整形
-    docker exec "${CONTAINER_NAME}" npx prettier --write "/var/www/resources/${relative_file}" || exit 1
+    docker exec "${CONTAINER_NAME}" npx prettier --write "$CONTAINER_RESOURCES_BASE/${relative_file}" || exit 1
     
     # 整形後のファイルをステージングに追加
     git add "$file"
@@ -203,18 +233,18 @@ if [ -n "$JS_FILES" ]; then
   # eslintでJSファイルを修正
   echo "🔧 JSファイルをESLintで修正中..."
   for file in $JS_FILES; do
-    # コンテナ内のパスに変換（dev-front/プレフィックスを削除）
+    # コンテナ内のパスに変換（${DEV_FRONT_DIR}/プレフィックスを削除）
     case "$file" in
-      dev-front/*)
-        relative_file="${file#dev-front/resources/}"
+      ${DEV_FRONT_DIR}/*)
+        relative_file="${file#${DEV_FRONT_RESOURCES_PREFIX}}"
         ;;
       *)
-        relative_file="${file#resources/}"
+        relative_file="${file#${RESOURCES_PREFIX}}"
         ;;
     esac
     
     # コンテナ内でeslint --fixを実行して自動修正
-    docker exec "${CONTAINER_NAME}" npx eslint --fix "/var/www/resources/${relative_file}" || exit 1
+    docker exec "${CONTAINER_NAME}" npx eslint --fix "$CONTAINER_RESOURCES_BASE/${relative_file}" || exit 1
     
     # 修正後のファイルをステージングに追加
     git add "$file"

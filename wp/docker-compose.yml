@@ -33,17 +33,15 @@ services:
     volumes:
       # wordpressのイメージはvar/www/htmlが想定パスとなる
       - ./resources:/var/www/html
-      - ./resources/scripts/wp:/var/www/scripts/wp
+      - ./scripts/wp:/var/www/scripts/wp
       - ./docker/wordpress/php.ini:/usr/local/etc/php/php.ini
     environment:
       - WORDPRESS_DB_NAME=${DB_DATABASE}
       - WORDPRESS_DB_HOST=${DB_HOST}
       - WORDPRESS_DB_USE=${DB_USERNAME}
       - WORDPRESS_DB_PASSWORD=${DB_PASSWORD}
-      - HOST_UID=${HOST_UID:-1000}
-      - HOST_GID=${HOST_GID:-1000}
     working_dir:
-      /var/www/html/htdocs/${WP_SUB_DIR}
+      /var/www/html/${WP_SUB_DIR}
     networks:
       - br0
 

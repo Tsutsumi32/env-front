@@ -10,10 +10,10 @@ xmlrpc.php
 docker/phpmyadmin/
 wp-*.php
 !wp-install.sh
-resources/htdocs/wp-dir/*
-!resources/htdocs/wp-dir/wp-content
-resources/htdocs/wp-dir/wp-content/*
-!resources/htdocs/wp-dir/wp-content/themes
+resources/wp-dir/*
+!resources/wp-dir/wp-content
+resources/wp-dir/wp-content/*
+!resources/wp-dir/wp-content/themes
 docker-compose.override.yml
 
 #==============================
