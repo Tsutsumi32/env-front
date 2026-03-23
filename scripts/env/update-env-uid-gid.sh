@@ -3,7 +3,7 @@
 # Windows (Git Bash / WSL), Linux, Mac で動作するよう id がない場合は 1000 を使用
 
 set -e
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 
 # .env がなければ .env.example からコピー
 if [ ! -f .env ] && [ -f .env.example ]; then

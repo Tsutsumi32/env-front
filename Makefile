@@ -75,10 +75,10 @@ shell: ## Dockerコンテナ内のシェルに接続
 
 ##@ 開発
 
-start: up ## 開発環境を起動（ビルド + 監視 + サーバー）
+dev: up ## 開発環境を起動（ビルド + 監視 + サーバー）
 	@echo "コンテナ起動を待機中..."
 	@sleep 2
-	docker exec -it $(FRONT_CONTAINER_NAME) bash -c "npm run start"
+	docker exec -it $(FRONT_CONTAINER_NAME) bash -c "npm run dev"
 
 build: up ## ビルドを実行（SCSS + JS + 画像変換）
 	@echo "コンテナ起動を待機中..."

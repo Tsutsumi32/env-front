@@ -8,13 +8,13 @@
  */
 
 // 定数の読み込み
-require_once __DIR__ . '/consts/consts.php';
+require_once __DIR__ . '/config/consts.php';
 
 // ユーティリティ関数の読み込み
 require_once __DIR__ . '/utils/render-img.php';
 
 // ページ設定クラスの読み込み
-require_once __DIR__ . '/pages/pages.php';
+require_once __DIR__ . '/config/pages.php';
 
 // 現在のURLからページIDを自動設定（各画面・レイアウトの両方で利用可能）
-$pageId = PageConfig::getPageIdFromRequest();
+$pageId = Page::getPageIdFromRequest();

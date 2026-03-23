@@ -3,9 +3,10 @@
  * resources/配下のスクリプトで使用する設定を定義する
  * DIR_SRC_PATH / DIR_DIST_PATH を基準にパスを連結して定義する
  ************************************************************/
+const FRONT_DIR = 'htdocs';
 
-const DIR_SRC_PATH = 'htdocs/src/';
-const DIR_DIST_PATH = 'htdocs/dist/';
+const DIR_SRC_PATH = `${FRONT_DIR}/src/`;
+const DIR_DIST_PATH = `${FRONT_DIR}/dist/`;
 
 /**
  * ビルド設定
@@ -15,7 +16,7 @@ export const BUILD_CONFIG = {
   DIR_SRC_PATH,
   DIR_DIST_PATH,
   // 画像の格納親ディレクトリ
-  DIR_IMAGE_TARGET_PATH: 'htdocs/assets/images/',
+  DIR_IMAGE_TARGET_PATH: `${FRONT_DIR}/assets/images/`,
 
   // SCSS/CSS関連（パスを連結して指定）
   SCSS: {
@@ -67,7 +68,7 @@ export const BUILD_CONFIG = {
   SCSS_INDEX: [
     {
       // 生成するエントリーファイルのパス（npm実行階層からの相対パス）
-      OUTPUT_FILE: 'htdocs/src/scss/common.scss',
+      OUTPUT_FILE: `${FRONT_DIR}/src/scss/common.scss`,
       // 対象ディレクトリの配列（上から順に読み込まれる）
       // 各ディレクトリは npm実行階層からの相対パス
       OUTPUT_FILE: DIR_SRC_PATH + 'scss/common.scss',

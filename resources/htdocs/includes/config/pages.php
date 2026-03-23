@@ -3,20 +3,27 @@
  * 各画面の設定値を定義するクラス
  *
  * このクラスでは、各ページの設定値（タイトル、ディスクリプション、パンくずリスト、URL等）を管理します。
- * PageConfigクラスとして、各ページの設定を定義します。
+ * Pageクラスとして、各ページの設定を定義します。
  */
 
 /**
  * ページ設定クラス
  */
-class PageConfig
+class Page
 {
+    /**
+     * 画面キー定数
+     */
+    public const PAGE_SAMPLE = 'sample';
+    public const PAGE_SAMPLE_ABOUT = 'sample-about';
+    public const PAGE_SAMPLE_WORKS = 'sample-works';
+
     /**
      * ページ設定の配列（キーがページID）
      * @var array
      */
     private static $pages = [
-        'sample' => [
+        self::PAGE_SAMPLE => [
             'title' => 'サンプルトップ',
             'description' => 'サンプルサイトのトップページです。',
             'breadcrumbs' => [
@@ -25,7 +32,7 @@ class PageConfig
             'url' => '/',
             'noindex' => false,
         ],
-        'sample-about' => [
+        self::PAGE_SAMPLE_ABOUT => [
             'title' => 'About - サンプルサイト',
             'description' => 'このサイトについてのページです。',
             'breadcrumbs' => [
@@ -35,7 +42,7 @@ class PageConfig
             'url' => '/about.php',
             'noindex' => false,
         ],
-        'sample-works' => [
+        self::PAGE_SAMPLE_WORKS => [
             'title' => 'Works - サンプルサイト',
             'description' => '制作実績のページです。',
             'breadcrumbs' => [
@@ -124,6 +131,18 @@ class PageConfig
     {
         $page = self::get($pageId);
         return $page['url'] ?? '/';
+    }
+
+    /**
+     * noindex設定を取得
+     *
+     * @param string $pageId ページID
+     * @return bool noindex設定
+     */
+    public static function getNoindex($pageId)
+    {
+        $page = self::get($pageId);
+        return (bool) ($page['noindex'] ?? false);
     }
 }
 

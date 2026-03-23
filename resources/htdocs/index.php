@@ -18,6 +18,24 @@ ob_start();
     <div class="ly_container __medium">
         <?php include __DIR__ . '/includes/modules/breadcrumbs.php'; ?>
 
+        <?php render_img([
+            'fileName' => 'work1.png',
+            'alt' => 'サンプル',
+            'width' => '1000',
+            'height' => '1000',
+            'loading' => 'lazy',
+            'responsive' => [
+                'sp' => [
+                    'width' => '800',
+                    'height' => '800',
+                ],
+                // 'pc' => [
+                //     'width' => '',
+                //     'height' => ''
+                // ]
+            ],
+        ]); ?>
+
         <div class="un_hero">
             <h1 class="un_hero_title">Welcome to Sample Site</h1>
             <p class="un_hero_description">サンプルサイトへようこそ<br></p>
@@ -120,4 +138,6 @@ $pageContents = ob_get_clean();
 // ベースレイアウトを読み込み（init.phpとhead.phpも読み込まれる）
 // CSS/JSファイルはbase.phpでページIDから自動的に読み込まれます
 include __DIR__ . '/includes/layouts/base.php';
+
+
 ?>

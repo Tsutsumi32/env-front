@@ -11,8 +11,7 @@
  */
 
 // ページコンテンツが指定されていない場合は空文字列
-$pageContents = $pageContents ?? '';
-?>
+$pageContents = $pageContents ?? ''; ?>
 
 <!doctype html>
 <html lang="ja">
@@ -29,32 +28,15 @@ $pageContents = $pageContents ?? '';
     <?php include __DIR__ . '/../head/favicon.php'; ?>
     <?php include __DIR__ . '/../head/theme-color.php'; ?>
     <?php include __DIR__ . '/../head/font.php'; ?>
-
-    <?php
-    // ページID（画面キー）をそのままファイル名としてCSS/JSを自動読み込み
-    // 共通スタイル（global, helpers, header, footer, layouts）は各ページのCSSファイルに含まれます
-    $distPath = "/dist/";
-    $cssPath = "{$distPath}css/";
-    $jsPath = "{$distPath}js/";
-    if (!empty($pageId)) {
-        $cssPagePath = "{$cssPath}{$pageId}.css";
-        $jsPagePath = "{$jsPath}{$pageId}.js";
-    ?>
-    <!-- css page -->
-    <link rel="stylesheet" href="<?php echo htmlspecialchars($cssPagePath, ENT_QUOTES, 'UTF-8'); ?>">
-    <!-- css common -->
-    <link rel="stylesheet" href="<?php echo htmlspecialchars("{$cssPath}common.css", ENT_QUOTES, 'UTF-8'); ?>">
-    <!-- js -->
-    <script type="module" src="<?php echo htmlspecialchars($jsPagePath, ENT_QUOTES, 'UTF-8'); ?>"></script>
-    <?php
-    }
-    ?>
+    <?php include __DIR__ . '/../head/assets.php'; ?>
 </head>
 
 <?php
-    // data-page属性の設定
+// data-page属性の設定
 ?>
-<body class="is_nojs"<?php echo !empty($pageId) ? ' data-page="' . htmlspecialchars($pageId, ENT_QUOTES, 'UTF-8') . '"' : ''; ?>>
+<body class="is_nojs"<?php echo !empty($pageId)
+    ? ' data-page="' . htmlspecialchars($pageId, ENT_QUOTES, 'UTF-8') . '"'
+    : ''; ?>>
     <?php include __DIR__ . '/header.php'; ?>
 
     <main class="ly_main">

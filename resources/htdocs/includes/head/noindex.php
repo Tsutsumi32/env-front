@@ -6,10 +6,8 @@
  * 検索エンジンにインデックスされないようにするページで使用します。
  */
 
-// ページ設定を取得
-$pageConfig = PageConfig::get($pageId ?? '');
-$noindex = $pageConfig['noindex'] ?? false;
-?>
+// noindex設定を取得
+$noindex = Page::getNoindex($pageId ?? ''); ?>
 <?php if ($noindex === true): ?>
 <meta name="robots" content="noindex nofollow" />
 <?php endif; ?>

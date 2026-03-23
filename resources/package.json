@@ -16,7 +16,7 @@
     "serve": "node node/serve/browser-sync.js",
     "build": "run-s build:scss-index build:scss build:js build:convert-images",
     "watch": "concurrently \"npm run watch:scss-index\" \"npm run watch:scss\" \"npm run watch:js\" \"npm run watch:convert-images\"",
-    "start": "concurrently \"npm run watch\" \"npm run serve\""
+    "dev": "concurrently \"npm run watch\" \"npm run serve\""
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
@@ -27,6 +27,7 @@
     "chokidar": "^4.0.3",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^9.2.1",
+    "@prettier/plugin-php": "^0.24.0",
     "cssnano": "^7.0.6",
     "esbuild": "^0.25.12",
     "eslint": "^9.39.1",
