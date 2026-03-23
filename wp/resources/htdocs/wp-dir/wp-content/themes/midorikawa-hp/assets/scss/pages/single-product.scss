@@ -1,0 +1,230 @@
+@charset "UTF-8";
+@use '../utils' as *;
+
+.products_contents {
+  @include pc {
+    display: flex;
+    gap: 8.3rem;
+  }
+}
+
+.products_imgWrap {
+  width: 100%;
+  margin-bottom: 6rem;
+  @include pc {
+    width: 41.1rem;
+    min-width: 41.1rem;
+    height: fit-content;
+    margin-bottom: 0 !important;
+  }
+  &:not(:has(.products_imgSliderSlide:nth-of-type(2))) {
+    margin-bottom: 3rem;
+    .products_imgSliderNav {
+      display: none !important;
+    }
+  }
+}
+
+.products_imgSliderParent {
+  position: relative;
+}
+
+.products_imgSliderWrapper {
+  align-items: center;
+}
+
+.products_imgSliderSlide {
+  padding: 1rem;
+  padding-top: 0;
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    box-shadow: 0 .3rem .6rem rgba($color_dark, .26);
+  }
+}
+
+.products_imgSliderNav {
+  cursor: pointer;
+  width: 3.5rem;
+  height: 3.5rem;
+  background-image: url(#{$image_path}icon_circle_angle_right_color.svg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: absolute;
+  bottom: -3rem;
+  z-index: 1;
+  @include pc {
+    width: 4rem;
+    height: 4rem;
+    bottom: -3.5rem;
+  }
+  &.__prev {
+    left: 1rem;
+    transform: scale(-1, 1);
+  }
+  &.__next {
+    right: 1rem;
+  }
+}
+
+.products_imgSliderPagination {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  bottom: -2rem !important;
+  .swiper-pagination-bullet {
+    width: 1rem !important;
+    height: 1rem !important;
+  }
+  .swiper-pagination-bullet-active {
+    background-color: $color_theme;
+  }
+}
+
+.products_infoWrap {
+  @include pc {
+    flex-basis: 0;
+    flex-grow: 1;
+    margin-top: 0
+  }
+  &_head {
+    @include font(22, 22, 0, 700);
+    color: $color_theme;
+    background-color: $color_theme_bg;
+    padding: 1rem 1.9rem;
+    @include pc {
+      font-size: 2.3rem;
+    }
+  }
+  &_text {
+    @include font(13, 20, 25);
+    margin-top: 3rem;
+    @include pc {
+      @include font(14, 25, 50);
+    }
+  }
+  &_exampleWrap {
+    background-color: $color_gray2;
+    border-radius: 1rem;
+    margin-top: 5rem;
+    padding: 5rem 2rem;
+    @include pc {
+      margin-top: 3.6rem;
+      padding-block: 2.6rem 3.7rem;
+      padding-inline: 4rem;
+    }
+  }
+  &_example {
+    @include font(25, 25, 0, 700);
+    color: $color_theme;
+    @include pc {
+      font-size: 2rem;
+    }
+  }
+  &_list {
+    margin-top: 3rem;
+    counter-reset: example;
+    @include pc {
+      margin-top: 2rem;
+    }
+  }
+  &_item {
+    counter-increment: example;
+    &:nth-of-type(n + 2) {
+      margin-top: 3rem;
+      @include pc {
+        margin-top: 1.8rem;
+      }
+    }
+  }
+  &_exampleHead {
+    @include font(14, 17, 0, 700);
+    &::before {
+      content: counter(example) '.';
+      display: inline-block;
+    }
+  }
+  &_exampleText {
+    @include font(12, 18, 0);
+    margin-top: 1.5rem;
+    @include pc {
+      margin-top: .5rem;
+    }
+  }
+}
+
+.products_secondHead {
+  @include font(25, 34, 0, 700);
+  color: $color_theme;
+  margin-bottom: 2rem;
+  @include pc {
+    @include font(32, 45, 0, 700);
+    margin-bottom: 3rem;
+  }
+}
+
+.products_text {
+  @include font(13, 20, 25);
+  margin-bottom: 5rem;
+  @include pc {
+    @include font(14, 25, 50);
+    margin-bottom: 3rem;
+  }
+}
+
+.products_outline {
+  margin-top: 2.5rem;
+  @include pc {
+    margin-top: 3.5rem;
+  }
+  &_item {
+    &:nth-of-type(n + 2) {
+      margin-top: 3.6rem;
+    }
+  }
+  &_head {
+    @include font(16, 19, 0, 700);
+    position: relative;
+    padding-left: 1.5rem;
+    padding-block: .4rem;
+    margin-bottom: 1.7rem;
+    @include pc {
+      font-size: 1.8rem;
+      margin-bottom: 1.8rem;
+    }
+    &::before {
+      content: "";
+      display: block;
+      height: 100%;
+      width: .5rem;
+      background-color: $color_theme;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }
+  &_text {
+    @include font(12, 18, 0);
+    display: flex;
+    gap: .8rem;
+    @include pc {
+      @include font(14, 25, 50);
+    }
+    &::before {
+      // content: "";
+      // display: inline-block;
+      // min-width: .6rem;
+      // height: .8rem;
+      // background-color: $color_black;
+      // clip-path: polygon(100% 50%, 0 0, 0 100%);
+      // position: relative;
+      // top: .5rem;
+      // left: 0;
+      @include pc {
+        // display: none;
+      }
+    }
+  }
+}

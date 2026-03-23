@@ -44,6 +44,11 @@ a {
   //text-box: trim-both cap alphabetic;
 }
 
+::before,
+::after {
+  pointer-events: none;
+}
+
 // picutreはスタイル上無視
 picture {
   display: contents;

@@ -1,0 +1,9 @@
+@charset "UTF-8";
+@use '../utils' as *;
+
+.policy_text {
+  @include font(13, 20, 50);
+  @include pc {
+    @include font(16, 30, 100);
+  }
+}

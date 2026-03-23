@@ -1,0 +1,18 @@
+@charset "UTF-8";
+@use '../utils' as *;
+
+.thanks_wrap {
+  margin-top: calc($height_header_sp + 8rem);
+  @include pc {
+      margin-top: calc($height_header_pc + 12rem);
+  }
+  .el_btn {
+    margin-inline: auto;
+    margin-top: 4rem;
+  }
+}
+
+.thanks_text {
+  @include font(16, 30, 0);
+  text-align: center;
+}

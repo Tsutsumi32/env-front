@@ -1,6 +1,6 @@
 services:
   php:
-    container_name: "${PROJECT_NAME}_app"
+    container_name: "${PROJECT_NAME}_php"
     build:
       context: ./docker/php
       args:
@@ -13,8 +13,9 @@ services:
     environment:
       - HOST_UID=${HOST_UID:-1000}
       - HOST_GID=${HOST_GID:-1000}
+    # マウントはresourcesの中
     volumes:
-      - .:/var/www
+      - ./resources:/var/www/html
       - ./docker/php/php.ini-development:/usr/local/etc/php/php.ini:cached
     networks:
       - br0
@@ -29,11 +30,11 @@ services:
     # ホスト側のユーザーID/グループIDをマッピング(Dockerfile側で追加済)
     user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     volumes:
-      # プロジェクトのファイルをマウント（ホストの変更がコンテナに反映される）
-      - .:/var/www
+      # プロジェクトのファイルをマウント（resourcesの中）
+      - ./resources:/var/www/html
       # node_modulesはボリュームとしてマウント
-      - node_modules:/var/www/resources/node_modules
-    working_dir: /var/www/resources
+      - node_modules:/var/www/html/node_modules
+    working_dir: /var/www/html
     # ポートマッピング（.envファイルから読み込み）
     ports:
       - "${FRONT_PORT}:${FRONT_PORT}"

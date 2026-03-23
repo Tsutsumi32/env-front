@@ -1,0 +1,1 @@
+.products_pickup{display:grid;grid-template-columns:1fr;gap:8rem}@media screen and (960px <= width){.products_pickup{grid-template-columns:1fr 1fr 1fr;gap:10.8rem}}/*# sourceMappingURL=products.css.map */

@@ -21,7 +21,7 @@ RUN a2enmod rewrite headers
 ADD 000-default.conf /etc/apache2/sites-enabled/000-default.conf
 
 # 作業ディレクトリ
-WORKDIR /var/www
+WORKDIR /var/www/html
 
 # PHP 設定ファイルを追加
 COPY mailhog.ini /usr/local/etc/php/conf.d/mailhog.ini
@@ -31,7 +31,7 @@ RUN curl -sSL https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhs
     && chmod +x mhsendmail \
     && mv mhsendmail /usr/local/bin/mhsendmail
 
-# entrypointスクリプトを追加（/var/wwwの所有権を設定）
+# entrypointスクリプトを追加（/var/www/htmlの所有権を設定）
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 

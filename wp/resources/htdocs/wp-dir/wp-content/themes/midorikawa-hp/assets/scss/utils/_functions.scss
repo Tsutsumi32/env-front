@@ -1,0 +1,128 @@
+// 単位変換(数値は引数そのまま)
+// $number 数値
+// $unit 変換結果の単位 省略時は 単位除外処理
+// 例) 「30px」を、「30」にする (30)
+// 例) 「30px」を、「30rem」にする(30px, 'rem');
+@function unit($number, $unit: 0) {
+  $calc: $number;
+
+  // numberに単位が指定されていた場合削除
+  @if type-of($number) == 'number' and not unitless($number) {
+    $calc: $number / ($number * 0 + 1);
+  }
+
+  // unitに指定がない場合、単位除外した数値を返却
+  @if $unit == 0 {
+    @return $calc;
+  }
+  @else if $unit == 'px' {
+    @return $calc * 1px;
+  }
+  @else if $unit == 'rem' {
+    @return $calc * 1rem;
+  }
+  @else if $unit == '%' {
+    @return $calc * 1%;
+  }
+  @else if $unit == 'vw' {
+    @return $calc * 1vw;
+  }
+  @else if $unit == 'vh' {
+    @return $calc * 1vh;
+  }
+}
+
+/**
+* rem変換 ※375以下ではvwとする
+* $number 数値
+* 例) 32pxをremに変換 (32);
+*/
+@function rem($number) {
+  @if $number < 0 {
+    @return max(unit($number) / 16 * 1rem, calc(unit($number) / unit($width_design_sp) * 100vw));
+  }
+    @return min(unit($number) / 16 * 1rem, calc(unit($number) / unit($width_design_sp) * 100vw));
+}
+
+// %計算
+// $number 数値
+// $basis %を計算するための基準値(幅)
+// 例) 値1000に対して50の%値 (50, 1000);
+@function toPer($number, $basis) {
+  @return calc(unit($number) / unit($basis) * 100%);
+}
+
+// vw(%)指定時、指定幅時点の固定値取得
+// $number 数値
+// $basis vw(%)を計算するための基準幅
+// $$widt 求めたい時点の幅
+// 例) 画面幅1280px時点で100pxとなるvw変化において、画面幅1400px時点での値を取得する。(100, 1280, 1400);
+@function vwToPixel($number, $basis, $width) {
+  @return calc(unit($number) / unit($basis) * unit($width) * 1px);
+}
+
+// vw(%)指定時、指定幅時点の固定値取得
+// $number 数値
+// $basis vw(%)を計算するための基準幅
+// $$widt 求めたい時点の幅
+// 例) 画面幅1280px時点で100pxとなるvw変化において、画面幅1400px時点での値を取得する。(100, 1280, 1400);
+@function vwToPixel($number, $basis, $width) {
+  @return calc(unit($number) / unit($basis) * unit($width) * 1px);
+}
+
+// vw
+// $number 数値
+// $screen 基準画面幅 数値
+@function vw($number, $screen) {
+  @return calc($number / $screen * 100vw);
+}
+
+//リキッドMAX値を指定
+//$number 数値
+//$screen 基準画面幅 数値
+//$max MAXとする「値」(単位あり)
+@function vwMax($number, $screen, $max) {
+  @return min(vw($number, $screen), $max);
+}
+
+//リキッドMIN値を指定
+//$number 数値
+//$screen 基準画面幅 数値
+//$min MINとする「値」(単位あり)
+@function vwMin($number, $screen, $min) {
+  @return min(vw($number, $screen), $min);
+}
+
+//vh計算
+//$number 数値
+//$height 基準の画面高さ
+//例) 画面高さ600pxの時に、50pxとなるvh (50, 600);
+@function vh($number, $height) {
+  @return calc($number / $height * 100vh);
+}
+
+@function vhMax($number, $max, $height) {
+  @return min($max, calc($number / $height * 100vh));
+}
+
+@function vhMin($number, $min, $height) {
+  @return max($min, calc($number / $height * 100vh));
+}
+
+// 行の高さを取得する
+// $line 行数
+// $font_size フォントサイズ (単位あり)
+// $line-height 行間
+// 例) 3行 サイズ16px 行間1.5 (3, 16px, 1.5);
+@function heightString($line, $font_size, $line_height) {
+  @return calc($font_size * $line_height * $line);
+}
+
+// 文字数による横幅を取得する
+// $num 文字数
+// $font_size フォントサイズ (単位あり)
+// $letter-spacing 文字間
+// 例) 30文字の横幅 サイズ16px 文字間0.03em (30, 16px, 0.03em);
+@function widthString($num, $font_size, $letter_spacing) {
+  @return calc(($font_size + $letter_spacing) * $num - $letter_spacing);
+}

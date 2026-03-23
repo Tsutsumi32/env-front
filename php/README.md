@@ -84,23 +84,6 @@ make start
 - **URL**: `http://localhost:8888`（ポートは `.env` の `VNU_PORT` で変更可能）
 - **ブックマークレット**：開発画面を開いている状態で、用意したブックマークレットを使用することで、画面内のDOMをvnuにPOSTして、そのまま検証が可能。(nu-html-checker-bookmarklet.md)
 
-### CLI での検証
-
-以下コマンドで、コンテナ内にて、CLIで一括の検証が可能
-※現在は素のhtmlのみ対応
-
-```bash
-make validate-html
-```
-
-エラーのみ表示したい場合:
-
-```bash
-make validate-html-errors-only
-```
-
-コンテナ内のシェル（`make shell`）では、`npm run validate:html` でも同じ検証ができます。
-
 ---
 
 ## コードフォーマット

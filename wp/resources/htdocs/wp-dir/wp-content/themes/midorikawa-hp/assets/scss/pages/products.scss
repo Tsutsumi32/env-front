@@ -1,0 +1,12 @@
+@charset "UTF-8";
+@use '../utils' as *;
+
+.products_pickup {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8rem;
+  @include pc {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10.8rem;
+  }
+}
