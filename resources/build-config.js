@@ -106,7 +106,7 @@ export const BUILD_CONFIG = {
   // Browser Sync設定
   // プロキシモード: 例: 'php:80'、サーバーモード: null
   BROWSER_SYNC_PROXY: 'php:80',
-  BROWSER_SYNC_WATCH_DIR: 'htdocs',
+  BROWSER_SYNC_WATCH_DIR: FRONT_DIR,
 
   // 画像変換設定
   IMAGE_CONVERT: {

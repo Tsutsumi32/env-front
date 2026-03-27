@@ -31,6 +31,10 @@ RUN curl -sSL https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhs
     && chmod +x mhsendmail \
     && mv mhsendmail /usr/local/bin/mhsendmail
 
+# PHP CS Fixer
+RUN curl -L https://cs.symfony.com/download/php-cs-fixer-v3.phar -o /usr/local/bin/php-cs-fixer && \
+    chmod +x /usr/local/bin/php-cs-fixer
+
 # entrypointスクリプトを追加（/var/www/htmlの所有権を設定）
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

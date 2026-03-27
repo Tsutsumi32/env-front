@@ -2,14 +2,7 @@
 
 ## 開発環境の立ち上げ
 
-### 1. .envファイルの作成・docker-compose.overrideの作成
-
-- プロジェクトルートにある`.env.example`を複製し、`.env`ファイルを作成してください。
-※中身の内容についてはプロジェクト毎に指示があります。
-- **必要に応じて**、`docker-compose.override.sample`を複製し、`docker-compose.override`ファイルを作成してください。自身の環境に必要な設定がある場合、本ファイルを編集します。
-
-
-### 2. Dockerコンテナの起動
+### Dockerコンテナの起動
 
 初回セットアップの場合は、以下のコマンドでDockerコンテナの起動とpre-commitフックの設置を行います。
 
@@ -17,7 +10,7 @@
 make init
 ```
 
-### 3. コンテナ起動(2回目以降)
+### コンテナ起動(2回目以降)
 
 Makefileを使用してDockerコンテナを起動します。
 
@@ -25,13 +18,13 @@ Makefileを使用してDockerコンテナを起動します。
 make up
 ```
 
-### 4. 開発サーバーの起動
+### 開発サーバーの起動
 
 ビルド、ファイル監視、ブラウザシンクを同時に起動します。
 *コンテナの起動も同時に行われるため、開発開始時には基本的にstartコマンドを利用します*
 
 ```bash
-make start
+make dev
 ```
 
 ブラウザで `http://localhost:3000` にアクセスできます。
@@ -99,6 +92,10 @@ make start
 - **対象**: コードの詳細なフォーマット（クォート、括弧、import順、プロパティ順など）
 - **VSCode設定**: `.vscode/settings.json`でPrettierをフォーマッターに設定
 
+### php-cs-fixer(PHPがある場合)
+
+- **設定ファイル**: `php-cs-fixer.dist.php`
+
 ### Pre-commitフック
 
 - **ファイル**: `pre-commit`
@@ -122,12 +119,6 @@ make start
 4. SCSS: Live Sass Compilerで`src`内にCSSを生成
 5. ブラウザシンクは不要（Live Serverで十分）
 
-**PHP環境の場合はDockerが必要。Live Serverは使えないため、ブラウザシンク必須**
-
-### JSプラグインについて
-
-- **基本方針**: npmで管理せず、CDNを利用
-- **CSS**: `vendor/`ディレクトリに格納
 
 ### ビルドができない場合
 

@@ -1,5 +1,6 @@
-import { spawn, exec } from 'child_process';
+import { exec } from 'child_process';
 import { promisify } from 'util';
+import browserSync from 'browser-sync';
 import { getEnv } from '../load-env.js';
 import { BUILD_CONFIG } from '../../build-config.js';
 
@@ -92,6 +93,7 @@ async function startBrowserSync() {
   // その他の設定は定数から取得
   const proxyTarget = BUILD_CONFIG.BROWSER_SYNC_PROXY;
   const watchDir = BUILD_CONFIG.BROWSER_SYNC_WATCH_DIR;
+  const localAddress = getEnv('LOCAL_ADDRESS', 'localhost');
 
   // 既存のプロセスを終了
   await killExistingBrowserSync();
@@ -110,38 +112,40 @@ async function startBrowserSync() {
     `${watchDir}/**/*.js`
   ];
 
-  // ブラウザシンクの起動コマンドを構築
-  const browserSyncArgs = ['browser-sync', 'start'];
+  // ブラウザシンク起動（API）:
+  // WordPressが受け取るHostが `wordpress:3000` になってしまうと、WordPress側で
+  // `Location: http://wordpress:3000/...` のリダイレクトが発生するため、
+  // プロキシ時のHostヘッダを `localhost:${port}` に上書きする。
+  const bs = browserSync.create();
+
+  const proxyHostHeader = `${localAddress}:${port}`;
 
   if (proxyTarget) {
-    // プロキシモード：BROWSER_SYNC_PROXYが設定されている場合
     console.log(`🚀 Browser Sync starting with proxy: ${proxyTarget}`);
-    browserSyncArgs.push('--proxy', proxyTarget);
+    bs.init({
+      // proxyを文字列ではなくオブジェクトで渡す（reqHeadersを効かせるため）
+      proxy: {
+        target: proxyTarget,
+        // WordPressが参照するHost情報を安定化させる
+        reqHeaders: {
+          host: proxyHostHeader,
+          'x-forwarded-host': proxyHostHeader,
+          'x-forwarded-port': String(port),
+        },
+      },
+      port,
+      files: watchFilesArray,
+      open: false,
+    });
   } else {
-    // サーバーモード：BROWSER_SYNC_PROXYが設定されていない場合
     console.log(`🚀 Browser Sync starting in server mode (${watchDir})`);
-    browserSyncArgs.push('--server', watchDir);
+    bs.init({
+      server: watchDir,
+      port,
+      files: watchFilesArray,
+      open: false,
+    });
   }
-
-  browserSyncArgs.push('--port', port, '--files', watchFilesArray.join(','));
-
-  // ブラウザシンクを起動
-  const browserSync = spawn('npx', browserSyncArgs, {
-    stdio: 'inherit',
-    shell: true
-  });
-
-  browserSync.on('error', (error) => {
-    console.error(`❌ Browser Sync error: ${error.message}`);
-    process.exit(1);
-  });
-
-  browserSync.on('exit', (code) => {
-    if (code !== 0) {
-      console.error(`❌ Browser Sync exited with code ${code}`);
-      process.exit(code);
-    }
-  });
 }
 
 // ブラウザシンクを起動

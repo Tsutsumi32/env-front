@@ -37,6 +37,18 @@ help: ## このヘルプメッセージを表示
 init: ## 初回セットアップ（.env 作成・HOST_UID/HOST_GID 反映・ビルド・起動・pre-commit フック設置）
 	@if [ ! -f .env ] && [ -f .env.example ]; then \
 		echo "🟡 .env が見つかりません。.env.example からコピーします..."; \
+		cp .env.example .env; \
+		echo "✅ .env を作成しました"; \
+	fi
+	@if [ ! -f docker-compose.override.yml ] && [ -f docker-compose.override.yml.example ]; then \
+		printf "🍎 macユーザーですか? docker-compose.override.yml を作成します... [y(yes)/n(no)]: "; \
+		read answer; \
+		if [ "$$answer" = "yes" ] || [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; then \
+			cp docker-compose.override.yml.example docker-compose.override.yml; \
+			echo "✅ docker-compose.override.yml を作成しました"; \
+		else \
+			echo "⏭️ docker-compose.override.yml の作成をスキップしました"; \
+		fi; \
 	fi
 	@sh scripts/env/update-env-uid-gid.sh 2>/dev/null || true
 	@echo "🟢 Docker イメージをビルドします..."
@@ -160,3 +172,14 @@ clean-docker: ## Dockerコンテナ、イメージ、ボリュームを完全削
 
 clean-all: clean-docker clean ## コンテナ、イメージ、ボリューム、ビルド成果物をすべて削除
 	@echo "✅ すべてのクリーンアップ完了"
+
+
+php-cs-fixer-fix: up ## PHP CS Fixerで自動整形
+	@echo "コンテナ起動を待機中..."
+	@sleep 2
+	docker exec $(WP_CONTAINER_NAME) bash -lc "php-cs-fixer fix --config=/var/www/html/php-cs-fixer.dist.php"
+
+php-cs-fixer-check: up ## PHP CS Fixerで差分確認（dry-run）
+	@echo "コンテナ起動を待機中..."
+	@sleep 2
+	docker exec $(WP_CONTAINER_NAME) bash -lc "php-cs-fixer fix --config=/var/www/html/php-cs-fixer.dist.php --dry-run"

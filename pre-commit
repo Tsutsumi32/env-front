@@ -1,9 +1,9 @@
 #!/bin/sh
 #
 # Git pre-commit hook
-# コミット前にステージングされたJS/SCSS/HTML/PHPファイルに対して
-# prettier（およびJSはeslint）を実行してコードを自動整形・修正します
-# （Dockerコンテナ内で実行）
+# コミット前にステージングされた JS/SCSS/HTML に対して prettier（JS は eslint も）、
+# PHP に対して php-cs-fixer を実行して自動整形・修正します
+# （Docker コンテナ内で実行）
 #
 
 # ============================================================================
@@ -53,22 +53,15 @@ fi
 # Docker Composeサービス名（環境変数から取得、未設定時はfrontendをデフォルト値として使用）
 FRONT_CONTAINER="${FRONT_CONTAINER:-frontend}"
 
+# WordPress サービス名（php-cs-fixer 実行用）
+WP_CONTAINER="${WP_CONTAINER:-wordpress}"
+
 # プロジェクト名（環境変数から取得、未設定時はsample_hpをデフォルト値として使用）
 PROJECT_NAME="${PROJECT_NAME:-sample_hp}"
 
-# コンテナ名を構築（形式: ${PROJECT_NAME}_${FRONT_CONTAINER}）
+# コンテナ名を構築（形式: ${PROJECT_NAME}_${FRONT_CONTAINER} / ${PROJECT_NAME}_${WP_CONTAINER}）
 CONTAINER_NAME="${PROJECT_NAME}_${FRONT_CONTAINER}"
-
-# ============================================================================
-# Dockerコンテナが起動しているか確認
-# ============================================================================
-
-# コンテナが起動しているか確認（pre-commit からは自動起動しない）
-if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${CONTAINER_NAME}$"; then
-  echo "❌ Dockerコンテナ（${CONTAINER_NAME}）が起動していません。先に起動してください。"
-  echo "  例: make up または docker compose up -d ${FRONT_CONTAINER}"
-  exit 1
-fi
+WP_CONTAINER_NAME="${PROJECT_NAME}_${WP_CONTAINER}"
 
 # ============================================================================
 # ステージングされたファイルの取得と分類
@@ -113,6 +106,36 @@ for file in $STAGED_FILES; do
 done
 
 # ============================================================================
+# Dockerコンテナが起動しているか確認（必要なときだけ）
+# ============================================================================
+
+NEED_FRONT=0
+if [ -n "$JS_FILES" ] || [ -n "$SCSS_FILES" ] || [ -n "$HTML_FILES" ]; then
+  NEED_FRONT=1
+fi
+
+NEED_WP=0
+if [ -n "$PHP_FILES" ]; then
+  NEED_WP=1
+fi
+
+if [ "$NEED_FRONT" -eq 1 ]; then
+  if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${CONTAINER_NAME}$"; then
+    echo "❌ Dockerコンテナ（${CONTAINER_NAME}）が起動していません。先に起動してください。"
+    echo "  例: make up または docker compose up -d ${FRONT_CONTAINER}"
+    exit 1
+  fi
+fi
+
+if [ "$NEED_WP" -eq 1 ]; then
+  if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${WP_CONTAINER_NAME}$"; then
+    echo "❌ Dockerコンテナ（${WP_CONTAINER_NAME}）が起動していません。先に起動してください。"
+    echo "  例: docker compose up -d ${WP_CONTAINER}"
+    exit 1
+  fi
+fi
+
+# ============================================================================
 # SCSSファイルの整形処理
 # ============================================================================
 
@@ -148,10 +171,12 @@ fi
 # ============================================================================
 
 if [ -n "$PHP_FILES" ]; then
-  echo "🔧 PHPファイルを整形中..."
+  echo "🔧 PHPファイルを PHP CS Fixer で整形中..."
   for file in $PHP_FILES; do
     relative_file="${file#${RESOURCES_PREFIX}}"
-    docker exec "${CONTAINER_NAME}" npx prettier --write "$CONTAINER_RESOURCES_BASE/${relative_file}" || exit 1
+    docker exec "${WP_CONTAINER_NAME}" php-cs-fixer fix \
+      "$CONTAINER_RESOURCES_BASE/${relative_file}" \
+      --config=/var/www/html/php-cs-fixer.dist.php || exit 1
     git add "$file"
   done
 fi

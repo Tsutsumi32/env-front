@@ -290,4 +290,32 @@
 		],
 		"description": "PHP render_img関数",
 	},
+	"wp-img-path": {
+		"prefix": "wp-img-path",
+		"body": [
+			"<?php echo get_template_directory_uri(); ?>/assets/images/$1"
+		],
+		"description": "Wordpress echo img path",
+	},
+	"wp-url": {
+		"prefix": "wp-url",
+		"body": [
+			"<?php esc_url(home_url('/$1')); ?>"
+		],
+		"description": "Wordpress echo url",
+	},
+	"wp-html": {
+		"prefix": "wp-html",
+		"body": [
+			"<?php echo nl2br(esc_html($1)); ?>"
+		],
+		"description": "Wordpress echo html text",
+	},
+	"wp-attr": {
+		"prefix": "wp-attr",
+		"body": [
+			"<?php echo esc_attr($1); ?>"
+		],
+		"description": "Wordpress echo attr",
+	},
 }
