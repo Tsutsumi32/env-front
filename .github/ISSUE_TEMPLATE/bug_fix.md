@@ -1,7 +1,7 @@
 ---
 name: 不具合報告
 about: 不具合の報告はこちら
-title: "[BUG]FEorBE： "
+title: "[BUG] FEorBE："
 # labels: ["bug", "triage"]
 labels:
 assignees: []
