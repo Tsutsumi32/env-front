@@ -38,24 +38,24 @@ ob_start();
                     $techStack = [
                         [
                             'title' => 'PHP',
-                            'text' => 'サーバーサイドのロジックを実装しています。',
+                            'text'  => 'サーバーサイドのロジックを実装しています。',
                         ],
                         [
                             'title' => 'SCSS',
-                            'text' => 'メンテナンスしやすいスタイルシートを記述しています。',
+                            'text'  => 'メンテナンスしやすいスタイルシートを記述しています。',
                         ],
                         [
                             'title' => 'JavaScript (ES6+)',
-                            'text' => 'モダンなJavaScriptでインタラクティブな機能を実装しています。',
+                            'text'  => 'モダンなJavaScriptでインタラクティブな機能を実装しています。',
                         ],
                         [
                             'title' => 'HTML5',
-                            'text' => 'セマンティックなマークアップで構造化しています。',
+                            'text'  => 'セマンティックなマークアップで構造化しています。',
                         ],
                     ];
 
-                    foreach ($techStack as $tech):
-                    ?>
+foreach ($techStack as $tech):
+    ?>
                     <div class="bl_card">
                         <div class="bl_card_header">
                             <h3 class="bl_card_title"><?php echo htmlspecialchars($tech['title'], ENT_QUOTES, 'UTF-8'); ?></h3>

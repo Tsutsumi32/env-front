@@ -6,14 +6,14 @@
  */
 
 // ページ情報を取得
-$currentPageId = $pageId ?? '';
-$pageTitle = Page::getTitle($currentPageId);
+$currentPageId   = $pageId ?? '';
+$pageTitle       = Page::getTitle($currentPageId);
 $pageDescription = Page::getDescription($currentPageId);
-$pageUrl = Page::getUrl($currentPageId);
+$pageUrl         = Page::getUrl($currentPageId);
 
 // サイト情報を取得
 $siteName = defined('SITE_NAME') ? SITE_NAME : 'Sample Site';
-$siteUrl = defined('SITE_URL') ? SITE_URL : 'http://localhost';
+$siteUrl  = defined('SITE_URL') ? SITE_URL : 'http://localhost';
 
 // タイトルの整形
 if (empty($pageTitle) || $pageTitle === $siteName) {

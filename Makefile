@@ -177,9 +177,9 @@ clean-all: clean-docker clean ## コンテナ、イメージ、ボリューム�
 php-cs-fixer-fix: up ## PHP CS Fixerで自動整形
 	@echo "コンテナ起動を待機中..."
 	@sleep 2
-	docker exec $(WP_CONTAINER_NAME) bash -lc "php-cs-fixer fix --config=/var/www/html/php-cs-fixer.dist.php"
+	docker exec $(PHP_CONTAINER_NAME) bash -lc "php-cs-fixer fix --config=/var/www/html/php-cs-fixer.dist.php"
 
 php-cs-fixer-check: up ## PHP CS Fixerで差分確認（dry-run）
 	@echo "コンテナ起動を待機中..."
 	@sleep 2
-	docker exec $(WP_CONTAINER_NAME) bash -lc "php-cs-fixer fix --config=/var/www/html/php-cs-fixer.dist.php --dry-run"
+	docker exec $(PHP_CONTAINER_NAME) bash -lc "php-cs-fixer fix --config=/var/www/html/php-cs-fixer.dist.php --dry-run"

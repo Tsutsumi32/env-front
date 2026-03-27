@@ -6,13 +6,13 @@
  */
 
 // 設定値（パス・ファイル名）
-$page = $pageId ?? '';
-$distBaseUrl = '/dist/';
-$cssUrlPath = "{$distBaseUrl}css/";
-$jsUrlPath = "{$distBaseUrl}js/";
-$jsFileDir = __DIR__ . '/../../dist/js/';
+$page              = $pageId ?? '';
+$distBaseUrl       = '/dist/';
+$cssUrlPath        = "{$distBaseUrl}css/";
+$jsUrlPath         = "{$distBaseUrl}js/";
+$jsFileDir         = __DIR__ . '/../../dist/js/';
 $commonCssFileName = 'common.css';
-$commonJsFileName = 'commonPage.js';
+$commonJsFileName  = 'commonPage.js';
 ?>
 <?php if (!empty($pageId)): ?>
     <?php $cssPagePath = "{$cssUrlPath}{$pageId}.css"; ?>
@@ -32,10 +32,10 @@ $commonJsFileName = 'commonPage.js';
 
     <!-- js (ページ固有 -> 無ければ共通) -->
     <?php
-    $pageJsPath = "{$jsUrlPath}{$pageId}.js";
+    $pageJsPath   = "{$jsUrlPath}{$pageId}.js";
     $commonJsPath = "{$jsUrlPath}{$commonJsFileName}";
-    $existPage = file_exists($jsFileDir . $pageId . '.js');
-    $finalJsPath = $existPage ? $pageJsPath : $commonJsPath;
+    $existPage    = file_exists($jsFileDir . $pageId . '.js');
+    $finalJsPath  = $existPage ? $pageJsPath : $commonJsPath;
     ?>
     <script src="<?php echo htmlspecialchars($finalJsPath, ENT_QUOTES, 'UTF-8'); ?>"></script>
 <?php endif; ?>

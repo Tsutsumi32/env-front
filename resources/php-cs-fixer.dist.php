@@ -9,22 +9,25 @@ declare(strict_types=1);
  */
 $targetDir = sprintf('%s/htdocs', __DIR__);
 
-$finder = new PhpCsFixer\Finder()
-    ->in([$targetDir])
+$finder = PhpCsFixer\Finder::create();
+$finder
+    ->in($targetDir)
     ->name('*.php')
     ->exclude(['vendor', 'node_modules']);
 
-return new PhpCsFixer\Config()
-    ->setRiskyAllowed(true)
-    ->setUsingCache(false)
-    ->setRules([
-        '@PSR12' => true,
-        'binary_operator_spaces' => [
-            'default' => 'single_space',
-            'operators' => [
-                '=>' => 'align_single_space_minimal',
-                '=' => 'align_single_space_minimal',
-            ],
+$config = new PhpCsFixer\Config();
+$config->setRiskyAllowed(true);
+$config->setUsingCache(false);
+$config->setRules([
+    '@PSR12'                 => true,
+    'binary_operator_spaces' => [
+        'default'   => 'single_space',
+        'operators' => [
+            '=>' => 'align_single_space_minimal',
+            '='  => 'align_single_space_minimal',
         ],
-    ])
-    ->setFinder($finder);
+    ],
+]);
+$config->setFinder($finder);
+
+return $config;

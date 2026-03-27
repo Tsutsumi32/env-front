@@ -19,14 +19,14 @@ ob_start();
         <?php include __DIR__ . '/includes/modules/breadcrumbs.php'; ?>
 
         <?php render_img([
-            'fileName' => 'work1.png',
-            'alt' => 'サンプル',
-            'width' => '1000',
-            'height' => '1000',
-            'loading' => 'lazy',
+            'fileName'   => 'work1.png',
+            'alt'        => 'サンプル',
+            'width'      => '1000',
+            'height'     => '1000',
+            'loading'    => 'lazy',
             'responsive' => [
                 'sp' => [
-                    'width' => '800',
+                    'width'  => '800',
                     'height' => '800',
                 ],
                 // 'pc' => [

@@ -54,14 +54,14 @@ fi
 FRONT_CONTAINER="${FRONT_CONTAINER:-frontend}"
 
 # WordPress サービス名（php-cs-fixer 実行用）
-WP_CONTAINER="${WP_CONTAINER:-wordpress}"
+PHP_CONTAINER="${PHP_CONTAINER:-wordpress}"
 
 # プロジェクト名（環境変数から取得、未設定時はsample_hpをデフォルト値として使用）
 PROJECT_NAME="${PROJECT_NAME:-sample_hp}"
 
-# コンテナ名を構築（形式: ${PROJECT_NAME}_${FRONT_CONTAINER} / ${PROJECT_NAME}_${WP_CONTAINER}）
+# コンテナ名を構築（形式: ${PROJECT_NAME}_${FRONT_CONTAINER} / ${PROJECT_NAME}_${PHP_CONTAINER}）
 CONTAINER_NAME="${PROJECT_NAME}_${FRONT_CONTAINER}"
-WP_CONTAINER_NAME="${PROJECT_NAME}_${WP_CONTAINER}"
+PHP_CONTAINER_NAME="${PROJECT_NAME}_${PHP_CONTAINER}"
 
 # ============================================================================
 # ステージングされたファイルの取得と分類
@@ -119,18 +119,84 @@ if [ -n "$PHP_FILES" ]; then
   NEED_WP=1
 fi
 
+# コンテナ未起動時に整形スキップで続行するか確認
+confirm_skip_without_format() {
+  missing_containers="$1"
+  start_examples="$2"
+
+  echo "⚠️ 以下のDockerコンテナが起動していません。"
+  echo "${missing_containers}"
+  echo "   整形なしでコミットを続行しますか？ [y/N]"
+
+  if [ -r /dev/tty ]; then
+    printf "> " > /dev/tty
+    read -r answer < /dev/tty
+  else
+    echo "❌ 対話入力が利用できないため、コミットを停止します。"
+    echo "${start_examples}"
+    return 1
+  fi
+
+  case "$answer" in
+    y|Y|yes|YES)
+      return 0
+      ;;
+    *)
+      echo "❌ コミットを停止しました。"
+      echo "${start_examples}"
+      return 1
+      ;;
+  esac
+}
+
+FRONT_RUNNING=1
+WP_RUNNING=1
+
 if [ "$NEED_FRONT" -eq 1 ]; then
   if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${CONTAINER_NAME}$"; then
-    echo "❌ Dockerコンテナ（${CONTAINER_NAME}）が起動していません。先に起動してください。"
-    echo "  例: make up または docker compose up -d ${FRONT_CONTAINER}"
-    exit 1
+    FRONT_RUNNING=0
   fi
 fi
 
 if [ "$NEED_WP" -eq 1 ]; then
-  if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${WP_CONTAINER_NAME}$"; then
-    echo "❌ Dockerコンテナ（${WP_CONTAINER_NAME}）が起動していません。先に起動してください。"
-    echo "  例: docker compose up -d ${WP_CONTAINER}"
+  if ! docker ps --format "{{.Names}}" 2>/dev/null | grep -q "^${PHP_CONTAINER_NAME}$"; then
+    WP_RUNNING=0
+  fi
+fi
+
+if [ "$FRONT_RUNNING" -eq 0 ] || [ "$WP_RUNNING" -eq 0 ]; then
+  MISSING_CONTAINERS=""
+  START_EXAMPLES=""
+
+  if [ "$FRONT_RUNNING" -eq 0 ]; then
+    MISSING_CONTAINERS="${MISSING_CONTAINERS}  - ${CONTAINER_NAME}
+"
+    START_EXAMPLES="${START_EXAMPLES}  例: make up または docker compose up -d ${FRONT_CONTAINER}
+"
+  fi
+
+  if [ "$WP_RUNNING" -eq 0 ]; then
+    MISSING_CONTAINERS="${MISSING_CONTAINERS}  - ${PHP_CONTAINER_NAME}
+"
+    START_EXAMPLES="${START_EXAMPLES}  例: docker compose up -d ${PHP_CONTAINER}
+"
+  fi
+
+  if confirm_skip_without_format "${MISSING_CONTAINERS}" "${START_EXAMPLES}"; then
+    if [ "$FRONT_RUNNING" -eq 0 ]; then
+      SCSS_FILES=""
+      HTML_FILES=""
+      JS_FILES=""
+      NEED_FRONT=0
+      echo "⏭️ フロント側の整形処理をスキップして続行します。"
+    fi
+
+    if [ "$WP_RUNNING" -eq 0 ]; then
+      PHP_FILES=""
+      NEED_WP=0
+      echo "⏭️ PHP整形処理をスキップして続行します。"
+    fi
+  else
     exit 1
   fi
 fi
@@ -174,7 +240,7 @@ if [ -n "$PHP_FILES" ]; then
   echo "🔧 PHPファイルを PHP CS Fixer で整形中..."
   for file in $PHP_FILES; do
     relative_file="${file#${RESOURCES_PREFIX}}"
-    docker exec "${WP_CONTAINER_NAME}" php-cs-fixer fix \
+    docker exec "${PHP_CONTAINER_NAME}" php-cs-fixer fix \
       "$CONTAINER_RESOURCES_BASE/${relative_file}" \
       --config=/var/www/html/php-cs-fixer.dist.php || exit 1
     git add "$file"

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * レスポンシブ画像出力関数
  *
@@ -22,18 +23,16 @@ function render_img(array $attributes): void
 {
     // ===== 共通: パス構築 =====
     $buildPaths = function (string $src): array {
-        $info = pathinfo($src);
-        $dirname = $info['dirname'] !== '.' ? $info['dirname'] . '/' : '';
+        $info     = pathinfo($src);
+        $dirname  = $info['dirname'] !== '.' ? $info['dirname'] . '/' : '';
         $basename = $info['filename'];
-        $ext = $info['extension'];
+        $ext      = $info['extension'];
 
         return [
-            'origin' =>
-                IMAGE_BASE_URI . '/' . IMAGE_DIR_ORIGIN . '/' . $dirname . $basename . '.' . $ext,
-            'webp' => IMAGE_BASE_URI . '/' . IMAGE_DIR_WEBP . '/' . $dirname . $basename . '.webp',
-            'avif' => IMAGE_BASE_URI . '/' . IMAGE_DIR_AVIF . '/' . $dirname . $basename . '.avif',
-            'compression' =>
-                IMAGE_BASE_URI .
+            'origin'      => IMAGE_BASE_URI . '/' . IMAGE_DIR_ORIGIN . '/' . $dirname . $basename . '.' . $ext,
+            'webp'        => IMAGE_BASE_URI . '/' . IMAGE_DIR_WEBP . '/' . $dirname . $basename . '.webp',
+            'avif'        => IMAGE_BASE_URI . '/' . IMAGE_DIR_AVIF . '/' . $dirname . $basename . '.avif',
+            'compression' => IMAGE_BASE_URI .
                 '/' .
                 IMAGE_DIR_COMPRESSION .
                 '/' .
@@ -46,10 +45,10 @@ function render_img(array $attributes): void
 
     $withSuffix = function (string $fileName, string $suffix): string {
         // 末尾に _sp / _pc を入れる（拡張子の前）
-        $info = pathinfo($fileName);
-        $dirname = $info['dirname'] !== '.' ? $info['dirname'] . '/' : '';
+        $info     = pathinfo($fileName);
+        $dirname  = $info['dirname'] !== '.' ? $info['dirname'] . '/' : '';
         $basename = $info['filename'];
-        $ext = $info['extension'];
+        $ext      = $info['extension'];
         return $dirname . $basename . $suffix . '.' . $ext;
     };
 
@@ -69,12 +68,12 @@ function render_img(array $attributes): void
         ? strtolower(trim($loadingCandidate))
         : 'eager';
     $allowedLoading = ['eager', 'lazy', 'auto'];
-    $loading = in_array($loadingCandidate, $allowedLoading, true) ? $loadingCandidate : 'eager';
+    $loading        = in_array($loadingCandidate, $allowedLoading, true) ? $loadingCandidate : 'eager';
 
     // ===== 新仕様: fileName + responsive =====
     if (array_key_exists('fileName', $attributes)) {
         $fileName = (string) ($attributes['fileName'] ?? '');
-        $alt = (string) ($attributes['alt'] ?? '');
+        $alt      = (string) ($attributes['alt'] ?? '');
 
         if ($fileName === '') {
             echo '<!-- fileName属性が必要です -->';
@@ -82,12 +81,12 @@ function render_img(array $attributes): void
         }
 
         $defaultDims = [
-            'width' => $attributes['width'] ?? '',
+            'width'  => $attributes['width'] ?? '',
             'height' => $attributes['height'] ?? '',
         ];
         $defaultDimsStr = $extractDimensions($defaultDims);
 
-        $responsive = is_array($attributes['responsive'] ?? null) ? $attributes['responsive'] : [];
+        $responsive  = is_array($attributes['responsive'] ?? null) ? $attributes['responsive'] : [];
         $spDimsInput = is_array($responsive['sp'] ?? null) ? $responsive['sp'] : null;
         $pcDimsInput = is_array($responsive['pc'] ?? null) ? $responsive['pc'] : null;
 
@@ -105,8 +104,8 @@ function render_img(array $attributes): void
 
         if ($mode === 'sp') {
             if ($spDimsInput) {
-                $spPaths = $buildPaths($withSuffix($fileName, IMAGE_SUFFIX_SP));
-                $spDimsStr = $extractDimensions($spDimsInput);
+                $spPaths      = $buildPaths($withSuffix($fileName, IMAGE_SUFFIX_SP));
+                $spDimsStr    = $extractDimensions($spDimsInput);
                 $breakpointSp = BREAKPOINT_SP;
                 echo <<<HTML
                 <source srcset="{$spPaths['avif']}" type="image/avif" media="(max-width: {$breakpointSp}px)"{$spDimsStr}>
@@ -124,9 +123,9 @@ function render_img(array $attributes): void
             HTML;
 
             // imgはPC側（base）を使用
-            $imgWidth = $attributes['width'] ?? '';
+            $imgWidth  = $attributes['width'] ?? '';
             $imgHeight = $attributes['height'] ?? '';
-            $wAttr = !empty($imgWidth)
+            $wAttr     = !empty($imgWidth)
                 ? sprintf(' width="%s"', htmlspecialchars((string) $imgWidth))
                 : '';
             $hAttr = !empty($imgHeight)
@@ -147,8 +146,8 @@ function render_img(array $attributes): void
 
         if ($mode === 'pc') {
             if ($pcDimsInput) {
-                $pcPaths = $buildPaths($withSuffix($fileName, IMAGE_SUFFIX_PC));
-                $pcDimsStr = $extractDimensions($pcDimsInput);
+                $pcPaths      = $buildPaths($withSuffix($fileName, IMAGE_SUFFIX_PC));
+                $pcDimsStr    = $extractDimensions($pcDimsInput);
                 $breakpointPc = BREAKPOINT_PC;
                 echo <<<HTML
                 <source srcset="{$pcPaths['avif']}" type="image/avif" media="(min-width: {$breakpointPc}px)"{$pcDimsStr}>
@@ -166,9 +165,9 @@ function render_img(array $attributes): void
             HTML;
 
             // imgはSP側（base）を使用
-            $imgWidth = $attributes['width'] ?? '';
+            $imgWidth  = $attributes['width'] ?? '';
             $imgHeight = $attributes['height'] ?? '';
-            $wAttr = !empty($imgWidth)
+            $wAttr     = !empty($imgWidth)
                 ? sprintf(' width="%s"', htmlspecialchars((string) $imgWidth))
                 : '';
             $hAttr = !empty($imgHeight)
@@ -194,9 +193,9 @@ function render_img(array $attributes): void
         <source srcset="{$basePaths['webp']}" type="image/webp"{$defaultDimsStr}>
         HTML;
 
-        $imgWidth = $attributes['width'] ?? '';
+        $imgWidth  = $attributes['width'] ?? '';
         $imgHeight = $attributes['height'] ?? '';
-        $wAttr = !empty($imgWidth)
+        $wAttr     = !empty($imgWidth)
             ? sprintf(' width="%s"', htmlspecialchars((string) $imgWidth))
             : '';
         $hAttr = !empty($imgHeight)

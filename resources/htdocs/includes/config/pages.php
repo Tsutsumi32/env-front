@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 各画面の設定値を定義するクラス
  *
@@ -14,7 +15,7 @@ class Page
     /**
      * 画面キー定数
      */
-    public const PAGE_SAMPLE = 'sample';
+    public const PAGE_SAMPLE       = 'sample';
     public const PAGE_SAMPLE_ABOUT = 'sample-about';
     public const PAGE_SAMPLE_WORKS = 'sample-works';
 
@@ -24,32 +25,32 @@ class Page
      */
     private static $pages = [
         self::PAGE_SAMPLE => [
-            'title' => 'サンプルトップ',
+            'title'       => 'サンプルトップ',
             'description' => 'サンプルサイトのトップページです。',
             'breadcrumbs' => [
                 ['name' => 'ホーム', 'url' => '/']
             ],
-            'url' => '/',
+            'url'     => '/',
             'noindex' => false,
         ],
         self::PAGE_SAMPLE_ABOUT => [
-            'title' => 'About - サンプルサイト',
+            'title'       => 'About - サンプルサイト',
             'description' => 'このサイトについてのページです。',
             'breadcrumbs' => [
                 ['name' => 'ホーム', 'url' => '/'],
                 ['name' => 'About', 'url' => '/about.php']
             ],
-            'url' => '/about.php',
+            'url'     => '/about.php',
             'noindex' => false,
         ],
         self::PAGE_SAMPLE_WORKS => [
-            'title' => 'Works - サンプルサイト',
+            'title'       => 'Works - サンプルサイト',
             'description' => '制作実績のページです。',
             'breadcrumbs' => [
                 ['name' => 'ホーム', 'url' => '/'],
                 ['name' => 'Works', 'url' => '/works.php']
             ],
-            'url' => '/works.php',
+            'url'     => '/works.php',
             'noindex' => false,
         ],
     ];
@@ -145,4 +146,3 @@ class Page
         return (bool) ($page['noindex'] ?? false);
     }
 }
-

@@ -1,6 +1,6 @@
 services:
   php:
-    container_name: "${PROJECT_NAME}_php"
+    container_name: "${PROJECT_NAME}_${PHP_CONTAINER}"
     build:
       context: ./docker/php
       args:

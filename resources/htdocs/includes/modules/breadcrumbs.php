@@ -20,8 +20,8 @@ if (!empty($breadcrumbs)): ?>
     <ol class="bl_breadcrumbs_list">
         <?php
         $count = count($breadcrumbs);
-        foreach ($breadcrumbs as $index => $item):
-            $isLast = $index === $count - 1; ?>
+    foreach ($breadcrumbs as $index => $item):
+        $isLast = $index === $count - 1; ?>
             <li class="bl_breadcrumbs_item">
                 <?php if ($isLast): ?>
                     <span class="bl_breadcrumbs_text" aria-current="page"><?php echo htmlspecialchars(
@@ -35,18 +35,18 @@ if (!empty($breadcrumbs)): ?>
                         ENT_QUOTES,
                         'UTF-8',
                     ); ?>" class="bl_breadcrumbs_link"><?php echo htmlspecialchars(
-    $item['name'],
-    ENT_QUOTES,
-    'UTF-8',
-); ?></a>
+                        $item['name'],
+                        ENT_QUOTES,
+                        'UTF-8',
+                    ); ?></a>
                 <?php endif; ?>
             </li>
             <?php if (!$isLast): ?>
                 <li class="bl_breadcrumbs_separator" aria-hidden="true">></li>
             <?php endif; ?>
         <?php
-        endforeach;
-        ?>
+    endforeach;
+?>
     </ol>
 </nav>
 <?php endif;
