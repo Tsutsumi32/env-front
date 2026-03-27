@@ -2,7 +2,8 @@
 name: 新規ISSUE
 about: 新しいISSUE作成時に利用する
 title: "[FEATURE] "
-labels: ["enhancement", "triage"]
+# labels: ["enhancement", "triage"]
+labels:
 assignees: ''
 
 ---

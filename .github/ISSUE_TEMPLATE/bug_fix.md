@@ -2,7 +2,8 @@
 name: 不具合報告
 about: 不具合の報告はこちら
 title: "[BUG] "
-labels: ["bug", "triage"]
+# labels: ["bug", "triage"]
+labels:
 assignees: []
 ---
 
