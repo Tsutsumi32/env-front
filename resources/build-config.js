@@ -111,7 +111,7 @@ export const BUILD_CONFIG = {
   // 画像変換設定
   IMAGE_CONVERT: {
     // 各形式の出力有効/無効
-    ENABLE_AVIF: false,
+    ENABLE_AVIF: true,
     ENABLE_WEBP: false,
     ENABLE_COMPRESSION: true,
     // AVIF変換のクオリティ設定

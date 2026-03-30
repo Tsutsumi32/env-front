@@ -39,6 +39,8 @@ const IMAGE_DIR_ORIGIN      = '_origin';
 const IMAGE_DIR_WEBP        = 'webp';
 const IMAGE_DIR_AVIF        = 'avif';
 const IMAGE_DIR_COMPRESSION = 'compression';
+// AVIF対応するか true:する
+const RENDER_IMG_ENABLE_AVIF = true;
 
 /***********************************
  * template

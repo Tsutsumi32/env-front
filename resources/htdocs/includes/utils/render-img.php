@@ -70,6 +70,8 @@ function render_img(array $attributes): void
     $allowedLoading = ['eager', 'lazy', 'auto'];
     $loading        = in_array($loadingCandidate, $allowedLoading, true) ? $loadingCandidate : 'eager';
 
+    $enableAvif = (bool) (defined('RENDER_IMG_ENABLE_AVIF') ? RENDER_IMG_ENABLE_AVIF : false);
+
     // ===== 新仕様: fileName + responsive =====
     if (array_key_exists('fileName', $attributes)) {
         $fileName = (string) ($attributes['fileName'] ?? '');
@@ -107,8 +109,12 @@ function render_img(array $attributes): void
                 $spPaths      = $buildPaths($withSuffix($fileName, IMAGE_SUFFIX_SP));
                 $spDimsStr    = $extractDimensions($spDimsInput);
                 $breakpointSp = BREAKPOINT_SP;
+                if ($enableAvif) {
+                    echo <<<HTML
+                    <source srcset="{$spPaths['avif']}" type="image/avif" media="(max-width: {$breakpointSp}px)"{$spDimsStr}>
+                    HTML;
+                }
                 echo <<<HTML
-                <source srcset="{$spPaths['avif']}" type="image/avif" media="(max-width: {$breakpointSp}px)"{$spDimsStr}>
                 <source srcset="{$spPaths['webp']}" type="image/webp" media="(max-width: {$breakpointSp}px)"{$spDimsStr}>
                 HTML;
             }
@@ -117,8 +123,12 @@ function render_img(array $attributes): void
             // responsive 設定があっても、default（img と media無し）はサフィックスを付けない
             // （呼び出し側が渡す $fileName が default 側の基準画像名になる）
             $pcBasePaths = $buildPaths($fileName);
+            if ($enableAvif) {
+                echo <<<HTML
+                <source srcset="{$pcBasePaths['avif']}" type="image/avif"{$defaultDimsStr}>
+                HTML;
+            }
             echo <<<HTML
-            <source srcset="{$pcBasePaths['avif']}" type="image/avif"{$defaultDimsStr}>
             <source srcset="{$pcBasePaths['webp']}" type="image/webp"{$defaultDimsStr}>
             HTML;
 
@@ -149,8 +159,12 @@ function render_img(array $attributes): void
                 $pcPaths      = $buildPaths($withSuffix($fileName, IMAGE_SUFFIX_PC));
                 $pcDimsStr    = $extractDimensions($pcDimsInput);
                 $breakpointPc = BREAKPOINT_PC;
+                if ($enableAvif) {
+                    echo <<<HTML
+                    <source srcset="{$pcPaths['avif']}" type="image/avif" media="(min-width: {$breakpointPc}px)"{$pcDimsStr}>
+                    HTML;
+                }
                 echo <<<HTML
-                <source srcset="{$pcPaths['avif']}" type="image/avif" media="(min-width: {$breakpointPc}px)"{$pcDimsStr}>
                 <source srcset="{$pcPaths['webp']}" type="image/webp" media="(min-width: {$breakpointPc}px)"{$pcDimsStr}>
                 HTML;
             }
@@ -159,8 +173,12 @@ function render_img(array $attributes): void
             // responsive 設定があっても、default（img と media無し）はサフィックスを付けない
             // （呼び出し側が渡す $fileName が default 側の基準画像名になる）
             $spBasePaths = $buildPaths($fileName);
+            if ($enableAvif) {
+                echo <<<HTML
+                <source srcset="{$spBasePaths['avif']}" type="image/avif"{$defaultDimsStr}>
+                HTML;
+            }
             echo <<<HTML
-            <source srcset="{$spBasePaths['avif']}" type="image/avif"{$defaultDimsStr}>
             <source srcset="{$spBasePaths['webp']}" type="image/webp"{$defaultDimsStr}>
             HTML;
 
@@ -188,8 +206,12 @@ function render_img(array $attributes): void
 
         // responsiveなし: ただの通常画像
         $basePaths = $buildPaths($fileName);
+        if ($enableAvif) {
+            echo <<<HTML
+            <source srcset="{$basePaths['avif']}" type="image/avif"{$defaultDimsStr}>
+            HTML;
+        }
         echo <<<HTML
-        <source srcset="{$basePaths['avif']}" type="image/avif"{$defaultDimsStr}>
         <source srcset="{$basePaths['webp']}" type="image/webp"{$defaultDimsStr}>
         HTML;
 
