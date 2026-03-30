@@ -28,12 +28,10 @@ xmlrpc.php
 docker/phpmyadmin/
 wp-*.php
 !wp-install.sh
-wp-dir/*
-!wp-dir/wp-content
-wp-dir/wp-content/*
-!wp-dir/wp-content/themes
-wp-dir/wp-content/themes/*
-!wp-dir/wp-content/themes/momimo-hp
+resources/wp-dir/*
+!resources/wp-dir/wp-content
+resources/wp-dir/wp-content/*
+!resources/wp-dir/wp-content/themes
 docker-compose.override.yml
 
 #==============================
@@ -53,5 +51,6 @@ vendor/
 mix-manifest.json
 build/
 nbproject/
+.php-cs-fixer.cache
 
 .image-meta.json
