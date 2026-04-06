@@ -5,16 +5,14 @@
 // data属性
 // ----------------------------------------------------------
 /**
- * 決まった命名の data 属性（data-module / data-page / data-scope / data-action）
- * - モジュールルート・ページルート・スコープ・イベントトリガーで共通利用
+ * 決まった命名の data 属性（data-module / data-page / data-action）
+ * - モジュールルート・ページルート・イベントトリガーで共通利用
  */
 export const DATA_ATTR = Object.freeze({
   /** モジュールルート */
   MODULE: 'data-module',
   /** ページルート（body 等） */
   PAGE: 'data-page',
-  /** ページ内スコープ（委譲 root） */
-  SCOPE: 'data-scope',
   /** イベントトリガー（委譲対象） */
   ACTION: 'data-action',
   /** 機能の適用対象（features） */

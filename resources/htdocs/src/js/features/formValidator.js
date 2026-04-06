@@ -1,8 +1,8 @@
 /************************************************************
  * バリデーション
- * - data-feature="formValidator" がフォーム。data-feature-formValidator-form でフォーム種別（例: contact）
+ * - data-feature="formValidator" がフォーム。data-feature-form-validator-form でフォーム種別（例: contact）
  * - 送信ボタンに data-action="formValidator.submit" を付与しフォームルートに delegate
- * - data-feature-formValidator-validate / data-feature-formValidator-input / data-feature-formValidator-err 等で項目とエラー表示を紐付け
+ * - data-feature-form-validator-validate / data-feature-form-validator-input / data-feature-form-validator-err 等で項目とエラー表示を紐付け
  ************************************************************/
 
 import { DATA_ATTR } from '../constans/global.js';
@@ -13,15 +13,16 @@ import { delegate } from '../utils/delegate.js';
 // ---------------------------------------------------------------------------
 /** 機能名（data-feature の値）。data 属性の値はキャメルケース */
 const FEATURE_NAME = 'formValidator';
+const FEATURE_ATTR_NAME = 'form-validator';
 
-const ATTR_FORM_TYPE = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-form`;
-const ATTR_SUBMIT = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-submit`;
-const ATTR_VALIDATE = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-validate`;
-const ATTR_INPUT = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-input`;
-const ATTR_LABEL = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-label`;
-const ATTR_MAX = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-max`;
-const ATTR_MAX_SIZE = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-maxSize`;
-const ATTR_ERR = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-err`;
+const ATTR_FORM_TYPE = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-form`;
+const ATTR_SUBMIT = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-submit`;
+const ATTR_VALIDATE = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-validate`;
+const ATTR_INPUT = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-input`;
+const ATTR_LABEL = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-label`;
+const ATTR_MAX = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-max`;
+const ATTR_MAX_SIZE = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-max-size`;
+const ATTR_ERR = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-err`;
 
 /** フォーム種別（例: contact） */
 const FORM_CONTACT = 'contact';
@@ -267,8 +268,8 @@ const validatePassword = (val) => {
 };
 
 /**
- * data-feature-formValidator-input を付与した要素の中にある input の value を取得する
- * @param {Element} item - data-feature-formValidator-input が付与された要素
+ * data-feature-form-validator-input を付与した要素の中にある input の value を取得する
+ * @param {Element} item - data-feature-form-validator-input が付与された要素
  * @returns {String|Boolean|File|null} 入力値
  */
 const getInputValue = (item) => {
@@ -331,7 +332,7 @@ const validation = (options = {}) => {
   /** バリデーションエラーがあるかどうか判定する */
   let validateStatus = false;
 
-  // 実施するバリデーションの種類 data-feature-formValidator-validate に該当の文字列をセットする
+  // 実施するバリデーションの種類 data-feature-form-validator-validate に該当の文字列をセットする
   // (inputの親タグに付与する(CF7対応のため))
   /** 必須チェック */
   const requireValidate = "require";
@@ -363,18 +364,18 @@ const validation = (options = {}) => {
 
   /**
    * バリデーションの種類を、項目ごとに管理するオブジェクト
-   * キー名: data-feature-formValidator-input 値 フィールド: data-feature-formValidator-validate を分割した配列
+   * キー名: data-feature-form-validator-input 値 フィールド: data-feature-form-validator-validate を分割した配列
    */
   const validateOptions = {};
-  /** data-feature-formValidator-validate がある要素 */
+  /** data-feature-form-validator-validate がある要素 */
   const validateItem = document.querySelectorAll(validateSelector);
 
-  // data-feature-formValidator-validate / data-feature-formValidator-input の値を取得し、配列に格納する
+  // data-feature-form-validator-validate / data-feature-form-validator-input の値を取得し、配列に格納する
   validateItem.forEach((item) => {
     const validateAttribute = item.getAttribute(ATTR_VALIDATE);
     const inputAttribute = item.getAttribute(ATTR_INPUT);
     if (validateAttribute && inputAttribute) {
-      // data-feature-formValidator-validate に設定した種別を配列にする
+      // data-feature-form-validator-validate に設定した種別を配列にする
       const validateArray = validateAttribute.split(" ");
       // 上記配列を、バリデーションの種類を管理する配列にpush
       validateOptions[inputAttribute] = validateArray;
@@ -387,7 +388,7 @@ const validation = (options = {}) => {
     err.length = 0;
     // 該当項目の入力値
     let value = "";
-    // data-feature-formValidator-input の値(key)に該当する要素を取得
+    // data-feature-form-validator-input の値(key)に該当する要素を取得
     const targetItemArray = Array.from(validateItem).filter(
       (item) => item.getAttribute(ATTR_INPUT) === key
     );
@@ -397,9 +398,9 @@ const validation = (options = {}) => {
       value = getInputValue(targetItem);
     }
 
-    // 該当の項目のラベル（data-feature-formValidator-label）
+    // 該当の項目のラベル（data-feature-form-validator-label）
     let targetItemLabel = targetItem?.getAttribute(ATTR_LABEL) || "";
-    // 該当要素の、data-feature-formValidator-validate の数分、バリデーション実施
+    // 該当要素の、data-feature-form-validator-validate の数分、バリデーション実施
     validateOptions[key].forEach((validate) => {
       // 本項目にエラーがあるか
       let isError = false;
@@ -443,7 +444,7 @@ const validation = (options = {}) => {
           isError = true;
         }
       } else if (validate === maxLengthValidate) {
-        // 最大文字数を取得する（data-feature-formValidator-max に最大文字数をセット）
+        // 最大文字数を取得する（data-feature-form-validator-max に最大文字数をセット）
         const max = targetItem?.getAttribute(ATTR_MAX);
         result = validateMaxLength(
           value,
@@ -543,11 +544,9 @@ const handleValidationError = () => {
 
 /**
  * 初期化（送信ボタンにクリックリスナーを登録）
- * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  * @param {{ formSelector?: string, submitBtnSelector?: string, useRecaptcha?: boolean }} [options]
  */
-const init = (ctx = {}, options = {}) => {
-  const { scope } = ctx;
+const init = (_ctx = {}, options = {}) => {
   const formSelector = options.formSelector ?? SELECTOR_FORM_CONTACT;
   const submitBtnSelector = options.submitBtnSelector ?? SELECTOR_FORM_SUBMIT;
   const useRecaptcha = options.useRecaptcha ?? false;
@@ -560,7 +559,7 @@ const init = (ctx = {}, options = {}) => {
       event.preventDefault();
       handleFormSubmit(event, { formSelector, submitBtnSelector, useRecaptcha });
     },
-  }, scope);
+  });
 };
 
 export const formValidator = { init };

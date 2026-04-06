@@ -6,4 +6,4 @@
 
 import { bootPage } from '../lifecycle/bootPage.js';
 
-bootPage(() => (() => {}));
+bootPage(() => {});

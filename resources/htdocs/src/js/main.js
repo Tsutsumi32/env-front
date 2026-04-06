@@ -1,7 +1,7 @@
 /************************************************************
  * main.js（動的 import 版）
  * - BUILD_MODE: 'dynamic' 時にのみビルド。entry/ の外に置くので entry モードではコンパイル対象外
- * - ページキーに応じて pages/* を動的 import し、bootPage(start) で起動
+ * - ページキーに応じて pages/* を動的 import し、bootPage(start) で起動（start は無引数）
  ************************************************************ */
 
 import 'whatwg-fetch';

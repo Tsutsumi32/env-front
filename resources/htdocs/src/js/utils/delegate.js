@@ -72,9 +72,8 @@ const warnActionKeyFormat = (key, root) => {
  * @param {Document|Element} root - 委譲のルート（document または Element）
  * @param {string|{ eventType: string, selector?: string, getKey?: (el: Element) => string, suppressWarn?: boolean, force?: boolean }} eventTypeOrOptions - イベントタイプ（必須）。文字列または { eventType } を含むオプション
  * @param {Record<string, (e: Event, el: Element) => void>} handlers - action 名 → ハンドラ
- * @param {{ signal: AbortSignal } | null | undefined} [scope] - 解除用 signal（省略時は MPA 想定で登録のみ）
  */
-export const delegate = (root, eventTypeOrOptions, handlers, scope = undefined) => {
+export const delegate = (root, eventTypeOrOptions, handlers) => {
   if (eventTypeOrOptions === undefined || eventTypeOrOptions === null) {
     throw new Error('delegate: eventType は必須です。例: delegate(root, "click", handlers)');
   }
@@ -107,7 +106,6 @@ export const delegate = (root, eventTypeOrOptions, handlers, scope = undefined) 
     }
   }
 
-  const listenerOptions = scope?.signal ? { signal: scope.signal } : {};
   root.addEventListener(
     eventType,
     (e) => {
@@ -122,7 +120,6 @@ export const delegate = (root, eventTypeOrOptions, handlers, scope = undefined) 
       }
       const fn = handlers[key];
       if (fn) fn(e, el);
-    },
-    listenerOptions
+    }
   );
 };

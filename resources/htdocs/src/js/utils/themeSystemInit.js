@@ -76,10 +76,9 @@ export function initializeThemeSystem(storageEnabled = true) {
 /**
  * システム設定の変更を監視してテーマを更新
  * ユーザーが手動で設定していない場合のみ、システム設定を反映
- * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定で登録のみ・破棄しない）
  * @param {boolean} storageEnabled - ストレージを使用するか
  */
-export function watchSystemThemeChange(signal, storageEnabled = true) {
+export function watchSystemThemeChange(storageEnabled = true) {
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
   const handleMediaChange = (e) => {
@@ -96,15 +95,9 @@ export function watchSystemThemeChange(signal, storageEnabled = true) {
     }
   };
 
-  const listenerOptions = signal ? { signal } : {};
   if (mediaQuery.addEventListener) {
-    mediaQuery.addEventListener('change', handleMediaChange, listenerOptions);
+    mediaQuery.addEventListener('change', handleMediaChange);
   } else {
     mediaQuery.addListener(handleMediaChange);
-    if (signal) {
-      signal.addEventListener('abort', () => {
-        mediaQuery.removeListener(handleMediaChange);
-      }, { once: true });
-    }
   }
 }

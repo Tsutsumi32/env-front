@@ -18,13 +18,12 @@ export const syncScrollbarWidth = () => {
 /**
  * スクロールを無効化し、レイアウトシフトを防ぐ
  * @param {boolean} [pl=true] - 幅調整を行うかどうか
- * @param {AbortSignal} [signal] - AbortSignal（クリーンアップ用）
  * @description スクロールバーの幅を計算し、bodyのoverflowをhiddenに設定してスクロールを無効化する。
  * スクロールバーが消えることによるレイアウトシフトを防ぐため、bodyの幅を画面幅からスクロールバー分引いた値に設定する。
  * plがtrueのとき--scrollbar-widthも実測値で更新する（fixed要素などで利用可能）。
  * 固定中はbodyにSCROLL_LOCK_CLASSが付与される。
  */
-export const disableScroll = (pl = true, signal) => {
+export const disableScroll = (pl = true) => {
   const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
   if (pl) {
     document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
@@ -32,31 +31,15 @@ export const disableScroll = (pl = true, signal) => {
   }
   document.body.style.overflow = 'hidden';
   document.body.classList.add(SCROLL_LOCK_CLASS);
-
-  // signalがabortされたら元に戻す
-  if (signal) {
-    signal.addEventListener(
-      'abort',
-      () => {
-        if (pl) {
-          document.body.style.width = '';
-        }
-        document.body.style.overflow = 'visible';
-        document.body.classList.remove(SCROLL_LOCK_CLASS);
-      },
-      { once: true }
-    );
-  }
 };
 
 /**
  * スクロールを有効化し、レイアウトを元に戻す
  * @param {boolean} [pl=true] - 幅調整を行うかどうか
- * @param {AbortSignal} [signal] - AbortSignal（クリーンアップ用、この関数では使用しないが互換性のため）
  * @description bodyのoverflowをvisibleに設定してスクロールを有効化し、
  * 設定されていた幅を解除し、SCROLL_LOCK_CLASSを外してレイアウトを元に戻す。
  */
-export const enableScroll = (pl = true, signal) => {
+export const enableScroll = (pl = true) => {
   if (pl) {
     document.body.style.width = '';
   }
@@ -75,22 +58,19 @@ const preventScroll = (e) => {
 
 /**
  * スクロール防止イベントリスナーを追加する
- * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定で登録のみ・破棄しない）
  * @description wheelとtouchmoveイベントにpreventScroll関数をバインドして、
  * マウスホイールやタッチスクロールを防止する。
  * passive: falseでイベントのデフォルト動作を阻止可能にする。
  */
-export const disableScrollPrevent = (signal) => {
-  const opts = signal ? { passive: false, signal } : { passive: false };
-  document.addEventListener('wheel', preventScroll, opts);
-  document.addEventListener('touchmove', preventScroll, opts);
+export const disableScrollPrevent = () => {
+  document.addEventListener('wheel', preventScroll, { passive: false });
+  document.addEventListener('touchmove', preventScroll, { passive: false });
 };
 
 /**
  * スクロール防止イベントリスナーを削除する
  * @description wheelとtouchmoveイベントからpreventScroll関数のイベントリスナーを削除して、
  * マウスホイールやタッチスクロールを再度有効化する。
- * @deprecated signalを使用したdisableScrollPreventを使用することを推奨
  */
 export const enableScrollPrevent = () => {
   document.removeEventListener('wheel', preventScroll, { passive: false });

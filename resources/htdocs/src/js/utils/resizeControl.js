@@ -16,9 +16,8 @@ export const isPc = () => {
  * PC SP 切り替わり時に一度だけ実行する
  * @param {Function} funcPc - PCレイアウト時の実行関数
  * @param {Function} funcSp - SPレイアウト時の実行関数
- * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定で登録のみ・破棄しない）
  */
-export const resizeTimingControl = (funcPc, funcSp, signal) => {
+export const resizeTimingControl = (funcPc, funcSp) => {
   // pc領域かどうか
   let change_pc_check = false;
   isPc() && (change_pc_check = true);
@@ -26,7 +25,6 @@ export const resizeTimingControl = (funcPc, funcSp, signal) => {
   let change_sp_check = false;
   !isPc() && (change_sp_check = true);
 
-  const opts = signal ? { signal } : {};
   window.addEventListener(
     'resize',
     () => {
@@ -43,7 +41,6 @@ export const resizeTimingControl = (funcPc, funcSp, signal) => {
         }
         change_pc_check = false;
       }
-    },
-    opts
+    }
   );
 };

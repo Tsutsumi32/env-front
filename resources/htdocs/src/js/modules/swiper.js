@@ -43,9 +43,8 @@ export function swiperBreakPoints({ sp, tab = sp, pc = sp, ...customBreakpoints 
   return breakpoints;
 }
 
-function initNormalSlider(swiperEl, scope, options = {}) {
+function initNormalSlider(swiperEl, options = {}) {
   if (!SwiperLib) return;
-  const signal = scope?.signal;
   const { Navigation, Pagination, Autoplay, EffectFade } = SwiperLib;
   const classNames = {
     parent: SELECTOR_SWIPER_PARENT,
@@ -120,37 +119,25 @@ function initNormalSlider(swiperEl, scope, options = {}) {
     });
   };
 
-  if (scope?.signal) {
-    scope.signal.addEventListener('abort', () => {
-      if (swiperInstance) swiperInstance.destroy(true, true);
-    }, { once: true });
-  }
-
   swiperEl.querySelectorAll(classNames.slide).forEach((s) => {
     if (!s.dataset[DATASET_KEY_ORIGINAL]) s.dataset[DATASET_KEY_ORIGINAL] = 'true';
   });
   initSwiperInstance();
 
-  const resizeOptions = signal ? { signal } : {};
   let resizeTimer;
   window.addEventListener(
     'resize',
     () => {
-      if (signal?.aborted) return;
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        if (!signal?.aborted) initSwiperInstance();
+        initSwiperInstance();
       }, 200);
-      signal?.addEventListener('abort', () => clearTimeout(resizeTimer), { once: true });
-    },
-    resizeOptions
+    }
   );
-
 }
 
-function initLinearSlider(swiperEl, scope, options = {}) {
+function initLinearSlider(swiperEl, options = {}) {
   if (!SwiperLib) return;
-  const signal = scope?.signal;
   const { Autoplay } = SwiperLib;
   const { speed = 15000, allowTouchMove = false, spaceBetween = 0, slidesPerView = 'auto', breakpoints = {} } = options;
   const wrapper = swiperEl.querySelector('.swiper-wrapper');
@@ -207,44 +194,34 @@ function initLinearSlider(swiperEl, scope, options = {}) {
     });
   };
 
-  if (scope?.signal) {
-    scope.signal.addEventListener('abort', () => {
-      if (swiperInstance) swiperInstance.destroy(true, true);
-    }, { once: true });
-  }
-
   initSwiperInstance();
 
-  const resizeOptions = signal ? { signal } : {};
   let resizeTimer;
   window.addEventListener(
     'resize',
     () => {
-      if (signal?.aborted) return;
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        if (!signal?.aborted) initSwiperInstance();
+        initSwiperInstance();
       }, 200);
-      signal?.addEventListener('abort', () => clearTimeout(resizeTimer), { once: true });
-    },
-    resizeOptions
+    }
   );
 }
 
 /**
  * 初期化（全 [data-module="swiper"] を対象。data-swiper-linear ありならリニア、なければ通常）
- * @param {{ scope?: { signal: AbortSignal }, root?: Element }} [ctx] - scope 省略時は MPA 想定
+ * @param {{ root?: Element }} [ctx]
  * @param {{ normal?: object, linear?: object }} [options] - 通常/リニアのデフォルトオプション
  */
 const init = (ctx = {}, options = {}) => {
   if (!SwiperLib) return;
-  const { scope, root = document } = ctx;
+  const { root = document } = ctx;
 
   const elements = root.querySelectorAll(SELECTOR_ROOT);
   elements.forEach((el) => {
     const isLinear = el.hasAttribute(ATTR_SWIPER_LINEAR);
-    if (isLinear) initLinearSlider(el, scope, options.linear || {});
-    else initNormalSlider(el, scope, options.normal || {});
+    if (isLinear) initLinearSlider(el, options.linear || {});
+    else initNormalSlider(el, options.normal || {});
   });
 };
 

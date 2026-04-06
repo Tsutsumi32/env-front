@@ -1,7 +1,7 @@
 /************************************************************
  * パンくずリスト
  * - 横幅を調整する（1行に納め、末尾のリストを末尾省略）
- * - data-module="breadCrumbs" がコンテナ、[data-breadCrumbs-item] が各アイテム、[data-breadCrumbs-itemText] が末尾省略対象のテキスト要素
+ * - data-module="breadCrumbs" がコンテナ、[data-bread-crumbs-item] が各アイテム、[data-bread-crumbs-item-text] が末尾省略対象のテキスト要素
  ************************************************************/
 
 import { DATA_ATTR } from '../constans/global.js';
@@ -10,9 +10,9 @@ import { DATA_ATTR } from '../constans/global.js';
 // data 属性（参照するものは定数で一覧化。DATA_ATTR は global.js）
 // ---------------------------------------------------------------------------
 const MODULE_BREAD_CRUMBS = 'breadCrumbs';
-const ATTR_BREADCRUMBS_ITEM = 'data-breadCrumbs-item';
+const ATTR_BREADCRUMBS_ITEM = 'data-bread-crumbs-item';
 /** 各アイテム内で省略表示を適用するテキスト要素（data 属性で参照） */
-const ATTR_BREADCRUMBS_ITEM_TEXT = 'data-breadCrumbs-itemText';
+const ATTR_BREADCRUMBS_ITEM_TEXT = 'data-bread-crumbs-item-text';
 
 const SELECTOR_BREADCRUMBS = `[${DATA_ATTR.MODULE}="${MODULE_BREAD_CRUMBS}"]`;
 const SELECTOR_BREADCRUMBS_ITEM = `[${ATTR_BREADCRUMBS_ITEM}]`;
@@ -22,11 +22,9 @@ const DEFAULT_MARGIN_OFFSET = 16;
 
 /**
  * 初期化
- * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  * @param {{ marginOffset?: number }} [options]
  */
-const init = (ctx = {}, options = {}) => {
-  const { scope } = ctx;
+const init = (_ctx = {}, options = {}) => {
   const container = document.querySelector(SELECTOR_BREADCRUMBS);
   if (!container) return;
 
@@ -60,8 +58,7 @@ const init = (ctx = {}, options = {}) => {
   };
 
   adjustBreadWidth();
-  const resizeOptions = scope?.signal ? { signal: scope.signal } : {};
-  window.addEventListener('resize', adjustBreadWidth, resizeOptions);
+  window.addEventListener('resize', adjustBreadWidth);
 };
 
 export const breadCrumbs = { init };

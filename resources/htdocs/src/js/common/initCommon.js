@@ -1,6 +1,6 @@
 /************************************************************
  * 全画面共通初期化処理
- * - 全ページで共通して実行される処理（scope/signal は使用しない・MPA はドキュメント寿命）
+ * - 全ページで共通して実行される処理（MPA はドキュメント寿命）
  ************************************************************/
 
 import { header } from '../modules/header.js';
@@ -15,7 +15,7 @@ export async function initCommon() {
   // テーマ: 初期値の適用（localStorage or OS設定）
   initializeThemeSystem();
   // テーマ: 切替ボタン、OS変更の監視
-  themeToggle.init({});
+  themeToggle.init();
   // テーマ: OS変更の監視
   watchSystemThemeChange();
 
@@ -23,7 +23,7 @@ export async function initCommon() {
   smoothAnchorLink();
 
   // ヘッダー（メニュー開閉・ESC・フォーカス管理）
-  header.init({});
+  header.init();
 
   // JS 有効時用クラス削除
   document.body.classList.remove('is_nojs');

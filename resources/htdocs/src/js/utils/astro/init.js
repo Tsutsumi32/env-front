@@ -1,23 +1,16 @@
 /**
- * ページ・コンポーネントの初期化と破棄を管理するベースクラス
- * ※還俗単純なMPAでは不要 SPAまたはViewTransitionを使用している場合など
- * AbortController + disposeBag を使用した確実なクリーンアップ
+ * ページ・コンポーネントの初期化と破棄を管理するベースクラス（Astro 等で部分置換する場合向け）
+ * ※純粋な MPA では通常不要。astro:before-swap で bag を flush する。
  *
  * 使用例:
  * new initClass({
- *   // ページ・モジュール毎のルート要素を指定する
  *   selector: '#page-root',
- *   init: (element, { bag, signal }) => {
- *     // イベントリスナー（signalで自動解除）
- *     window.addEventListener('resize', onResize, { signal });
+ *   init: (element, { bag }) => {
+ *     window.addEventListener('resize', onResize);
+ *     bag.add(() => window.removeEventListener('resize', onResize));
  *
- *     // 手動クリーンアップが必要な処理
  *     const interval = setInterval(tick, 1000);
  *     bag.add(() => clearInterval(interval));
- *
- *     // Swiper/GSAP等のインスタンス
- *     const swiper = new Swiper('.swiper');
- *     bag.dispose(swiper, 'destroy', [true, true]);
  *   }
  * });
  */
@@ -41,7 +34,6 @@ function createDisposeBag() {
 
     /**
      * オブジェクトのメソッドを自動検出してクリーンアップに追加
-     * インスタンス指定して削除するような処理を対象
      * @param {Object} obj - クリーンアップ対象のオブジェクト
      * @param {string} method - メソッド名（省略時は自動検出）
      * @param {Array} args - メソッドに渡す引数
@@ -80,7 +72,6 @@ export class initClass {
     this.selector = options.selector;
     this.initFn = options.init;
     this.isInitialized = false;
-    this.ctrl = null;
     this.bag = null;
 
     this.registerEvents();
@@ -90,10 +81,8 @@ export class initClass {
    * Astroのライフサイクルイベントに登録
    */
   registerEvents() {
-    // ページ遷移前のクリーンアップ
     document.addEventListener('astro:before-swap', () => this.cleanup());
 
-    // ページ読み込み時の初期化
     document.addEventListener('astro:page-load', () => this.initialize());
     document.addEventListener('DOMContentLoaded', () => this.initialize());
   }
@@ -103,29 +92,17 @@ export class initClass {
    * 要素が存在する場合のみ実行される
    */
   initialize() {
-    // すでに初期化済みの場合は何もしない（重複実行を防止）
     if (this.isInitialized) return;
 
     const element = document.querySelector(this.selector);
-    // console.log("PageComponent: element found:", element);
-
-    // 要素が存在しない場合は早期リターン
     if (!element) return;
 
-    // 前回分を全破棄してから開始
     this.cleanup();
 
-    // 新しいAbortControllerとdisposeBagを作成
-    this.ctrl = new AbortController();
     this.bag = createDisposeBag();
 
-    // abort したら bag も一緒に片付く
-    this.ctrl.signal.addEventListener('abort', () => this.bag.flush(), { once: true });
-
-    // 初期化処理を実行（bagとsignalを渡す）
     this.initFn(element, {
       bag: this.bag,
-      signal: this.ctrl.signal,
     });
 
     this.isInitialized = true;
@@ -135,10 +112,10 @@ export class initClass {
    * クリーンアップ処理
    */
   cleanup() {
-    if (this.ctrl) {
-      this.ctrl.abort(); // abortイベントでbag.flush()が自動実行される
+    if (this.bag) {
+      this.bag.flush();
+      this.bag = null;
     }
-    // クリーンアップ後は再初期化を許可
     this.isInitialized = false;
   }
 }

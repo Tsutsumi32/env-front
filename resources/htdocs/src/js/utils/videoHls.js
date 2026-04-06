@@ -15,14 +15,13 @@ import Hls from 'hls.js';
  * @param {HTMLVideoElement} options.videoElement - 動画要素
  * @param {Function} [options.onError] - エラー時のコールバック
  * @param {Function} [options.onLoad] - ロード時のコールバック
- * @param {AbortSignal} [options.signal] - AbortSignal（クリーンアップ用）
  */
 export function initVideoHls(options) {
-  const { hlsUrl, mp4Url, videoElement, onError, onLoad, signal } = options;
+  const { hlsUrl, mp4Url, videoElement, onError, onLoad } = options;
 
   let hlsInstance = null;
 
-  const onceOpts = signal ? { once: true, signal } : { once: true };
+  const onceOpts = { once: true };
 
   // ネイティブHLS対応ブラウザ (Safari / iOS)
   if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
@@ -82,16 +81,6 @@ export function initVideoHls(options) {
         if (onError) onError(data);
       }
     });
-
-    // signalでHLSインスタンスを破棄
-    if (signal) {
-      signal.addEventListener('abort', () => {
-        if (hlsInstance) {
-          hlsInstance.destroy();
-          hlsInstance = null;
-        }
-      }, { once: true });
-    }
   }
   // 古いブラウザ → 直接MP4を使用
   else {
@@ -114,4 +103,3 @@ export function getHlsUrl(mp4Path) {
   // .mp4 を .m3u8 に置き換え
   return mp4Path.replace(/\.mp4$/, '.m3u8');
 }
-

@@ -1,25 +1,31 @@
 /************************************************************
  * トップページ（ホーム）
  * - 本ファイルがエントリとして読み込まれたときに bootPage(start) で起動
- * - data-scope="home" をルートに createPage で初期化。MPA 想定で scope は渡さない
+ * - body をルートに createPage で初期化
  ************************************************************/
 
-import { DATA_ATTR } from '../constans/global.js';
 import { createPage } from '../lifecycle/createPage.js';
 import { bootPage } from '../lifecycle/bootPage.js';
 import { delegate } from '../utils/delegate.js';
-// プロジェクトでモーダルを拡張する場合は modules/extensions/modal を import
-import { modal } from '../modules/extensions/modal.js';
+import { modal } from '../modules/modal.js';
 import { accordion } from '../modules/accordion.js';
 
 /**
  * ページ初期化処理
  */
 const start = createPage({
-  getRoot: () =>
-    document.querySelector(`[${DATA_ATTR.SCOPE}="home"]`),
+  getRoot: () => document.body,
   init: ({ root }) => {
-    modal.init({});
+    modal.init({
+      onAfterOpen: ({ id }) => {
+        // 必要に応じてプロジェクト固有処理を追加
+        // 例: sendEvent('modal_opened', { id });
+        void id;
+      },
+      onAfterClose: () => {
+        // 必要に応じてクローズ後の処理を追加
+      },
+    });
     accordion.init({ root });
 
     delegate(root, 'click', {

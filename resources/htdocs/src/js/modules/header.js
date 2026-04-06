@@ -49,7 +49,7 @@ const open = () => {
   lastFocusTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   header.classList.add(STATE_CLASSES.ACTIVE);
   header.setAttribute('aria-expanded', 'true');
-  disableScroll(true, undefined);
+  disableScroll(true);
   prepareAndFocusContainer(header, { trigger: lastFocusTrigger, fallbackSelector: SELECTOR_MENU });
 };
 
@@ -69,10 +69,8 @@ const close = () => {
 
 /**
  * 初期化（ルートに delegate。data-action="header.toggle" / "header.close" で開閉。ESC・Tab は document）
- * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  */
-const init = (ctx = {}) => {
-  const { scope } = ctx;
+const init = () => {
   const header = getHeader();
   if (!header) return;
 
@@ -84,16 +82,14 @@ const init = (ctx = {}) => {
       else open();
     },
     'header.close': close,
-  }, scope);
+  });
 
-  const keydownOptions = scope?.signal ? { signal: scope.signal } : {};
   document.addEventListener(
     'keydown',
     (e) => {
       if (e.key === 'Escape' && isOpen()) close();
       if (e.key === 'Tab' && isOpen()) handleFocusTrapKeydown(header, e);
-    },
-    keydownOptions
+    }
   );
 };
 

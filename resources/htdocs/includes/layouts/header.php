@@ -27,10 +27,10 @@
                 </ul>
             </nav>
             <div class="ly_header_actions">
-                <button type="button" class="ly_header_themeToggle ly_header_themeToggle__dark" data-module="themeToggle" data-action="themeToggle.toggle" data-themeToggle-theme="dark" aria-label="ダークモードに切替">
+                <button type="button" class="ly_header_themeToggle ly_header_themeToggle__dark" data-module="themeToggle" data-action="themeToggle.toggle" data-theme-toggle-theme="dark" aria-label="ダークモードに切替">
                     <span class="ly_header_themeToggleIcon">🌙</span>
                 </button>
-                <button type="button" class="ly_header_themeToggle ly_header_themeToggle__light" data-module="themeToggle" data-action="themeToggle.toggle" data-themeToggle-theme="default" aria-label="ライトモードに切替">
+                <button type="button" class="ly_header_themeToggle ly_header_themeToggle__light" data-module="themeToggle" data-action="themeToggle.toggle" data-theme-toggle-theme="default" aria-label="ライトモードに切替">
                     <span class="ly_header_themeToggleIcon">☀️</span>
                 </button>
             </div>

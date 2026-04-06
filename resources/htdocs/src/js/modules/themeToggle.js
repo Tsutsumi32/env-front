@@ -1,7 +1,7 @@
 /************************************************************
  * テーマ切替
  * - 切り替えボタンの機能のみを提供。システム設定からの初期化は themeSystemInit.js で行う。
- * - data-module="themeToggle" がボタン（各ボタンがルート）。data-action="themeToggle.toggle" でトリガー、data-themeToggle-theme でモード指定
+ * - data-module="themeToggle" がボタン（各ボタンがルート）。data-action="themeToggle.toggle" でトリガー、data-theme-toggle-theme でモード指定
  * - ボタンはどこにあっても document に delegate。適用中のテーマは documentElement の data-theme に設定
  ************************************************************/
 
@@ -14,7 +14,7 @@ import { delegate } from '../utils/delegate.js';
 // ---------------------------------------------------------------------------
 const MODULE_THEME_TOGGLE = 'themeToggle';
 /** ボタンに設定するテーマ値（data-モジュール名-xxx） */
-const ATTR_THEME_TOGGLE_THEME = 'data-themeToggle-theme';
+const ATTR_THEME_TOGGLE_THEME = 'data-theme-toggle-theme';
 /** 適用中のテーマを documentElement に付与する属性（グローバル） */
 const ATTR_THEME = 'data-theme';
 
@@ -53,17 +53,15 @@ const getCurrentTheme = () => {
 
 /**
  * 初期化（document に delegate。data-action="themeToggle.toggle" をトリガーに。ボタンは data-module="themeToggle"）
- * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  */
-const init = (ctx = {}) => {
-  const { scope } = ctx;
+const init = () => {
   delegate(document, 'click', {
     'themeToggle.toggle': (e, el) => {
       const theme = el.getAttribute(ATTR_THEME_TOGGLE_THEME);
       if (theme) setTheme(theme, true);
       else console.warn(`${ATTR_THEME_TOGGLE_THEME}属性が設定されていません。`, el);
     },
-  }, scope);
+  });
 };
 
 export const themeToggle = { init, setTheme, getCurrentTheme, STORAGE_KEY };

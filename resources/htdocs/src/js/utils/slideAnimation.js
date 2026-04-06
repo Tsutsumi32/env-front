@@ -11,20 +11,14 @@
  * @param {HTMLElement} element - アニメーション対象の要素
  * @param {number} duration - アニメーション時間（ミリ秒）
  * @param {string} easing - イージング関数名
- * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定）
  */
-export const slideDown = (element, duration = 300, easing = 'ease-out', signal) => {
+export const slideDown = (element, duration = 300, easing = 'ease-out') => {
   // 既に表示されている場合は何もしない
   if (element.style.display !== 'none' && element.offsetHeight > 0) {
     return Promise.resolve();
   }
 
   return new Promise((resolve) => {
-    if (signal?.aborted) {
-      resolve();
-      return;
-    }
-
     // 初期状態を設定
     element.style.display = 'block';
     element.style.height = '0px';
@@ -39,22 +33,12 @@ export const slideDown = (element, duration = 300, easing = 'ease-out', signal) 
     element.style.height = targetHeight + 'px';
 
     // アニメーション完了を待つ
-    const timeoutId = setTimeout(() => {
-      if (!signal?.aborted) {
-        element.style.height = '';
-        element.style.overflow = '';
-        element.style.transition = '';
-      }
+    setTimeout(() => {
+      element.style.height = '';
+      element.style.overflow = '';
+      element.style.transition = '';
       resolve();
     }, duration);
-
-    // signalでタイムアウトをクリーンアップ
-    if (signal) {
-      signal.addEventListener('abort', () => {
-        clearTimeout(timeoutId);
-        resolve();
-      }, { once: true });
-    }
   });
 };
 
@@ -63,20 +47,14 @@ export const slideDown = (element, duration = 300, easing = 'ease-out', signal) 
  * @param {HTMLElement} element - アニメーション対象の要素
  * @param {number} duration - アニメーション時間（ミリ秒）
  * @param {string} easing - イージング関数名
- * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定）
  */
-export const slideUp = (element, duration = 300, easing = 'ease-out', signal) => {
+export const slideUp = (element, duration = 300, easing = 'ease-out') => {
   // 既に非表示の場合は何もしない
   if (element.style.display === 'none' || element.offsetHeight === 0) {
     return Promise.resolve();
   }
 
   return new Promise((resolve) => {
-    if (signal?.aborted) {
-      resolve();
-      return;
-    }
-
     // 現在の高さを取得
     const currentHeight = element.offsetHeight;
     element.style.height = currentHeight + 'px';
@@ -90,23 +68,13 @@ export const slideUp = (element, duration = 300, easing = 'ease-out', signal) =>
     element.style.height = '0px';
 
     // アニメーション完了を待つ
-    const timeoutId = setTimeout(() => {
-      if (!signal?.aborted) {
-        element.style.display = 'none';
-        element.style.height = '';
-        element.style.overflow = '';
-        element.style.transition = '';
-      }
+    setTimeout(() => {
+      element.style.display = 'none';
+      element.style.height = '';
+      element.style.overflow = '';
+      element.style.transition = '';
       resolve();
     }, duration);
-
-    // signalでタイムアウトをクリーンアップ
-    if (signal) {
-      signal.addEventListener('abort', () => {
-        clearTimeout(timeoutId);
-        resolve();
-      }, { once: true });
-    }
   });
 };
 
@@ -115,16 +83,15 @@ export const slideUp = (element, duration = 300, easing = 'ease-out', signal) =>
  * @param {HTMLElement} element - アニメーション対象の要素
  * @param {number} duration - アニメーション時間（ミリ秒）
  * @param {string} easing - イージング関数名
- * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定）
  */
-export const slideToggle = (element, duration = 300, easing = 'ease-out', signal) => {
+export const slideToggle = (element, duration = 300, easing = 'ease-out') => {
   // 現在の表示状態を確認
   const isVisible = element.style.display !== 'none' && element.offsetHeight > 0;
 
   if (isVisible) {
-    return slideUp(element, duration, easing, signal);
+    return slideUp(element, duration, easing);
   } else {
-    return slideDown(element, duration, easing, signal);
+    return slideDown(element, duration, easing);
   }
 };
 
@@ -133,10 +100,9 @@ export const slideToggle = (element, duration = 300, easing = 'ease-out', signal
  * @param {HTMLElement[]} elements - アニメーション対象の要素配列
  * @param {number} duration - アニメーション時間（ミリ秒）
  * @param {string} easing - イージング関数名
- * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定）
  */
-export const slideDownMultiple = (elements, duration = 300, easing = 'ease-out', signal) => {
-  return Promise.all(elements.map((element) => slideDown(element, duration, easing, signal)));
+export const slideDownMultiple = (elements, duration = 300, easing = 'ease-out') => {
+  return Promise.all(elements.map((element) => slideDown(element, duration, easing)));
 };
 
 /**
@@ -144,10 +110,9 @@ export const slideDownMultiple = (elements, duration = 300, easing = 'ease-out',
  * @param {HTMLElement[]} elements - アニメーション対象の要素配列
  * @param {number} duration - アニメーション時間（ミリ秒）
  * @param {string} easing - イージング関数名
- * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定）
  */
-export const slideUpMultiple = (elements, duration = 300, easing = 'ease-out', signal) => {
-  return Promise.all(elements.map((element) => slideUp(element, duration, easing, signal)));
+export const slideUpMultiple = (elements, duration = 300, easing = 'ease-out') => {
+  return Promise.all(elements.map((element) => slideUp(element, duration, easing)));
 };
 
 /**

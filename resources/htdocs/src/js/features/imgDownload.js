@@ -1,7 +1,7 @@
 /************************************************************
  * 画像ダウンロード（ZIP）
  * - data-action="imgDownload.download" でトリガー
- * - data-feature-imgDownload-img の画像を data-feature-imgDownload-folder の data-feature-imgDownload-folder-name 名で ZIP 化
+ * - data-feature-img-download-img の画像を data-feature-img-download-folder の data-feature-img-download-folder-name 名で ZIP 化
  ************************************************************/
 
 import { DATA_ATTR } from '../constans/global.js';
@@ -12,12 +12,13 @@ import { delegate } from '../utils/delegate.js';
 // ---------------------------------------------------------------------------
 /** 機能名（data-feature の値）。data 属性の値はキャメルケース */
 const FEATURE_NAME = 'imgDownload';
+const FEATURE_ATTR_NAME = 'img-download';
 
-const ATTR_IMG = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-img`;
-const ATTR_FOLDER = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-folder`;
-const ATTR_FOLDER_NAME = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-folderName`;
-const ATTR_SRC = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-src`;
-const ATTR_NAME = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-name`;
+const ATTR_IMG = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-img`;
+const ATTR_FOLDER = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-folder`;
+const ATTR_FOLDER_NAME = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-folder-name`;
+const ATTR_SRC = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-src`;
+const ATTR_NAME = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-name`;
 
 const SELECTOR_IMG = `[${ATTR_IMG}]`;
 const SELECTOR_FOLDER = `[${ATTR_FOLDER}]`;
@@ -71,13 +72,11 @@ async function downloadImagesAsZip() {
 
 /**
  * 初期化（document に delegate。data-action="imgDownload.download" をトリガーに）
- * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  */
-const init = (ctx = {}) => {
-  const { scope } = ctx;
+const init = () => {
   delegate(document, 'click', {
     'imgDownload.download': () => downloadImagesAsZip(),
-  }, scope);
+  });
 };
 
 export const imgDownload = { init };

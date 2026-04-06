@@ -9,28 +9,25 @@
  * ページ内のアンカーリンククリック時にスムーススクロールを実行
  * ヘッダーの高さを考慮した位置調整を行う
  *
- * @param {AbortSignal} [signal] - AbortSignal（省略時は MPA 想定で登録のみ・破棄しない）
  * @requires header - ヘッダー要素
  */
-export function smoothAnchorLink(signal) {
+export function smoothAnchorLink() {
   const anchorLinks = document.querySelectorAll('a[href^="#"]');
 
   if (!anchorLinks || anchorLinks.length === 0) {
     return;
   }
 
-  const listenerOptions = signal ? { signal } : {};
   anchorLinks.forEach((link) => {
-    link.addEventListener('click', (e) => handleAnchorClick(e, signal), listenerOptions);
+    link.addEventListener('click', handleAnchorClick);
   });
 }
 
 /**
  * アンカーリンククリック時の処理
  * @param {Event} e - クリックイベント
- * @param {AbortSignal} [signal] - AbortSignal（省略可）
  */
-function handleAnchorClick(e, signal) {
+function handleAnchorClick(e) {
   const href = e.currentTarget.getAttribute('href');
 
   if (!href || href === '#' || href === '#0') {
@@ -54,15 +51,14 @@ function handleAnchorClick(e, signal) {
   e.preventDefault();
 
   // スムーススクロール実行
-  smoothScrollToElement(targetElement, signal);
+  smoothScrollToElement(targetElement);
 }
 
 /**
  * 指定要素までスムーススクロール
  * @param {HTMLElement} element - スクロール先の要素
- * @param {AbortSignal} [signal] - AbortSignal（省略可）
  */
-function smoothScrollToElement(element, signal) {
+function smoothScrollToElement(element) {
   const SCROLL_SPEED = 500; // スクロール速度（ミリ秒）
   const OFFSET_ADJUSTMENT = 0; // 位置調整値
 
@@ -81,30 +77,24 @@ function smoothScrollToElement(element, signal) {
     currentScrollY + elementRect.top + paddingTop - headerHeight + OFFSET_ADJUSTMENT;
 
   // スムーススクロール実行
-  smoothScrollTo(targetPosition, SCROLL_SPEED, signal);
+  smoothScrollTo(targetPosition, SCROLL_SPEED);
 }
 
 /**
  * 指定位置までスムーススクロール
  * @param {number} targetPosition - スクロール先の位置
  * @param {number} duration - スクロール時間（ミリ秒）
- * @param {AbortSignal} [signal] - AbortSignal（省略可）
  */
-function smoothScrollTo(targetPosition, duration, signal) {
+function smoothScrollTo(targetPosition, duration) {
   const startPosition = window.scrollY;
   const distance = targetPosition - startPosition;
   let startTime = null;
-  let animationFrameId = null;
 
   /**
    * アニメーション関数
    * @param {number} currentTime - 現在時刻
    */
   function animation(currentTime) {
-    if (signal?.aborted) {
-      return;
-    }
-
     if (startTime === null) startTime = currentTime;
     const timeElapsed = currentTime - startTime;
     const progress = Math.min(timeElapsed / duration, 1);
@@ -116,22 +106,9 @@ function smoothScrollTo(targetPosition, duration, signal) {
     window.scrollTo(0, startPosition + distance * easeInOutCubic);
 
     if (timeElapsed < duration) {
-      animationFrameId = requestAnimationFrame(animation);
+      requestAnimationFrame(animation);
     }
   }
 
-  animationFrameId = requestAnimationFrame(animation);
-
-  // signalでアニメーションをキャンセル
-  if (signal) {
-    signal.addEventListener(
-      'abort',
-      () => {
-        if (animationFrameId !== null) {
-          cancelAnimationFrame(animationFrameId);
-        }
-      },
-      { once: true }
-    );
-  }
+  requestAnimationFrame(animation);
 }

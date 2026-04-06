@@ -14,7 +14,7 @@ require_once __DIR__ . '/includes/init.php';
 ob_start();
 ?>
 
-<section data-scope="home">
+<section>
     <div class="ly_container __medium">
         <?php include __DIR__ . '/includes/modules/breadcrumbs.php'; ?>
 

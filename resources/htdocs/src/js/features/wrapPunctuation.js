@@ -1,7 +1,7 @@
 /************************************************************
  * 句読点を span（クラス palt）で囲む（features）
  * - data-feature="wrapPunctuation" がついた要素内の句読点（、。（））を処理対象とする
- * - 関連属性: data-feature-wrapPunctuation-processed（処理済みフラグ）
+ * - 関連属性: data-feature-wrap-punctuation-processed（処理済みフラグ）
  ************************************************************/
 
 import { DATA_ATTR } from '../constans/global.js';
@@ -11,9 +11,10 @@ import { DATA_ATTR } from '../constans/global.js';
 // ---------------------------------------------------------------------------
 /** 機能名（data-feature の値）。data 属性の値はキャメルケース */
 const FEATURE_NAME = 'wrapPunctuation';
+const FEATURE_ATTR_NAME = 'wrap-punctuation';
 
 /** 処理済みフラグ用属性（data-feature-機能名-xxxx のルール） */
-const ATTR_PROCESSED = `${DATA_ATTR.FEATURE}-${FEATURE_NAME}-processed`;
+const ATTR_PROCESSED = `${DATA_ATTR.FEATURE}-${FEATURE_ATTR_NAME}-processed`;
 
 const SELECTOR_TARGET = `[${DATA_ATTR.FEATURE}="${FEATURE_NAME}"]`;
 
@@ -47,7 +48,7 @@ const walkTextNodes = (node, callback) => {
 
 /**
  * 初期化（対象要素の句読点を span.palt で囲む）
- * @param {{ scope?: { signal: AbortSignal } }} [ctx] - 本モジュールは DOM 操作のみで signal は未使用
+ * @param {Object} [ctx] - 互換用（未使用）
  */
 const init = (ctx = {}) => {
   const elements = document.querySelectorAll(SELECTOR_TARGET);

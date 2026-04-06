@@ -9,9 +9,8 @@
 
 /**
  * header/footerを読み込んで埋め込む
- * @param {AbortSignal} [signal] - AbortSignal（未使用・互換性のため残す）
  */
-export async function loadIncludes(signal) {
+export async function loadIncludes() {
 
   /** 読み込みパス */
   const path = "/include/";

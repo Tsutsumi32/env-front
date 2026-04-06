@@ -29,13 +29,11 @@ const syncPlaceholder = (e, el) => {
 
 /**
  * 初期化（document に delegate。data-action="placeholder.sync" を input/focus/blur で）
- * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
  */
-const init = (ctx = {}) => {
-  const { scope } = ctx;
-  delegate(document, { eventType: 'input' }, { 'placeholder.sync': syncPlaceholder }, scope);
-  delegate(document, { eventType: 'focus' }, { 'placeholder.sync': syncPlaceholder }, scope);
-  delegate(document, { eventType: 'blur' }, { 'placeholder.sync': syncPlaceholder }, scope);
+const init = () => {
+  delegate(document, { eventType: 'input' }, { 'placeholder.sync': syncPlaceholder });
+  delegate(document, { eventType: 'focus' }, { 'placeholder.sync': syncPlaceholder });
+  delegate(document, { eventType: 'blur' }, { 'placeholder.sync': syncPlaceholder });
 
   document.querySelectorAll(`${SELECTOR_INPUT}[data-action="placeholder.sync"]`).forEach((input) => {
     const placeholderEl = input.parentElement?.querySelector(SELECTOR_PLACEHOLDER);

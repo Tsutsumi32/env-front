@@ -27,6 +27,25 @@ const FADE_DURATION_MS = 400;
 
 /** 閉じたときにフォーカスを戻す要素（open を押したトリガー） */
 let lastTrigger = null;
+let isDelegateBound = false;
+let modalHooks = {
+  onAfterOpen: null,
+  onAfterClose: null,
+};
+
+/**
+ * フックを安全に実行
+ * @param {Function|null|undefined} hook
+ * @param  {...any} args
+ */
+const runHook = (hook, ...args) => {
+  if (typeof hook !== 'function') return;
+  try {
+    hook(...args);
+  } catch (e) {
+    console.warn('modal hook error:', e);
+  }
+};
 
 /**
  * モーダルルート要素を取得（id があれば data-modal-id で一致するものを取得）
@@ -93,7 +112,12 @@ const open = (payload = {}) => {
       });
     });
   });
-  disableScroll(true, undefined);
+  disableScroll(true);
+  runHook(modalHooks.onAfterOpen, {
+    trigger: payload.trigger,
+    id,
+    root,
+  });
 };
 
 /**
@@ -126,6 +150,11 @@ const close = () => {
     root.setAttribute('aria-hidden', 'true');
     returnFocus(triggerToReturn);
     lastTrigger = null;
+    runHook(modalHooks.onAfterClose, {
+      root,
+      trigger: triggerToReturn,
+      id: root.getAttribute(ATTR_MODAL_ID) ?? undefined,
+    });
   };
 
   root.addEventListener('transitionend', onTransitionEnd, { once: true });
@@ -134,10 +163,17 @@ const close = () => {
 
 /**
  * モーダルを初期化する（document に delegate して modal.open / modal.close を拾う）
- * @param {{ scope?: { signal: AbortSignal } }} [ctx] - scope 省略時は MPA 想定
+ * @param {{ onAfterOpen?: (payload: { trigger?: Element, id?: string, root: Element }) => void, onAfterClose?: (payload: { root: Element, trigger?: Element, id?: string }) => void }} [options]
  */
-const init = (ctx = {}) => {
-  const { scope } = ctx ?? {};
+const init = (options = {}) => {
+  modalHooks = {
+    onAfterOpen: options.onAfterOpen ?? null,
+    onAfterClose: options.onAfterClose ?? null,
+  };
+
+  if (isDelegateBound) return;
+  isDelegateBound = true;
+
   delegate(document, 'click', {
     'modal.open': (e, el) => {
       open({ trigger: el, id: el.getAttribute(ATTR_MODAL_ID) });
@@ -145,7 +181,7 @@ const init = (ctx = {}) => {
     'modal.close': () => {
       close();
     },
-  }, scope);
+  });
 };
 
 export const modal = { open, close, init };
